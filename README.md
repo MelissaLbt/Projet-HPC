@@ -2,7 +2,7 @@
 
 Sont listés l’ensemble des travaux possibles.
 
-##Travail algorithmique
+## Travail algorithmique
 Dans une première étape, il s’agit de réaliser la chaine de traitement : SD+morpho, en scalaire mono-thread et sans
 optimisation afin d’obtenir une version de référence. Dans une seconde étape il s’agit d’optimiser cette chaine de traitement
 pour qu’elle soit le plus rapide possible, en codant les opérateurs en SIMD, en paralélisation le code sur les coeurs du
