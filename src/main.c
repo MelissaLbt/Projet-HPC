@@ -19,6 +19,7 @@
 
 #include "sd_naive.h"
 #include "morpho_naive.h"
+#include "sd_morpho_naive.h"
 
 
 void info(void)
@@ -36,7 +37,7 @@ int main(int argc, char *argv[])
     //info();
     //main_1D(argc, argv);
     //main_2D(argc, argv);
-
+	read_pgm_test();
     
     return 0;   
 }

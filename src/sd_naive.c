@@ -61,7 +61,7 @@ void read_pgm(int *temp){
 }*/
 
 // initialisation du M0 et V0 pour la methode SD
-void init_tabs(){
+void init_tabs(){/*
 	//il faut que I[0][][] est deja rempli
 	//init SD
 	for(int i=0; i<H; i++){
@@ -70,12 +70,12 @@ void init_tabs(){
 			V[0][i][j] = VMIN;
 		}
 	}
-
+*/
 }
 
 // methode SD pour une image
 void Sigma_Delta(int *temp){
-
+/*
 	int t = *temp;
 	//pseudo-code
 	if (t < 1){
@@ -131,6 +131,6 @@ void Sigma_Delta(int *temp){
 				E[t][i][j] = 1;
 			}
 		}
-	}
+	}*/
 }
 

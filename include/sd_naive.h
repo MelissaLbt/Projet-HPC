@@ -15,13 +15,6 @@
 #define MAX(X, Y) (((X) > (Y)) ? (X) : (Y))
 
 
-
-extern int32_t I[200][240][320];		
-extern int32_t M[200][240][320];		
-extern int32_t V[200][240][320];		
-extern int32_t O[200][240][320];
-extern int32_t E[200][240][320];
-
 void init_tabs();
 void Sigma_Delta(int *temp);
 
