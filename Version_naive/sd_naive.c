@@ -7,8 +7,8 @@
 
 #define H 240
 #define W 320
-#define N 2		// a verifier: 2/3/4
-#define VMIN 1
+#define N 2		// a verifier: 2/3/4   //Ecart-Type
+#define VMIN 1  
 #define VMAX 254
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define MAX(X, Y) (((X) > (Y)) ? (X) : (Y))
@@ -19,7 +19,7 @@ int32_t V[200][H][W];		// images de variance
 int32_t O[200][H][W];		// image de difference : en gris
 int32_t E[200][H][W];		// image d'etiquette : en gris
 
-// read pgm(P5) image to table I[t][][] 
+// read pgm(P5) image to table I[t][][]
 void read_pgm(int *temp){
 	int t = *temp-1; //temp start from 1
 	FILE *fp;
@@ -75,7 +75,7 @@ void init_tabs(){
 			V[0][i][j] = VMIN;
 		}
 	}
-	
+
 }
 
 // methode SD
@@ -140,7 +140,7 @@ void Sigma_Delta(int *temp){
 }
 
 int main(){
-	//Initialisation 
+	//Initialisation
 	int temp = 1;
 	read_pgm(&temp);
 
