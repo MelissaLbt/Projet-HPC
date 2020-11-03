@@ -4,7 +4,11 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include "sd_naive.h"
+#include "morpho_naive.h"
 
+<<<<<<< HEAD
+=======
 #define H 240
 #define W 320
 #define N 2		// a verifier: 2/3/4   //Ecart-Type
@@ -12,6 +16,7 @@
 #define VMAX 254
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define MAX(X, Y) (((X) > (Y)) ? (X) : (Y))
+>>>>>>> 830f904f3fb7c9779dc4e2d4b686f6226348bc46
 
 int32_t I[200][H][W];		// 200 images 320*240(w*h)
 int32_t M[200][H][W];		// images de moyenne
@@ -24,16 +29,16 @@ void read_pgm(int *temp){
 	int t = *temp-1; //temp start from 1
 	FILE *fp;
 	char name[60] = "/home/huiling/Projet-HPC/car3/car_"; //change le path pour vos images
-	int  nbint;
-	char nbstr[5];
+	int  imgint;
+	char imgstr[5];
     char version[3];
     char line_inutile[256];
     int i, j, c;
 
 
-    nbint = 3000+t;
-    sprintf(nbstr,"%d",nbint);
-    strcat(name, nbstr);
+    imgint = 3000+t;
+    sprintf(imgstr,"%d",imgint);
+    strcat(name, imgstr);
     strcat(name,".pgm");
 
 
