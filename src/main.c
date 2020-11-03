@@ -31,12 +31,12 @@ void info(void)
     puts("DEBUG ON");
 #endif
 }
-int main(int argc, char *argv[])
-{
-    //info();
-    //main_1D(argc, argv);
-    //main_2D(argc, argv);
-
-    
-    return 0;   
-}
+// int main(int argc, char *argv[])
+// {
+//     //info();
+//     //main_1D(argc, argv);
+//     //main_2D(argc, argv);
+//
+//
+//     return 0;
+// }
