@@ -411,9 +411,9 @@ void free_rgb8matrix(rgb8 **m, long nrl, long nrh, long ncl, long nch)
 /* ----------------------------------------------------------------------------- */
 void copy_ui8matrix_ui8matrix(uint8 **X, int i0, int i1, int j0, int j1, uint8 **Y)
 /* ----------------------------------------------------------------------------- */
-{
+{   
     int i, j;
-
+   
     for(i=i0; i<=i1; i++) {
         for(j=j0; j<=j1; j++) {
             Y[i][j] = X[i][j];

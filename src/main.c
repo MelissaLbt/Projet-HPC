@@ -38,7 +38,8 @@ int main(int argc, char *argv[])
     //info();
     //main_1D(argc, argv);
     //main_2D(argc, argv);
-	read_pgm_test();
-    
+	
+	//read_pgm_test();
+    sd_morpho_naive();
     return 0;   
 }
