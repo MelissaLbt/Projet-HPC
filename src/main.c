@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "nrdef.h"
 #include "nrutil.h"
@@ -15,6 +16,10 @@
 
 #include "simd1D.h"
 #include "simd2D.h"
+
+#include "sd_naive.h"
+#include "morpho_naive.h"
+
 
 void info(void)
 {
@@ -28,8 +33,10 @@ void info(void)
 }
 int main(int argc, char *argv[])
 {
-    info();
-    main_1D(argc, argv);
-    main_2D(argc, argv);
+    //info();
+    //main_1D(argc, argv);
+    //main_2D(argc, argv);
+
+    
     return 0;   
 }
