@@ -44,7 +44,9 @@ void read_pgm_test(){
 void sd_morpho_naive(){
 
 	char* path = "/home/huiling/HPC/Projet-HPC/car3/";	
+	char* sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";	
 	char* filename = "car_";
+	char* sdoutname = "car_e";
 	int k, ndigit=0;
 	char *extension = "pgm";
 	char complete_filename[50];
@@ -74,11 +76,14 @@ void sd_morpho_naive(){
 	}
 
 	for(int i=0; i<2; i++){
+		if(i==0){
+			O = ui8matrix(nrl, nrh, ncl, nch); 
+		}
 		M[i] = ui8matrix(nrl, nrh, ncl, nch); 
 		V[i] = ui8matrix(nrl, nrh, ncl, nch); 
 	}
 
-	O = ui8matrix(nrl, nrh, ncl, nch); 
+	
 
 	//--------Sigma_Delta----------
 
@@ -87,7 +92,28 @@ void sd_morpho_naive(){
 	for(int i=1; i<200; i++){
 		
 		Sigma_Delta(I[i],M[0],M[1],O,V[0],V[1],E[i]);
+		generate_path_filename_k_ndigit_extension(sdout_path, sdoutname, i+3000, ndigit, extension, complete_filename);
+		SavePGM_ui8matrix(E[i], nrl, nrh, ncl, nch, complete_filename);
 	}
+	
 
+	//--------Morphologie Mathematique--------
+
+
+
+
+	
 	printf("congratulations!! \n");
+
+	// Desallocation
+	for(int i=0; i<200; i++){
+		if(i<2){
+			if(i==0)
+				free_ui8matrix(O,nrl,nrh,ncl,nch);
+			free_ui8matrix(M[i],nrl,nrh,ncl,nch);
+			free_ui8matrix(V[i],nrl,nrh,ncl,nch);
+		}
+		free_ui8matrix(I[i],nrl,nrh,ncl,nch);
+		free_ui8matrix(E[i],nrl,nrh,ncl,nch);
+	}
 }

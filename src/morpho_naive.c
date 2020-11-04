@@ -34,9 +34,9 @@ void erosion_r1(int32_t I[H][W], int32_t img[H][W]){
  	   for(int j = 0; j < W; j++){
  		    x0 = MIN3(I[i-1][j-1], I[i-1][j], I[i-1][j+1]);
  		    x1 = MIN3(I[i  ][j-1], I[i  ][j], I[i  ][j+1]);
- 			  x2 = MIN3(I[i+1][j-1], I[i+1][j], I[i+1][j+1]);
- 			  img[i][j] = MIN3(x0, x1, x2);
-     }
+ 			x2 = MIN3(I[i+1][j-1], I[i+1][j], I[i+1][j+1]);
+ 			img[i][j] = MIN3(x0, x1, x2);
+     	}
  	 }
  }
 
@@ -159,7 +159,7 @@ void fermeture_r2(int32_t I[H][W], int32_t res[H][W]){
   dilatation_r2(I, intermediaire);
   erosion_r2(intermediaire, res);
 }
-
+/*
  int main(){
    char *path = "~/Documents/CHP/Projet-HPC/car3";
    char *filename = "car_";
@@ -169,4 +169,4 @@ void fermeture_r2(int32_t I[H][W], int32_t res[H][W]){
    char *complete_filename;
    generate_path_filename_k_ndigit_extension(path, filename, k, ndigit, extension, complete_filename);
    printf("%s\n", complete_filename);
- }
+ }*/

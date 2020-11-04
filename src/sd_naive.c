@@ -79,7 +79,7 @@ void Sigma_Delta(uint8 **I, uint8 **M0, uint8 **M1, uint8 **O, uint8 **V0, uint8
 				E[i][j] = 0;
 			}
 			else{
-				E[i][j] = 1;
+				E[i][j] = 255;
 			}
 		}
 	}
