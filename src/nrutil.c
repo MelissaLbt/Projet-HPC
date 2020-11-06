@@ -931,3 +931,11 @@ void SavePPM_rgb8matrix(rgb8 **m, int nrl, int nrh, int ncl, int nch, char *file
   /* fermeture du fichier */
   fclose(file);
 }
+
+int64_t clocktime() {
+   struct timeval full_time;
+
+   gettimeofday(&full_time, NULL);
+   return (int64_t) (full_time.tv_usec + full_time.tv_sec * 1000000);
+}
+

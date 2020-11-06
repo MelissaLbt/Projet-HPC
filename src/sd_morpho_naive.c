@@ -2,8 +2,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
-#include <string.h>
 
 #include "nrdef.h"
 #include "nrutil.h"
@@ -17,6 +15,10 @@
 #include "morpho_naive.h"
 #include "sd_morpho_naive.h"
 
+long nrl = 0;
+long nrh = 240-1;
+long ncl = 0;
+long nch = 320-1;
 
 void read_pgm_test(){
 
@@ -27,10 +29,6 @@ void read_pgm_test(){
 	char *extension = "pgm";
 	char complete_filename[50];
 	char *save_filename = "congratulations.pgm";
-	long nrl = 0;
-	long nrh = 240-1;
-	long ncl = 0;
-	long nch = 320-1;
 	uint8 **I;
 
 	I = ui8matrix(nrl, nrh, ncl, nch); 
@@ -43,10 +41,6 @@ void read_pgm_test(){
 
 void sd_morpho_naive(){
 
-	long nrl = 0;
-	long nrh = 240-1;
-	long ncl = 0;
-	long nch = 320-1;
 	int indice;
 	int b = 1; // pour 3*3
 	
@@ -58,17 +52,17 @@ void sd_morpho_naive(){
 	int k, ndigit=0;
 	char *extension = "pgm";
 	char complete_filename[50];
-	char* sdoutname = "car_";
 
-	// SD
 	uint8 **I[200];
 	uint8 **E[200];
 	uint8 **M[2];
 	uint8 **V[2];
 	uint8 **O;
-	
-	// Morpho
 	uint8 **out; //sortie du Morpho
+
+	int64_t start, end;
+	int64_t sd_time = 0;
+	int64_t mor_time = 0;
 
 
 	//------------Initialisation des tableaux et charger les images----------
@@ -90,30 +84,45 @@ void sd_morpho_naive(){
 	O    = ui8matrix(nrl, nrh, ncl, nch); 
 	out  = ui8matrix(nrl, nrh, ncl, nch); 
 
-
+	printf("\n***  Démarrage de la chaîne de traitement naïve  ***\n\n");
 	//--------Sigma_Delta----------
 
+	start = clocktime();
 	init_SDtabs(I[0],M[0],V[0]);
-
+	end = clocktime();
+	sd_time += (end-start);
+	
 	for(int i=1; i<200; i++){
 		
+		start  = clocktime();
 		Sigma_Delta(I[i],M[0],M[1],O,V[0],V[1],E[i]);
+		end = clocktime();
+		sd_time += (end-start);
+
 		generate_path_filename_k_ndigit_extension(sdout_path, filename, i+3000, ndigit, extension, complete_filename);
 		SavePGM_ui8matrix(E[i], nrl, nrh, ncl, nch, complete_filename);
 	}
-	
+
+	printf(" - %-*s completed %8" PRId64 " us\n", 20, "Sigma_Delta naive", end-start);
+
 
 	//--------Morphologie Mathematique--------
 	for(int i=1; i<200; i++){
 
+		start  = clocktime();
 		morpho(E[i],out,b,nrl,nrh,ncl,nch);
-	
+		end = clocktime();
+		mor_time += (end-start);
+
 		generate_path_filename_k_ndigit_extension(morout_path, filename, i+3000, ndigit, extension, complete_filename);
 		SavePGM_ui8matrix(out, nrl, nrh, ncl, nch, complete_filename);
 	}
 
+	printf(" - %-*s completed %8" PRId64 " us\n", 20, "Morphologie naive", end-start);
+	printf("\n***  Fin de la chaîne de traitement naïve  ***\n\n");
 
-	printf("Congratulations!! \nCheck the pictures in the project folder:\n");
+
+	printf("Congratulations!! \n\nCheck the pictures in the project folder:\n");
 	printf("Output of Sigma_Delta : Projet-HPC/sdout\n");
 	printf("Output of Morphologie : Projet-HPC/morphoout\n");
 	// Desallocation

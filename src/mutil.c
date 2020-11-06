@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <math.h>
 
 #include "nrdef.h"
@@ -14,6 +15,7 @@
 #include "vnrutil.h"
 
 #include "mutil.h"
+
 
 double chrono(void)
 {

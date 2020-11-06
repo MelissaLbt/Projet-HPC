@@ -14,9 +14,9 @@
 #pragma message ("C++")
 extern "C" {
 #endif  
-
-   
+  
 //#define CHRONO(X,t) tmin = 1e10; for(r=0; r<run; r++) { t0 = chrono(); for(i=0;i<iter;i++) X;  t1 = chrono(); dt = t1-t0; if(dt<tmin) tmin = dt; } t=tmin/iter
+
 
 double chrono(void);
     

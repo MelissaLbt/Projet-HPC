@@ -1,15 +1,16 @@
+/* Algorithme Morphologie version naïve */
 // erosion-dilatation-dilatation-erosion
-// min-max-max-min
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
-#include <string.h>
-#include <unistd.h>
 
 #include "nrdef.h"
 #include "nrutil.h"
 
-#include "sd_naive.h"
+#include "vnrdef.h"
+#include "vnrutil.h"
+
+#include "mutil.h"
+
 #include "morpho_naive.h"
 
 /* --------------------- */

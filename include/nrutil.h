@@ -16,9 +16,18 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+#include <sys/time.h>
+#include <inttypes.h>
 
 #define NR_END 0
 #define FREE_ARG char*
+#define H 240
+#define W 320
+#define N 2		// partie SD a verifier: 2/3/4
+#define VMIN 1
+#define VMAX 254
+
 
 extern long nr_end;
 
@@ -98,6 +107,10 @@ void    SavePGM_ui8matrix(uint8 **m,      int  nrl, int  nrh, int  ncl, int nch,
 
 rgb8 ** LoadPPM_rgb8matrix(char *filename, int *nrl, int *nrh, int *ncl, int *nch);
 void    SavePPM_rgb8matrix(rgb8 **m,       int  nrl, int  nrh, int  ncl, int  nch, char *filename);
+
+/* timer: vient du tp histo*/
+int64_t clocktime();
+
 
 #ifdef __cplusplus
 }
