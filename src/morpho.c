@@ -11,7 +11,7 @@
 
 #include "mutil.h"
 
-#include "morpho_naive.h"
+#include "morpho.h"
 
 /* --------------------- */
 /* E: Image d'entree     */

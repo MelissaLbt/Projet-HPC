@@ -936,6 +936,6 @@ int64_t clocktime() {
    struct timeval full_time;
 
    gettimeofday(&full_time, NULL);
-   return (int64_t) (full_time.tv_usec + full_time.tv_sec * 1000000);
+   return (int64_t) ((full_time.tv_usec + full_time.tv_sec * 1000000) / 1000);
 }
 

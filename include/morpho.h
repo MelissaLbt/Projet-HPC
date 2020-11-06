@@ -1,9 +1,9 @@
 /* --------------------- */
-/* --- morpho_naive.h --- */
+/* --- morpho.h --- */
 /* --------------------- */
 
-#ifndef __MORPHO_NAIVE__
-#define __MORPHO_NAIVE__
+#ifndef __MORPHO_H__
+#define __MORPHO_H__
 
 
 #define MAX3(a,b,c) ((((a) > (b)) ? (a) : (b)) > (c) ? (((a) > (b)) ? (a) : (b)) : c)

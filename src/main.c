@@ -14,12 +14,11 @@
 
 #include "mutil.h"
 
-#include "simd1D.h"
-#include "simd2D.h"
 
-#include "sd_naive.h"
-#include "morpho_naive.h"
-#include "sd_morpho_naive.h"
+#include "mouvement.h"
+#include "morpho.h"
+#include "test_mouvement.h"
+#include "test_morpho.h"
 
 
 void info(void)
@@ -35,11 +34,11 @@ void info(void)
 
 int main(int argc, char *argv[])
 {
-    //info();
+    info();
     //main_1D(argc, argv);
     //main_2D(argc, argv);
-	
-	//read_pgm_test();
-    sd_morpho_naive();
+	test_mouvement();
+    test_morpho();
+    
     return 0;   
 }

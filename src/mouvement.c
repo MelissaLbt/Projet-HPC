@@ -11,25 +11,23 @@
 
 #include "mutil.h"
 
-#include "sd_naive.h"
+#include "mouvement.h"
 
 
 // initialisation du M0 et V0 pour la methode SD
-void init_SDtabs(uint8 **I, uint8 **M, uint8 **V){
-	//il faut que I[0] est deja rempli
+void SigmaDelta_step0(uint8 **I, uint8 **M, uint8 **V){
 
 	copy_ui8matrix_ui8matrix(I, 0, 240-1, 0, 320-1, M);
 
 	for(int i=0; i<H; i++){
 		for(int j=0; j<W; j++){
-			//M[i][j] = I[i][j];
 			V[i][j] = VMIN;
 		}
 	}
 }
 
 // methode SD pour une image
-void Sigma_Delta(uint8 **I, uint8 **M0, uint8 **M1, uint8 **O, uint8 **V0, uint8 **V1, uint8 **E){
+void SigmaDelta_1step(uint8 **I, uint8 **M0, uint8 **M1, uint8 **O, uint8 **V0, uint8 **V1, uint8 **E){
 
 	//step 1: Mt estimation
 	for(int i=0; i<H; i++){
