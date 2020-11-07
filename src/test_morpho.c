@@ -1,4 +1,4 @@
-/* test de la detection du mouvement : SigmaDelta */
+/* test de la detection du mouvement : Morphologie Math */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,8 +13,6 @@
 
 #include "morpho.h"
 #include "test_morpho.h"
-
-
 
 
 void test_morpho(){
