@@ -35,11 +35,11 @@ void info(void)
 
 int main(int argc, char *argv[])
 {
-    //info();
+    info();
     //main_1D(argc, argv);
-    //main_2D(argc, argv);
-	
+    main_2D(argc, argv);
+
 	//read_pgm_test();
-    sd_morpho_naive();
-    return 0;   
+  //sd_morpho_naive();
+    return 0;
 }

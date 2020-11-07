@@ -20,7 +20,7 @@
 
 void read_pgm_test(){
 
-	char *path = "/home/huiling/HPC/Projet-HPC/car3/";	
+	char *path = "/home/huiling/HPC/Projet-HPC/car3/";
 	char *filename = "car_";
 	int k = 3000;
 	int ndigit = 0;
@@ -33,12 +33,12 @@ void read_pgm_test(){
 	long nch = 320-1;
 	uint8 **I;
 
-	I = ui8matrix(nrl, nrh, ncl, nch); 
+	I = ui8matrix(nrl, nrh, ncl, nch);
 	generate_path_filename_k_ndigit_extension(path, filename, k, ndigit, extension, complete_filename);
 	MLoadPGM_ui8matrix(complete_filename, nrl, nrh, ncl, nch, I);
 	SavePGM_ui8matrix(I, nrl, nrh, ncl, nch, save_filename);
 
-	
+
 }
 
 void sd_morpho_naive(){
@@ -49,10 +49,14 @@ void sd_morpho_naive(){
 	long nch = 320-1;
 	int indice;
 	int b = 1; // pour 3*3
-	
-	char* path = "/home/huiling/HPC/Projet-HPC/car3/";	
-	char* sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";	
-	char* morout_path = "/home/huiling/HPC/Projet-HPC/morphoout/";	
+
+	//char* path = "/home/huiling/HPC/Projet-HPC/car3/";
+	//char* sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";
+	//char* morout_path = "/home/huiling/HPC/Projet-HPC/morphoout/";
+
+	char* path = "/home/melissa/Documents/HPC/Projet-HPC/car3/";
+	char* sdout_path = "/home/melissa/Documents/HPC/Projet-HPC/sdout/";
+	char* morout_path = "/home/melissa/Documents/HPC/Projet-HPC/morphoout/";
 
 	char* filename = "car_";
 	int k, ndigit=0;
@@ -66,7 +70,7 @@ void sd_morpho_naive(){
 	uint8 **M[2];
 	uint8 **V[2];
 	uint8 **O;
-	
+
 	// Morpho
 	uint8 **out; //sortie du Morpho
 
@@ -80,15 +84,15 @@ void sd_morpho_naive(){
 		E[indice] = ui8matrix(nrl, nrh, ncl, nch); //allocation du E
 		generate_path_filename_k_ndigit_extension(path, filename, k, ndigit, extension, complete_filename);
 		MLoadPGM_ui8matrix(complete_filename, nrl, nrh, ncl, nch, I[indice]);//lire et stoker
-		
+
 	}
 
-	M[0] = ui8matrix(nrl, nrh, ncl, nch); 
-	M[1] = ui8matrix(nrl, nrh, ncl, nch); 
-	V[0] = ui8matrix(nrl, nrh, ncl, nch); 
-	V[1] = ui8matrix(nrl, nrh, ncl, nch); 
-	O    = ui8matrix(nrl, nrh, ncl, nch); 
-	out  = ui8matrix(nrl, nrh, ncl, nch); 
+	M[0] = ui8matrix(nrl, nrh, ncl, nch);
+	M[1] = ui8matrix(nrl, nrh, ncl, nch);
+	V[0] = ui8matrix(nrl, nrh, ncl, nch);
+	V[1] = ui8matrix(nrl, nrh, ncl, nch);
+	O    = ui8matrix(nrl, nrh, ncl, nch);
+	out  = ui8matrix(nrl, nrh, ncl, nch);
 
 
 	//--------Sigma_Delta----------
@@ -96,18 +100,18 @@ void sd_morpho_naive(){
 	init_SDtabs(I[0],M[0],V[0]);
 
 	for(int i=1; i<200; i++){
-		
+
 		Sigma_Delta(I[i],M[0],M[1],O,V[0],V[1],E[i]);
 		generate_path_filename_k_ndigit_extension(sdout_path, filename, i+3000, ndigit, extension, complete_filename);
 		SavePGM_ui8matrix(E[i], nrl, nrh, ncl, nch, complete_filename);
 	}
-	
+
 
 	//--------Morphologie Mathematique--------
 	for(int i=1; i<200; i++){
 
 		morpho(E[i],out,b,nrl,nrh,ncl,nch);
-	
+
 		generate_path_filename_k_ndigit_extension(morout_path, filename, i+3000, ndigit, extension, complete_filename);
 		SavePGM_ui8matrix(out, nrl, nrh, ncl, nch, complete_filename);
 	}
