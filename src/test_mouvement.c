@@ -16,13 +16,11 @@
 
 
 void test_mouvement(){
-	long nrl = 0;
-	long nrh = 240-1;
-	long ncl = 0;
-	long nch = 320-1;
 
-	int b = 1; // pour 3*3
-	int k, ndigit=0;
+	long i0 = 0, i1 = 240-1;
+	long j0 = 0, j1 = 320-1;
+
+	int k, ndigit = 0;
 	
 	char *path = "/home/huiling/HPC/Projet-HPC/car3/";	
 	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";	
@@ -31,37 +29,32 @@ void test_mouvement(){
 	char *extension = "pgm";
 	char  complete_filename[50];
 
-	uint8 **I[2];
-	uint8 **M[2];
-	uint8 **V[2];
-	uint8 **O;
-	uint8 **E;
+	uint8 **I0, **I1, **M0, **M1, **V0, **V1, **O, **E;
 	
 	int64_t start, end;
 	int64_t timer_sd = 0;
 
 	//------------ Allocation des tableaux et Initialisation du I[0]----------
-	for(int i=0; i<2; i++){	
-		
-		if(i==0){
-			O = ui8matrix(nrl,nrh,ncl,nch);
-			E = ui8matrix(nrl,nrh,ncl,nch);
-		}
-		I[i] = ui8matrix(nrl,nrh,ncl,nch);
-		M[i] = ui8matrix(nrl,nrh,ncl,nch);
-		V[i] = ui8matrix(nrl,nrh,ncl,nch);
-	}
+	I0 = ui8matrix(i0,i1,j0,j1);
+	I1 = ui8matrix(i0,i1,j0,j1);
+	M0 = ui8matrix(i0,i1,j0,j1);
+	M1 = ui8matrix(i0,i1,j0,j1);
+	V0 = ui8matrix(i0,i1,j0,j1);
+	V1 = ui8matrix(i0,i1,j0,j1);
+	O  = ui8matrix(i0,i1,j0,j1);
+	E  = ui8matrix(i0,i1,j0,j1);
+	
 
 	generate_path_filename_k_ndigit_extension(path, filename, 3000, ndigit, extension, complete_filename);
-	MLoadPGM_ui8matrix(complete_filename, nrl, nrh, ncl, nch, I[0]); 
+	MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, I0); 
 	
 
 	//-------------Sigma_Delta-------------
 
-	printf("\n***  Démarrage de la chaîne de traitement naïve  ***\n\n");
+	printf("\n***  Démarrage du Sigma_Delta naïve  ***\n\n");
 
 	start = clocktime();
-	SigmaDelta_step0(I[0],M[0],V[0]);
+	SigmaDelta_step0(I0,M0,V0);
 	end = clocktime();
 	timer_sd += (end-start);
 
@@ -69,31 +62,32 @@ void test_mouvement(){
 
 		k = i + 3000;
 		generate_path_filename_k_ndigit_extension(path, filename, k, ndigit, extension, complete_filename);
-		MLoadPGM_ui8matrix(complete_filename, nrl, nrh, ncl, nch, I[1]);
+		MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, I1);
 		
 		start  = clocktime();
-		SigmaDelta_1step(I[1],M[0],M[1],O,V[0],V[1],E);
+		SigmaDelta_1step(I1,M0,M1,O,V0,V1,E);
 		end = clocktime();
 		timer_sd += (end-start);
 
 		generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
-		SavePGM_ui8matrix(E, nrl, nrh, ncl, nch, complete_filename);
+		SavePGM_ui8matrix(E, i0, i1, j0, j1, complete_filename);
 		
 	}
 
 	printf(" - %-*s completed %8" PRId64 " ms\n", 20, "Sigma_Delta naive", timer_sd);
 	
 	// Desallocation
-	for(int i=0; i<2; i++){	
+	free_ui8matrix(I0,i0,i1,j0,j1);
+	free_ui8matrix(I1,i0,i1,j0,j1);
+	free_ui8matrix(M0,i0,i1,j0,j1);
+	free_ui8matrix(M1,i0,i1,j0,j1);
+	free_ui8matrix(V0,i0,i1,j0,j1);
+	free_ui8matrix(V1,i0,i1,j0,j1);	
+	free_ui8matrix(O,i0,i1,j0,j1);
+	free_ui8matrix(E,i0,i1,j0,j1);
 
-		if(i==0){
-			free_ui8matrix(O,nrl,nrh,ncl,nch);
-			free_ui8matrix(E,nrl,nrh,ncl,nch);
-		}
-		free_ui8matrix(I[i],nrl,nrh,ncl,nch);
-		free_ui8matrix(M[i],nrl,nrh,ncl,nch);
-		free_ui8matrix(V[i],nrl,nrh,ncl,nch);
-	}
+		
+	
 
 	
 
