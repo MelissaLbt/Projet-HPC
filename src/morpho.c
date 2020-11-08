@@ -21,9 +21,9 @@
 
 //Copy dans un tableau plus grand et duplication des bords
 void copy_duplication(uint8 **E, uint8 **I, int b, long nrl, long nrh, long ncl, long nch){
-	
+
 	copy_ui8matrix_ui8matrix(E,(int)nrl,(int)nrh,(int)ncl,(int)nch,I);
-	
+
 	if(b==1){
 		I[-1][-1] = I[0][0];
 	    I[-1][W] = I[0][W-1];
@@ -123,7 +123,7 @@ void dilatation_r1(uint8 **E, uint8 **img, int b, long nrl, long nrh, long ncl, 
 // Erosion dans le cas B de taille 5*5
 void dilatation_r2(uint8 **E, uint8 **img, int b, long nrl, long nrh, long ncl, long nch){
     uint8 x0, x1, x2, x3, x4;
-    
+
     uint8 **I;
   	I = ui8matrix(nrl-b, nrh+b, ncl-b, nch+b);
   	copy_duplication(E,I,b,nrl,nrh,ncl,nch);
@@ -144,7 +144,7 @@ void dilatation_r2(uint8 **E, uint8 **img, int b, long nrl, long nrh, long ncl, 
 
 void ouverture_r1(uint8 **E, uint8 **res, int b, long nrl, long nrh, long ncl, long nch){
   	uint8 **intermediaire;
-  	intermediaire = ui8matrix(nrl,nrh,ncl,nch); 
+  	intermediaire = ui8matrix(nrl,nrh,ncl,nch);
 
   	erosion_r1(E,intermediaire,b,nrl,nrh,ncl,nch);
   	dilatation_r1(intermediaire,res,b,nrl,nrh,ncl,nch);
@@ -165,7 +165,7 @@ void ouverture_r2(uint8 **E, uint8 **res, int b, long nrl, long nrh, long ncl, l
 
 void fermeture_r1(uint8 **E, uint8 **res, int b, long nrl, long nrh, long ncl, long nch){
 	uint8 **intermediaire;
-  	intermediaire = ui8matrix(nrl,nrh,ncl,nch); 
+  	intermediaire = ui8matrix(nrl,nrh,ncl,nch);
 
   	dilatation_r1(E,intermediaire,b,nrl,nrh,ncl,nch);
   	erosion_r1(intermediaire,res,b,nrl,nrh,ncl,nch);
@@ -176,7 +176,7 @@ void fermeture_r1(uint8 **E, uint8 **res, int b, long nrl, long nrh, long ncl, l
 
 void fermeture_r2(uint8 **E, uint8 **res, int b, long nrl, long nrh, long ncl, long nch){
 	uint8 **intermediaire;
-  	intermediaire = ui8matrix(nrl,nrh,ncl,nch); 
+  	intermediaire = ui8matrix(nrl,nrh,ncl,nch);
 
   	dilatation_r2(E,intermediaire,b,nrl,nrh,ncl,nch);
   	erosion_r2(intermediaire,res,b,nrl,nrh,ncl,nch);
@@ -187,11 +187,17 @@ void fermeture_r2(uint8 **E, uint8 **res, int b, long nrl, long nrh, long ncl, l
 
 void morpho(uint8 **E, uint8 **res, int b, long nrl, long nrh, long ncl, long nch){
 	uint8 **intermediaire;
-  	intermediaire = ui8matrix(nrl,nrh,ncl,nch); 
+  intermediaire = ui8matrix(nrl,nrh,ncl,nch);
 
-	ouverture_r1(E,intermediaire,b,nrl,nrh,ncl,nch);
-	fermeture_r1(intermediaire,res,b,nrl,nrh,ncl,nch);
+	if(b == 1){
+		ouverture_r1(E,intermediaire,b,nrl,nrh,ncl,nch);
+		fermeture_r1(intermediaire,res,b,nrl,nrh,ncl,nch);
+	}
+	else if(b == 2){
+		ouverture_r2(E,intermediaire,b,nrl,nrh,ncl,nch);
+		fermeture_r2(intermediaire,res,b,nrl,nrh,ncl,nch);
+	}
 
-  	free_ui8matrix(intermediaire,nrl,nrh,ncl,nch);
+	free_ui8matrix(intermediaire,nrl,nrh,ncl,nch);
 
 }
