@@ -13,7 +13,7 @@
 
 #include "morpho.h"
 #include "test_morpho.h"
-
+// Ajouter pour test pour cas 5*5
 
 void test_morpho(){
 
@@ -24,9 +24,9 @@ void test_morpho(){
 
 	int b = 1; // pour 3*3
 	int k, ndigit=0;
-	
-	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";	
-	char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout/";	
+
+	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";
+	char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout/";
 
 	char *filename = "car_";
 	char *extension = "pgm";
@@ -44,7 +44,7 @@ void test_morpho(){
 
 	//--------Morphologie Mathematique--------
 
-	for(int i=1; i<200; i++){
+	for(int i=0; i<200; i++){
 
 		k = i+3000;
 		generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
