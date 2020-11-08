@@ -38,27 +38,47 @@ void avg3_reg_vf32matrix(vfloat32** X, int n, vfloat32 **Y)
     for(i=0; i<(n*card_vfloat32()); i++){
         for(j=0; j<n; j++){
             a0 = _mm_load_ps((float32*) &X[i-1][j-1]);
+            DEBUG(display_vfloat32(a0, "%4.0f", "a0 =")); DEBUG(puts(""));
             a1 = _mm_load_ps((float32*) &X[i  ][j-1]);
+            DEBUG(display_vfloat32(a1, "%4.0f", "a1 =")); DEBUG(puts(""));
             a2 = _mm_load_ps((float32*) &X[i+1][j-1]);
+            DEBUG(display_vfloat32(a2, "%4.0f", "a2 =")); DEBUG(puts(""));
+
             b0 = _mm_load_ps((float32*) &X[i-1][j  ]);
+            DEBUG(display_vfloat32(b0, "%4.0f", "b0 =")); DEBUG(puts(""));
             b1 = _mm_load_ps((float32*) &X[i  ][j  ]);
+            DEBUG(display_vfloat32(b1, "%4.0f", "b1 =")); DEBUG(puts(""));
             b2 = _mm_load_ps((float32*) &X[i+1][j  ]);
+            DEBUG(display_vfloat32(b2, "%4.0f", "b2 =")); DEBUG(puts(""));
+
             c0 = _mm_load_ps((float32*) &X[i-1][j+1]);
+            DEBUG(display_vfloat32(c0, "%4.0f", "c0 =")); DEBUG(puts(""));
             c1 = _mm_load_ps((float32*) &X[i  ][j+1]);
+            DEBUG(display_vfloat32(c1, "%4.0f", "c1 =")); DEBUG(puts(""));
             c2 = _mm_load_ps((float32*) &X[i+1][j+1]);
+            DEBUG(display_vfloat32(c2, "%4.0f", "c2 =")); DEBUG(puts(""));
 
             aa0 = vec_left1(a0, b0);
+            DEBUG(display_vfloat32(aa0, "%4.0f", "aa0 =")); DEBUG(puts(""));
             cc0 = vec_right1(b0, c0);
+            DEBUG(display_vfloat32(cc0, "%4.0f", "cc0 =")); DEBUG(puts(""));
             b0  = vAVERAGE3(aa0,b0,cc0);
+            DEBUG(display_vfloat32(b0, "%4.0f", "b0 =")); DEBUG(puts(""));
 
             aa1 = vec_left1(a1, b1);
+            DEBUG(display_vfloat32(aa1, "%4.0f", "aa1 =")); DEBUG(puts(""));
             cc1 = vec_right1(b1, c1);
+            DEBUG(display_vfloat32(cc1, "%4.0f", "cc1 =")); DEBUG(puts(""));
             b1  = vAVERAGE3(aa1,b1,cc1);
+            DEBUG(display_vfloat32(b1, "%4.0f", "b1 =")); DEBUG(puts(""));
 
             aa2 = vec_left1(a2, b2);
+            DEBUG(display_vfloat32(aa2, "%4.0f", "aa2 =")); DEBUG(puts(""));
             cc2 = vec_right1(b2, c2);
+            DEBUG(display_vfloat32(cc2, "%4.0f", "cc2 =")); DEBUG(puts(""));
             b2  = vAVERAGE3(aa2,b2,cc2);
-
+            DEBUG(display_vfloat32(b2, "%4.0f", "b2 =")); DEBUG(puts(""));
+            DEBUG(puts(""));
             y   = vAVERAGE3(b0,b1,b2);
             /*
             DEBUG(display_vfloat32(b0, "%4.0f", "b0 =")); DEBUG(puts(""));
@@ -488,7 +508,7 @@ void test2D(int n)
     zero_vf32matrix(vY3, vi0, vi1, vj0, vj1);
     zero_vf32matrix(vY5, vi0, vi1, vj0, vj1);
 
-    init_vf32matrix_param(vX, vi0b, vi1b, vj0b, vj1b, 1,1,8); // A modifer  init_vui8matrix_param(vuint8 **m, int i0, int i1, int j0, int j1, uint8 x0, uint8 xstep, uint8 ystep)
+    init_vf32matrix_param(vX, vi0b, vi1b, vj0b, vj1b, 1,1,8);
 
     // display init data
     DEBUG(display_f32matrix(sX,  0, n-1, 0, n-1, format, "sX"));

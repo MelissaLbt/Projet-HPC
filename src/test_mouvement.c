@@ -23,10 +23,13 @@ void test_mouvement(){
 
 	int b = 1; // pour 3*3
 	int k, ndigit=0;
-	
-	char *path = "/home/huiling/HPC/Projet-HPC/car3/";	
-	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";	
-		
+
+	//char *path = "/home/huiling/HPC/Projet-HPC/car3/";
+	//char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";
+
+	char *path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/car3/";
+	char *sdout_path = "/home/melissa/Documents/HPC/Projet-HPC/sdout/";
+
 	char *filename = "car_";
 	char *extension = "pgm";
 	char  complete_filename[50];
@@ -36,13 +39,13 @@ void test_mouvement(){
 	uint8 **V[2];
 	uint8 **O;
 	uint8 **E;
-	
+
 	int64_t start, end;
 	int64_t timer_sd = 0;
 
 	//------------ Allocation des tableaux et Initialisation du I[0]----------
-	for(int i=0; i<2; i++){	
-		
+	for(int i=0; i<2; i++){
+
 		if(i==0){
 			O = ui8matrix(nrl,nrh,ncl,nch);
 			E = ui8matrix(nrl,nrh,ncl,nch);
@@ -53,12 +56,13 @@ void test_mouvement(){
 	}
 
 	generate_path_filename_k_ndigit_extension(path, filename, 3000, ndigit, extension, complete_filename);
-	MLoadPGM_ui8matrix(complete_filename, nrl, nrh, ncl, nch, I[0]); 
-	
+	printf("%s\n",complete_filename );
+	MLoadPGM_ui8matrix(complete_filename, nrl, nrh, ncl, nch, I[0]);
+
 
 	//-------------Sigma_Delta-------------
 
-	printf("\n***  Démarrage de la chaîne de traitement naïve  ***\n\n");
+	printf("\n***  Démarrage de la chaîne de traitement naïve: Sigma_Delta  ***\n\n");
 
 	start = clocktime();
 	SigmaDelta_step0(I[0],M[0],V[0]);
@@ -70,7 +74,7 @@ void test_mouvement(){
 		k = i + 3000;
 		generate_path_filename_k_ndigit_extension(path, filename, k, ndigit, extension, complete_filename);
 		MLoadPGM_ui8matrix(complete_filename, nrl, nrh, ncl, nch, I[1]);
-		
+
 		start  = clocktime();
 		SigmaDelta_1step(I[1],M[0],M[1],O,V[0],V[1],E);
 		end = clocktime();
@@ -78,13 +82,14 @@ void test_mouvement(){
 
 		generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
 		SavePGM_ui8matrix(E, nrl, nrh, ncl, nch, complete_filename);
-		
+
 	}
 
 	printf(" - %-*s completed %8" PRId64 " ms\n", 20, "Sigma_Delta naive", timer_sd);
-	
+	printf("Output of Sigma_Delta : Projet-HPC/sdout\n");
+
 	// Desallocation
-	for(int i=0; i<2; i++){	
+	for(int i=0; i<2; i++){
 
 		if(i==0){
 			free_ui8matrix(O,nrl,nrh,ncl,nch);
@@ -95,6 +100,6 @@ void test_mouvement(){
 		free_ui8matrix(V[i],nrl,nrh,ncl,nch);
 	}
 
-	
+
 
 }
