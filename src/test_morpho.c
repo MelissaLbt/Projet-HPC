@@ -13,7 +13,7 @@
 
 #include "morpho.h"
 #include "test_morpho.h"
-
+// Ajouter pour test pour cas 5*5
 
 void test_morpho(){
 
@@ -24,9 +24,12 @@ void test_morpho(){
 
 	int b = 1; // pour 3*3
 	int k, ndigit=0;
-	
-	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";	
-	char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout/";	
+
+	//char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";
+	//char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout/";
+
+	char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout/";
+	char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout/";
 
 	char *filename = "car_";
 	char *extension = "pgm";
@@ -44,6 +47,8 @@ void test_morpho(){
 
 	//--------Morphologie Mathematique--------
 
+	printf("\n***  Démarrage de la chaîne de traitement naïve: Morphologie Mathématique  ***\n\n");
+
 	for(int i=1; i<200; i++){
 
 		k = i+3000;
@@ -60,10 +65,9 @@ void test_morpho(){
 	}
 
 	printf(" - %-*s completed %8" PRId64 " ms\n", 20, "Morphologie naive", timer_morpho);
-	printf("\n***  Fin de la chaîne de traitement naïve  ***\n\n");
+	printf("\n***  Fin de la chaîne de traitement naïve: Morphologie Mathématique ***\n\n");
 
 	printf("Congratulations!! \n\nCheck the pictures in the project folder:\n");
-	printf("Output of Sigma_Delta : Projet-HPC/sdout\n");
 	printf("Output of Morphologie : Projet-HPC/morphoout\n");
 
 	// Desallocation
