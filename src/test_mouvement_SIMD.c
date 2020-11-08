@@ -26,23 +26,17 @@ void test_mouvement_SIMD(){
     int mi0, mi1, mj0, mj1; // memory (bounded) indices
     
     char *path = "/home/huiling/HPC/Projet-HPC/car3/";	
-	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";	
+	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SIMD/";	
 		
 	char *filename = "car_";
 	char *extension = "pgm";
 	char  complete_filename[50];
 
-	uint8 **I[2];
-	uint8 **M[2];
-	uint8 **V[2];
-	uint8 **O;
-	uint8 **E;
-	
 	int64_t start, end;
 	int64_t timer_sd = 0;
 
-	uint8  **sI0, **sI1, **sM0, **sM1, **sV0, **sV1, **sO, **sE;
-	vuint8 **vI0, **vI1, **vM0, **vM1, **vV0, **vV1, **vO, **vE;
+	uint8  **sI0, **sI1, **sM, **sV, **sE;
+	vuint8 **vI0, **vI1, **vM, **vV, **vE;
 
     // chronometrie
     //int iter, niter = 4;
@@ -50,20 +44,14 @@ void test_mouvement_SIMD(){
     //double t0, t1, dt, tmin, t;
     //double cycles;
       
-    puts("===========================");
-    puts("=== test_mouvement_SIMD ===");
-    puts("===========================");
- 
- 	h = 240;
-    w = 320;
-    printf("h = %d\nw = %d\n\n", h, w);
 
     // ------------------------- //
     // -- calculs des indices -- //
     // ------------------------- //
     
     //b = 2; // 1 for 3x3, 2 for 5x5
-    
+        
+ 	h = 240; w = 320;
     card = card = card_vuint8();
     
     si0 = 0; si1 = h-1;
@@ -75,22 +63,16 @@ void test_mouvement_SIMD(){
     // allocation
 	vI0 = vui8matrix(vi0, vi1, vj0, vj1);
 	vI1 = vui8matrix(vi0, vi1, vj0, vj1);
-	vM0 = vui8matrix(vi0, vi1, vj0, vj1);
-	vM1 = vui8matrix(vi0, vi1, vj0, vj1);
-	vV0 = vui8matrix(vi0, vi1, vj0, vj1);
-	vV1 = vui8matrix(vi0, vi1, vj0, vj1);
-	vO  = vui8matrix(vi0, vi1, vj0, vj1);
+	vM = vui8matrix(vi0, vi1, vj0, vj1);
+	vV = vui8matrix(vi0, vi1, vj0, vj1);
 	vE  = vui8matrix(vi0, vi1, vj0, vj1);
     
     // wrappers scalaires
   
 	sI0 = (uint8**) vI0;
 	sI1 = (uint8**) vI1;
-	sM0 = (uint8**) vM0;
-	sM1 = (uint8**) vM1;
-	sV0 = (uint8**) vV0;
-	sV1 = (uint8**) vV1;
-	sO  = (uint8**) vO;
+	sM = (uint8**) vM;
+	sV = (uint8**) vV;
 	sE  = (uint8**) vE;
 		
 	// ---------- //
@@ -101,11 +83,8 @@ void test_mouvement_SIMD(){
 	MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sI0);
 	
 	zero_vui8matrix(vI1, vi0, vi1, vj0, vj1);
-    zero_vui8matrix(vM0, vi0, vi1, vj0, vj1);
-    zero_vui8matrix(vM1, vi0, vi1, vj0, vj1);
-    zero_vui8matrix(vV0, vi0, vi1, vj0, vj1);
-    zero_vui8matrix(vV1, vi0, vi1, vj0, vj1);
-    zero_vui8matrix(vO , vi0, vi1, vj0, vj1);
+    zero_vui8matrix(vM, vi0, vi1, vj0, vj1);
+    zero_vui8matrix(vV, vi0, vi1, vj0, vj1);
     zero_vui8matrix(vE , vi0, vi1, vj0, vj1);
 
     // ------------ //
@@ -114,10 +93,8 @@ void test_mouvement_SIMD(){
 
     //-- Sigma_Delta --//
 
-	printf("\n***  Démarrage du Sigma_Delta en SIMD  ***\n\n");
-
 	start = clocktime();
-	SigmaDelta_step0_SIMD(vI0,vM0,vV0,vi0,vi1,vj0,vj1);
+	SigmaDelta_step0_SIMD(vI0,vM,vV,vi0,vi1,vj0,vj1);
 	end = clocktime();
 	timer_sd += (end-start);
 
@@ -128,10 +105,7 @@ void test_mouvement_SIMD(){
 		MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sI1);
 		
 		start  = clocktime();
-		SigmaDelta_1step_SIMD(vI1,vM0,vM1,vO,vV0,vV1,vE,vi0,vi1,vj0,vj1);
-		// update M0,V0
-		copy_ui8matrix_ui8matrix(sM1, si0, si1, sj0, sj1, sM0);
-		copy_ui8matrix_ui8matrix(sV1, si0, si1, sj0, sj1, sV0);
+		SigmaDelta_1step_SIMD(vI1,vM,vV,vE,vi0,vi1,vj0,vj1);
 
 		end = clocktime();
 		timer_sd += (end-start);
@@ -148,10 +122,7 @@ void test_mouvement_SIMD(){
     // ------------------- //
 	free_vui8matrix(vI0, vi0, vi1, vj0, vj1);
 	free_vui8matrix(vI1, vi0, vi1, vj0, vj1);
-	free_vui8matrix(vM0, vi0, vi1, vj0, vj1);
-	free_vui8matrix(vM1, vi0, vi1, vj0, vj1);
-	free_vui8matrix(vV0, vi0, vi1, vj0, vj1);
-	free_vui8matrix(vV1, vi0, vi1, vj0, vj1);
-	free_vui8matrix(vO , vi0, vi1, vj0, vj1);
+	free_vui8matrix(vM, vi0, vi1, vj0, vj1);
+	free_vui8matrix(vV, vi0, vi1, vj0, vj1);
 	free_vui8matrix(vE , vi0, vi1, vj0, vj1);
 }

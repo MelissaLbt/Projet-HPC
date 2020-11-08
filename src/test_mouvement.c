@@ -54,7 +54,6 @@ void test_mouvement(){
 
 	//-------------Sigma_Delta-------------
 
-	printf("\n***  Démarrage du Sigma_Delta naïve  ***\n\n");
 
 	start = clocktime();
 	SigmaDelta_step0(I0,M0,V0);
@@ -77,7 +76,7 @@ void test_mouvement(){
 	}
 
 	printf(" - %-*s completed %8" PRId64 " ms\n", 20, "Sigma_Delta naive", timer_sd);
-	printf("Output of Sigma_Delta : Projet-HPC/sdout\n");
+	
 
 	// Desallocation
 	free_ui8matrix(I0,i0,i1,j0,j1);
