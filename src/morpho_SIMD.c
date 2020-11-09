@@ -211,63 +211,46 @@ void dilatation_r2(vuint8 **vE, int n, vuint8 vOut){
   vuint8 y;
 }
 
-void ouverture_r1(vuint8 **vE, vuint8 **vOut, int n, int vi0, int vi1, int vj0, int vj1){
+void ouverture(vuint8 **vE, vuint8 **vOut, int n, int b, int vi0, int vi1, int vj0, int vj1){
 
   vuint8 **vintermediaire;
   vintermediaire = zero_vui8matrix(vi0, vi1, vj0, vj1);
-
-  erosion_r1(vE, n, vintermediaire);
-  dilatation_r1(vintermediaire, n, vOut);
-
-  free_vui8matrix(intermediaire, vi0, vi1, vj0, vj1);
-}
-
-void ouverture_r2(vuint8 **vE, vuint8 **vOut, int n, int vi0, int vi1, int vj0, int vj1){
-
-  vuint8 **vintermediaire;
-  vintermediaire = zero_vui8matrix(vi0, vi1, vj0, vj1);
-
-  erosion_r2(vE, n, vintermediaire);
-  dilatation_r2(vintermediaire, n, vOut);
-
-  free_vui8matrix(intermediaire, vi0, vi1, vj0, vj1);
-}
-
-void fermeture_r1(vuint8 **vE, vuint8 **vOut, int n, int vi0, int vi1, int vj0, int vj1){
-
-  vuint8 **vintermediaire;
-  vintermediaire = zero_vui8matrix(vi0, vi1, vj0, vj1);
-
-  dilatation_r1(vE, n, vintermediaire);
-  erosion_r1(vintermediaire, n, vOut);
-
-  free_vui8matrix(intermediaire, vi0, vi1, vj0, vj1);
-}
-
-void fermeture_r2(vuint8 **vE, vuint8 **vOut, int n, int vi0, int vi1, int vj0, int vj1){
-
-  vuint8 **vintermediaire;
-  vintermediaire = zero_vui8matrix(vi0, vi1, vj0, vj1);
-
-  dilatation_r2(vE, n, vintermediaire);
-  erosion_r2(vintermediaire, n, vOut);
-
-  free_vui8matrix(intermediaire, vi0, vi1, vj0, vj1);
-}
-
-void morpho(vuint8 **vE, vuint8 **vOut, int n, int vi0, int vi1, int vj0, int vj1){
-
-  vuint8 **vintermediaire;
-  vintermediaire = zero_vui8matrix(vi0, vi1, vj0, vj1);
-
   if(b == 1){
-		ouverture_r1(vE, vintermediaire, n, vi0, vi1, vj0, vj1);
-		fermeture_r1(vintermediaire, vOut, n, vi0, vi1, vj0, vj1);
-	}
-	else if(b == 2){
-		ouverture_r2(vE, vintermediaire, n, vi0, vi1, vj0, vj1);
-		fermeture_r2(vintermediaire, vOut, n, vi0, vi1, vj0, vj1);
-	}
+    erosion_r1(vE, n, vintermediaire);
+    dilatation_r1(vintermediaire, n, vOut);
+  }
+  else if(b == 2){
+    erosion_r2(vE, n, vintermediaire);
+    dilatation_r2(vintermediaire, n, vOut);
+  }
+
+  free_vui8matrix(intermediaire, vi0, vi1, vj0, vj1);
+}
+
+void fermeture(vuint8 **vE, vuint8 **vOut, int n, int b, int vi0, int vi1, int vj0, int vj1){
+
+  vuint8 **vintermediaire;
+  vintermediaire = zero_vui8matrix(vi0, vi1, vj0, vj1);
+  if(b == 1){
+    dilatation_r1(vE, n, vintermediaire);
+    erosion_r1(vintermediaire, n, vOut);
+  }
+  else if(b == 2){
+    dilatation_r2(vE, n, vintermediaire);
+    erosion_r2(vintermediaire, n, vOut);
+  }
+
+  free_vui8matrix(intermediaire, vi0, vi1, vj0, vj1);
+}
+
+void morpho(vuint8 **vE, vuint8 **vOut, int n, int b, int vi0, int vi1, int vj0, int vj1){
+
+  vuint8 **vintermediaire;
+  vintermediaire = zero_vui8matrix(vi0, vi1, vj0, vj1);
+
+	ouverture(vE, vintermediaire, n, b, vi0, vi1, vj0, vj1);
+	fermeture(vintermediaire, vOut, n, b, vi0, vi1, vj0, vj1);
+
 
   free_vui8matrix(vintermediaire, vi0, vi1, vj0, vj1);
 }
