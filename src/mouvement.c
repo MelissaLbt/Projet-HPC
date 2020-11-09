@@ -47,7 +47,7 @@ void SigmaDelta_1step(uint8 **I, uint8 **M0, uint8 **M1, uint8 **O, uint8 **V0, 
 	//step 2: Ot difference computation
 	for(int i=0; i<H; i++){
 		for(int j=0; j<W; j++){
-			O[i][j] = (int32_t) abs((int) (M1[i][j]-I[i][j]) );
+			O[i][j] = (uint8) abs((int) (M1[i][j]-I[i][j]) );
 		}
 	}
 
