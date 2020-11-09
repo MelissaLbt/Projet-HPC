@@ -66,8 +66,6 @@ void test_morpho_SIMD(){
   zero_vui8matrix(vOut, vi0, vi1, vj0, vj1);
 
 
-  init_vui8matrix_param(vE, vi0b, vi1b, vj0b, vj1b, 1,1,8);  // A modifer  init_vui8matrix_param(vuint8 **m, int i0, int i1, int j0, int j1, uint8 x0, uint8 xstep, uint8 ystep)
-
   // display init data
   /*DEBUG(display_ui8matrix(sE,  0, 240-1, 0, 320-1, format, "sE"));
   DEBUG(display_ui8matrix(sOut, 0, 240-1, 0, 320-1, format, "sOut"));
@@ -76,11 +74,11 @@ void test_morpho_SIMD(){
   DEBUG(display_vui8matrix(vOut, vi0,  vi1,  vj0,  vj1,  format, "vOut"));
   */
 
-  // --> Vérifier initialisation des tableaux après chargement d'une image 
+  // --> Vérifier initialisation des tableaux après chargement d'une image
 
 	int k, ndigit=0;
 
-  char *sdout_path = "/home/melissa/Documents/HPC/Projet-HPC/sdout/"; // A remplacer par sdout_SIMD
+  char *sdout_path = "/home/melissa/Documents/HPC/Projet-HPC/sdout_SIMD/"; 
 	char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SIMD/";
 
 	char *filename = "car_";
@@ -95,7 +93,7 @@ void test_morpho_SIMD(){
     MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
 
     start  = clocktime();
-    //morpho(E,out,b,nrl,nrh,ncl,nch);
+    morpho(vE, vOut, n, b, vi0, vi1, vj0, vj1);
     end = clocktime();
     timer_morpho += (end-start);
 

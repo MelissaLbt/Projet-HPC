@@ -19,28 +19,7 @@
 /* img: Image de sortie  */
 /* --------------------- */
 
-/* Idées :
- - Faire des threads pour paralléliser le traitement des images.
- - Utiliser SIMD2D pour écrire morpho_SIMD
- - 1 tableau qui contient l'adresse des lignes du tableau
- - Plusieurs tableaux qui contient les valeurs d'une ligne du tableau
-
-Fonctions à utiliser :
-- vuint8   **vui8matrix_map (int nrl, int nrh, int ncl, int nch);
-- void free_vui8matrix_map (vuint8   **m, int nrl, int nrh, int ncl, int nch);
-- vuint8**    vui8matrix_map_1D_pitch(vuint8   **m, int nrl, int nrh, int ncl, int nch, void *data_1D, int pitch);
-- void zero_vui8vector(vuint8 *m, int j0, int j1); (après c'est en 1D)
-- void init_vui8matrix_param (vuint8   **m, int i0, int i1, int j0, int j1, uint8   x0, uint8   xstep, uint8   ystep);
-- void zero_vui8matrix (vuint8   **m, int i0, int i1, int j0, int j1);
-
-*/
-
-
-
-/*
-MACRO vMIN3, vMAX3, vMAX5, VMIN5 à faire !!!
-*/
-
+//SOUCIS AVEC LES FONCTIONS SSE2 --> UTILISER SSE3
 void erosion_r1(vuint8 **vE, int n, vuint8 **vOut){
   int i, j;
   vuint8 a0, b0, c0;
@@ -54,17 +33,17 @@ void erosion_r1(vuint8 **vE, int n, vuint8 **vOut){
 
   for(i = 0; i< n; i++){
 
-    a0 = _mm_load_ps((uint8*) &vE[i-1][-1]);
-    a1 = _mm_load_ps((uint8*) &vE[i  ][-1]);
-    a2 = _mm_load_ps((uint8*) &vE[i+1][-1]);
+    a0 = _mm_load_ps((float*) &vE[i-1][-1]);
+    a1 = _mm_load_ps((float*) &vE[i  ][-1]);
+    a2 = _mm_load_ps((float*) &vE[i+1][-1]);
 
-    b0 = _mm_load_ps((uint8*) &vE[i-1][0]);
-    b1 = _mm_load_ps((uint8*) &vE[i  ][0]);
-    b2 = _mm_load_ps((uint8*) &vE[i+1][0]);
+    b0 = _mm_load_ps((float*) &vE[i-1][0]);
+    b1 = _mm_load_ps((float*) &vE[i  ][0]);
+    b2 = _mm_load_ps((float*) &vE[i+1][0]);
 
-    c0 = _mm_load_ps((uint8*) &vE[i-1][1]);
-    c1 = _mm_load_ps((uint8*) &vE[i  ][1]);
-    c2 = _mm_load_ps((uint8*) &vE[i+1][1]);
+    c0 = _mm_load_ps((float*) &vE[i-1][1]);
+    c1 = _mm_load_ps((float*) &vE[i  ][1]);
+    c2 = _mm_load_ps((float*) &vE[i+1][1]);
 
     for(j = 2; j < n; j++){
       aa0 = vec_left1(a0,b0);
@@ -84,7 +63,7 @@ void erosion_r1(vuint8 **vE, int n, vuint8 **vOut){
 
       y = vMIN3(a0,a1,a2);
 
-      _mm_store_ps((float*) &vOut[i][j-2], y);
+      _mm_store_ps((uint8*) &vOut[i][j-2], y);
 
       a0 = b0;
       a1 = b1;
@@ -112,7 +91,7 @@ void erosion_r1(vuint8 **vE, int n, vuint8 **vOut){
     a2 = vMIN3(aa2,b2,cc2);
 
     y = vMIN3(a0,a1,a2);
-    _mm_store_ps((float*) &vOut[i][239], y);
+    _mm_store_ps((uint8*) &vOut[i][239], y);
   }
 }
 
@@ -123,6 +102,115 @@ void erosion_r2(vuint8 **vE, int n, vuint8 **vOut){
   vuint8 a2, b2, c2, d2, e2;
   vuint8 a3, b3, c3, d3, e3;
   vuint8 a4, b4, c4, d4, e4;
+  vuint8 xx0,xx1,xx2,xx3,xx4;
+  vuint8 ff0,ff1,ff2,ff3,ff4;
+
+  for(i = 0; i < n; i++){
+    b0 = _mm_load_ps((uint8*) &vE[i-2][-2]);
+    b1 = _mm_load_ps((uint8*) &vE[i-1][-2]);
+    b2 = _mm_load_ps((uint8*) &vE[i  ][-2]);
+    b3 = _mm_load_ps((uint8*) &vE[i+1][-2]);
+    b4 = _mm_load_ps((uint8*) &vE[i+2][-2]);
+
+    c0 = _mm_load_ps((uint8*) &vE[i-2][-1]);
+    c1 = _mm_load_ps((uint8*) &vE[i-1][-1]);
+    c2 = _mm_load_ps((uint8*) &vE[i  ][-1]);
+    c3 = _mm_load_ps((uint8*) &vE[i+1][-1]);
+    c4 = _mm_load_ps((uint8*) &vE[i+2][-1]);
+
+    d0 = _mm_load_ps((uint8*) &vE[i-2][0]);
+    d1 = _mm_load_ps((uint8*) &vE[i-1][0]);
+    d2 = _mm_load_ps((uint8*) &vE[i  ][0]);
+    d3 = _mm_load_ps((uint8*) &vE[i+1][0]);
+    d4 = _mm_load_ps((uint8*) &vE[i+2][0]);
+
+    for(j = 1; j < n; j++){
+      a0 = vec_left2(b0,c0);
+      ff0 = vec_left1(b0,c0);
+      xx0 = vec_right1(c0,d0);
+      e0 = vec_right2(c0,d0);
+
+      b0 = vMIN5(a0,ff0,b0,xx0,e0);
+
+      a1 = vec_left2(b1,c1);
+      ff1 = vec_left1(b1,c1);
+      xx1 = vec_right1(c1,d1);
+      e1 = vec_right2(c1,d1);
+
+      b1 = vMIN5(a1,ff1,b1,xx1,e1);
+
+      a2 = vec_left2(b2,c2);
+      ff2 = vec_left1(b2,c2);
+      xx2 = vec_right1(c2,d2);
+      e2 = vec_right2(c2,d2);
+
+      b2 = vMIN5(a2,ff2,b2,xx2,e2);
+      b3 = vMIN5(a3,ff3,b3,xx3,e3);
+
+      a3 = vec_left2(b3,c3);
+      ff3 = vec_left1(b3,c3);
+      xx3 = vec_right1(c3,d3);
+      e3 = vec_right2(c3,d3);
+
+
+      a4 = vec_left2(b4,c4);
+      ff4 = vec_left1(b4,c4);
+      xx4 = vec_right1(c4,d4);
+      e4 = vec_right2(c4,d4);
+
+      b4 = vMIN5(a4,ff4,b4,xx4,e4);
+
+      y = vMIN5(b0,b1,b2,b3,b4);
+      _mm_store_ps((uint8*) &vOut[i][j-1], y);
+
+      b0 = c0; b1 = c1; b2 = c2; b3 = c3; b4 = c4;
+      c0 = d0; c1 = d1; c2 = d2; c3 = d3; c4 = d4;
+
+      d0 = _mm_load_ps((uint8*) &vE[i-2][j]);
+      d1 = _mm_load_ps((uint8*) &vE[i-1][j]);
+      d2 = _mm_load_ps((uint8*) &vE[i  ][j]);
+      d3 = _mm_load_ps((uint8*) &vE[i+1][j]);
+      d4 = _mm_load_ps((uint8*) &vE[i+2][j]);
+    }
+    a0 = vec_left2(b0,c0);
+    ff0 = vec_left1(b0,c0);
+    xx0 = vec_right1(c0,d0);
+    e0 = vec_right2(c0,d0);
+
+    b0 = vMIN5(a0,ff0,b0,xx0,e0);
+
+    a1 = vec_left2(b1,c1);
+    ff1 = vec_left1(b1,c1);
+    xx1 = vec_right1(c1,d1);
+    e1 = vec_right2(c1,d1);
+
+    b1 = vMIN5(a1,ff1,b1,xx1,e1);
+
+    a2 = vec_left2(b2,c2);
+    ff2 = vec_left1(b2,c2);
+    xx2 = vec_right1(c2,d2);
+    e2 = vec_right2(c2,d2);
+
+    b2 = vMIN5(a2,ff2,b2,xx2,e2);
+
+    a3 = vec_left2(b3,c3);
+    ff3 = vec_left1(b3,c3);
+    xx3 = vec_right1(c3,d3);
+    e3 = vec_right2(c3,d3);
+
+    b3 = vMIN5(a3,ff3,b3,xx3,e3);
+
+
+    a4 = vec_left2(b4,c4);
+    ff4 = vec_left1(b4,c4);
+    xx4 = vec_right1(c4,d4);
+    e4 = vec_right2(c4,d4);
+
+    b4 = vMIN5(a4,ff4,b4,xx4,e4);
+
+    y = vMIN5(b0,b1,b2,b3,b4);
+    _mm_store_ps((uint8*) &vOut[i][239], y);
+  }
 }
 
 void dilatation_r1(vuint8 **vE, int n, vuint8 **vOut){
@@ -197,24 +285,131 @@ void dilatation_r1(vuint8 **vE, int n, vuint8 **vOut){
 
     y = vMAX3(a0,a1,a2);
     _mm_store_ps((float*) &vOut[i][239], y);
+  }
 }
 
-void dilatation_r2(vuint8 **vE, int n, vuint8 vOut){
+void dilatation_r2(vuint8 **vE, int n, vuint8 **vOut){
   int i, j;
-  vuint8 a0, b0, c0;
-  vuint8 a1, b1, c1;
-  vuint8 a2, b2, c2;
-  vuint8 a3, b3, c3;
-  vuint8 a4, b4, c4;
-  vuint8 ra, rb, rc;
-  vuint8 xx0, xx1, xx3, xx4;
-  vuint8 y;
+  vuint8 a0, b0, c0, d0, e0;
+  vuint8 a1, b1, c1, d1, e1;
+  vuint8 a2, b2, c2, d2, e2;
+  vuint8 a3, b3, c3, d3, e3;
+  vuint8 a4, b4, c4, d4, e4;
+  vuint8 xx0,xx1,xx2,xx3,xx4;
+  vuint8 ff0,ff1,ff2,ff3,ff4;
+
+  for(i = 0; i < n; i++){
+    b0 = _mm_load_ps((uint8*) &vE[i-2][-2]);
+    b1 = _mm_load_ps((uint8*) &vE[i-1][-2]);
+    b2 = _mm_load_ps((uint8*) &vE[i  ][-2]);
+    b3 = _mm_load_ps((uint8*) &vE[i+1][-2]);
+    b4 = _mm_load_ps((uint8*) &vE[i+2][-2]);
+
+    c0 = _mm_load_ps((uint8*) &vE[i-2][-1]);
+    c1 = _mm_load_ps((uint8*) &vE[i-1][-1]);
+    c2 = _mm_load_ps((uint8*) &vE[i  ][-1]);
+    c3 = _mm_load_ps((uint8*) &vE[i+1][-1]);
+    c4 = _mm_load_ps((uint8*) &vE[i+2][-1]);
+
+    d0 = _mm_load_ps((uint8*) &vE[i-2][0]);
+    d1 = _mm_load_ps((uint8*) &vE[i-1][0]);
+    d2 = _mm_load_ps((uint8*) &vE[i  ][0]);
+    d3 = _mm_load_ps((uint8*) &vE[i+1][0]);
+    d4 = _mm_load_ps((uint8*) &vE[i+2][0]);
+
+    for(j = 1; j < n; j++){
+      a0 = vec_left2(b0,c0);
+      ff0 = vec_left1(b0,c0);
+      xx0 = vec_right1(c0,d0);
+      e0 = vec_right2(c0,d0);
+
+      b0 = vMAX5(a0,ff0,b0,xx0,e0);
+
+      a1 = vec_left2(b1,c1);
+      ff1 = vec_left1(b1,c1);
+      xx1 = vec_right1(c1,d1);
+      e1 = vec_right2(c1,d1);
+
+      b1 = vMAX5(a1,ff1,b1,xx1,e1);
+
+      a2 = vec_left2(b2,c2);
+      ff2 = vec_left1(b2,c2);
+      xx2 = vec_right1(c2,d2);
+      e2 = vec_right2(c2,d2);
+
+      b2 = vMAX5(a2,ff2,b2,xx2,e2);
+
+      a3 = vec_left2(b3,c3);
+      ff3 = vec_left1(b3,c3);
+      xx3 = vec_right1(c3,d3);
+      e3 = vec_right2(c3,d3);
+
+      b3 = vMIN5(a3,ff3,b3,xx3,e3);
+
+      a4 = vec_left2(b4,c4);
+      ff4 = vec_left1(b4,c4);
+      xx4 = vec_right1(c4,d4);
+      e4 = vec_right2(c4,d4);
+
+      b4 = vMAX5(a4,ff4,b4,xx4,e4);
+
+      y = vMAX5(b0,b1,b2,b3,b4);
+      _mm_store_ps((uint8*) &vOut[i][j-1], y);
+
+      b0 = c0; b1 = c1; b2 = c2; b3 = c3; b4 = c4;
+      c0 = d0; c1 = d1; c2 = d2; c3 = d3; c4 = d4;
+
+      d0 = _mm_load_ps((uint8*) &vE[i-2][j]);
+      d1 = _mm_load_ps((uint8*) &vE[i-1][j]);
+      d2 = _mm_load_ps((uint8*) &vE[i  ][j]);
+      d3 = _mm_load_ps((uint8*) &vE[i+1][j]);
+      d4 = _mm_load_ps((uint8*) &vE[i+2][j]);
+    }
+    a0 = vec_left2(b0,c0);
+    ff0 = vec_left1(b0,c0);
+    xx0 = vec_right1(c0,d0);
+    e0 = vec_right2(c0,d0);
+
+    b0 = vMAX5(a0,ff0,b0,xx0,e0);
+
+    a1 = vec_left2(b1,c1);
+    ff1 = vec_left1(b1,c1);
+    xx1 = vec_right1(c1,d1);
+    e1 = vec_right2(c1,d1);
+
+    b1 = vMAX5(a1,ff1,b1,xx1,e1);
+
+    a2 = vec_left2(b2,c2);
+    ff2 = vec_left1(b2,c2);
+    xx2 = vec_right1(c2,d2);
+    e2 = vec_right2(c2,d2);
+
+    b2 = vMAX5(a2,ff2,b2,xx2,e2);
+
+    a3 = vec_left2(b3,c3);
+    ff3 = vec_left1(b3,c3);
+    xx3 = vec_right1(c3,d3);
+    e3 = vec_right2(c3,d3);
+
+    b3 = vMAX5(a3,ff3,b3,xx3,e3);
+
+    a4 = vec_left2(b4,c4);
+    ff4 = vec_left1(b4,c4);
+    xx4 = vec_right1(c4,d4);
+    e4 = vec_right2(c4,d4);
+
+    b4 = vMAX5(a4,ff4,b4,xx4,e4);
+
+    y = vMAX5(b0,b1,b2,b3,b4);
+    _mm_store_ps((uint8*) &vOut[i][239], y);
+  }
 }
 
 void ouverture(vuint8 **vE, vuint8 **vOut, int n, int b, int vi0, int vi1, int vj0, int vj1){
 
   vuint8 **vintermediaire;
-  vintermediaire = zero_vui8matrix(vi0, vi1, vj0, vj1);
+  zero_vui8matrix(vintermediaire, vi0, vi1, vj0, vj1);
+
   if(b == 1){
     erosion_r1(vE, n, vintermediaire);
     dilatation_r1(vintermediaire, n, vOut);
@@ -224,13 +419,14 @@ void ouverture(vuint8 **vE, vuint8 **vOut, int n, int b, int vi0, int vi1, int v
     dilatation_r2(vintermediaire, n, vOut);
   }
 
-  free_vui8matrix(intermediaire, vi0, vi1, vj0, vj1);
+  free_vui8matrix(vintermediaire, vi0, vi1, vj0, vj1);
 }
 
 void fermeture(vuint8 **vE, vuint8 **vOut, int n, int b, int vi0, int vi1, int vj0, int vj1){
 
   vuint8 **vintermediaire;
-  vintermediaire = zero_vui8matrix(vi0, vi1, vj0, vj1);
+  zero_vui8matrix(vintermediaire, vi0, vi1, vj0, vj1);
+
   if(b == 1){
     dilatation_r1(vE, n, vintermediaire);
     erosion_r1(vintermediaire, n, vOut);
@@ -240,13 +436,13 @@ void fermeture(vuint8 **vE, vuint8 **vOut, int n, int b, int vi0, int vi1, int v
     erosion_r2(vintermediaire, n, vOut);
   }
 
-  free_vui8matrix(intermediaire, vi0, vi1, vj0, vj1);
+  free_vui8matrix(vintermediaire, vi0, vi1, vj0, vj1);
 }
 
 void morpho(vuint8 **vE, vuint8 **vOut, int n, int b, int vi0, int vi1, int vj0, int vj1){
 
   vuint8 **vintermediaire;
-  vintermediaire = zero_vui8matrix(vi0, vi1, vj0, vj1);
+  zero_vui8matrix(vintermediaire, vi0, vi1, vj0, vj1);
 
 	ouverture(vE, vintermediaire, n, b, vi0, vi1, vj0, vj1);
 	fermeture(vintermediaire, vOut, n, b, vi0, vi1, vj0, vj1);
