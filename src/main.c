@@ -45,9 +45,9 @@ int main(int argc, char *argv[])
     puts("=== tests begin ===");
     puts("===================");
  
-    //test_mouvement();
-    //test_morpho();
-    //test_mouvement_SIMD();
+    test_mouvement();
+    test_morpho();
+    test_mouvement_SIMD();
     test_morpho_SIMD();
     //puts("\n");
     puts("=================");
