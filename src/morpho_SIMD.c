@@ -19,7 +19,7 @@
 /* img: Image de sortie  */
 /* --------------------- */
 
-//SOUCIS AVEC LES FONCTIONS SSE2 --> UTILISER SSE3
+//SOUCIS AVEC LES FONCTIONS SSE2
 void erosion_r1(vuint8 **vE, int n, vuint8 **vOut){
   int i, j;
   vuint8 a0, b0, c0;
@@ -63,7 +63,7 @@ void erosion_r1(vuint8 **vE, int n, vuint8 **vOut){
 
       y = vMIN3(a0,a1,a2);
 
-      _mm_store_ps((uint8*) &vOut[i][j-2], y);
+      _mm_store_si128((uint8*) &vOut[i][j-2], y);
 
       a0 = b0;
       a1 = b1;
