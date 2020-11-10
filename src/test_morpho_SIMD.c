@@ -19,8 +19,9 @@
 
 void test_morpho_SIMD(){
 
-  int b = 1; // border // pour 3*3
-  char *format = "%6.2f ";
+  int b = 2; // border
+  //char *format = "%6.2f ";
+  char *format = "%4d ";
 
   int si0, si1, sj0, sj1; // scalar indices
   int vi0, vi1, vj0, vj1; // vector indices
@@ -78,13 +79,24 @@ void test_morpho_SIMD(){
 
 	int k, ndigit=0;
 
-  char *sdout_path = "/home/melissa/Documents/HPC/Projet-HPC/sdout_SIMD/"; 
-	char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SIMD/";
-
+  	//char *sdout_path = "/home/melissa/Documents/HPC/Projet-HPC/sdout_SIMD/"; 
+	//char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SIMD/";
+	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SIMD/";	
+	char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_SIMD/";	
+	
 	char *filename = "car_";
 	char *extension = "pgm";
 	char  complete_filename[50];
 
+	k=3001;
+	generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
+    MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
+  	//DEBUG(display_ui8matrix(sE,  0, 240-1, 0, 320-1, "4d", "sE"));
+
+    //DEBUG(display_vui8matrix(vE,  vi0b, vi1b, vj0b, vj1b, format, "vE"));
+	test(vE, vi1,vj1);
+
+	/*
   printf("\n***  Démarrage de la chaîne de traitement SIMD: Morphologie Mathématique  ***\n\n");
 
   for(int i=1; i<200; i++){
@@ -93,17 +105,19 @@ void test_morpho_SIMD(){
     MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
 
     start  = clocktime();
-    morpho(vE, vOut, n, b, vi0, vi1, vj0, vj1);
+    //morpho(vE, vOut, n, b, vi0, vi1, vj0, vj1);
     end = clocktime();
     timer_morpho += (end-start);
 
     generate_path_filename_k_ndigit_extension(morout_path, filename, i+3000, ndigit, extension, complete_filename);
-    SavePGM_ui8matrix(sOut, si0, si1, sj0, sj1, complete_filename);
+    //SavePGM_ui8matrix(sOut, si0, si1, sj0, sj1, complete_filename);
+    SavePGM_ui8matrix(sE, si0, si1, sj0, sj1, complete_filename);
+
   }
   printf(" - %-*s completed %8" PRId64 " ms\n", 20, "Morphologie SIMD", timer_morpho);
 	printf("\n***  Fin de la chaîne de traitement SIMD: Morphologie Mathématique ***\n\n");
 
 	printf("Congratulations!! \n\nCheck the pictures in the project folder:\n");
 	printf("Output of Morphologie : Projet-HPC/morphoout_SIMD\n");
-
+*/
 }

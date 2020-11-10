@@ -45,10 +45,10 @@ int main(int argc, char *argv[])
     puts("=== tests begin ===");
     puts("===================");
  
-	test_mouvement();
-    test_morpho();
-    test_mouvement_SIMD();
-    //test_morpho()_SIMD();
+    //test_mouvement();
+    //test_morpho();
+    //test_mouvement_SIMD();
+    test_morpho_SIMD();
     //puts("\n");
     puts("=================");
     puts("=== tests end ===");
