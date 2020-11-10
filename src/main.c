@@ -44,23 +44,23 @@ int main(int argc, char *argv[])
     puts("===================");
     puts("=== tests begin ===");
     puts("===================");
- 
-    test_mouvement();
-    test_morpho();
-    test_mouvement_SIMD();
+
+    //test_mouvement();
+    //test_morpho();
+    //test_mouvement_SIMD();
     test_morpho_SIMD();
     //puts("\n");
     puts("=================");
     puts("=== tests end ===");
     puts("=================");
- 
+
 
     printf("\nCongratulations!! \n\nCheck the pictures in the project folder:\n");
     printf("Output of Sigma_Delta       : Projet-HPC/sdout\n");
     printf("Output of Morphologie       : Projet-HPC/morphoout\n");
     printf("Output of Sigma_Delta SIMD  : Projet-HPC/sdout_SIMD\n");
 
-    
-    return 0;   
+
+    return 0;
 
 }

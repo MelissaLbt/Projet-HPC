@@ -33,14 +33,11 @@ void init_bord(vuint8 **vE,int vi0,int vi1,int vj0,int vj1,int vj0b,int vj1b){//
 		vcst = vec_load2(vE,vi1,j); vec_store2(vE,vi1+1,j,vcst); vec_store2(vE,vi1+2,j,vcst);
 	}
 	for(int i = vi0; i <= vi1; i++){
-		vcst = vec_load2(vE,i,vj0); vec_store2(vE,i,vj0-1,vcst); 
-		vcst = vec_load2(vE,i,vj1); vec_store2(vE,i,vj1+1,vcst); 
+		vcst = vec_load2(vE,i,vj0); vec_store2(vE,i,vj0-1,vcst);
+		vcst = vec_load2(vE,i,vj1); vec_store2(vE,i,vj1+1,vcst);
 	}
-	  
+
 }
-
-
-
 
 void test(vuint8 **vE, int vi1, int vj1){
 	vuint8 a;
@@ -52,7 +49,6 @@ void test(vuint8 **vE, int vi1, int vj1){
 	}
 }
 
-//SOUCIS AVEC LES FONCTIONS SSE2 --> UTILISER SSE3
 void erosion_SIMD(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
 
   int i, j;
@@ -80,7 +76,7 @@ void erosion_SIMD(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1
 		    c0 = vec_load2(vE,i-1, j+1);
 		    c1 = vec_load2(vE,i  , j+1);
 		    c2 = vec_load2(vE,i+1, j+1);
-		    
+
 		    aa0 = vec_left1(a0,b0);
 		    cc0 = vec_right1(b0,c0);
 
@@ -102,6 +98,84 @@ void erosion_SIMD(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1
 	    }
   	}
 }
+
+//Optimisation par rotation de registre
+void erosion_SIMD_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+	int i, j;
+	vuint8 a0, b0, c0;
+	vuint8 a1, b1, c1;
+	vuint8 a2, b2, c2;
+
+	vuint8 aa0, cc0;
+	vuint8 aa1, cc1;
+	vuint8 aa2, cc2;
+	vuint8 y;
+
+	for(i = vi0; i <= vi1; i++){
+		a0 = vec_load2(vE,i-1, -1);
+		a1 = vec_load2(vE,i  , -1);
+		a2 = vec_load2(vE,i+1, -1);
+
+		b0 = vec_load2(vE,i-1, 0);
+		b1 = vec_load2(vE,i  , 0);
+		b2 = vec_load2(vE,i+1, 0);
+
+		c0 = vec_load2(vE,i-1, 1);
+		c1 = vec_load2(vE,i  , 1);
+		c2 = vec_load2(vE,i+1, 1);
+
+		for(j = 1; j <= vj1; j++){
+
+			aa0 = vec_left1(a0,b0);
+			cc0 = vec_right1(b0,c0);
+
+			a0 = vMIN3(aa0,b0,cc0);
+
+			aa1 = vec_left1(a1,b1);
+			cc1 = vec_right1(b1,c1);
+
+			a1 = vMIN3(aa1,b1,cc1);
+
+			aa2 = vec_left1(a2,b2);
+			cc2 = vec_right1(b2,c2);
+
+			a2 = vMIN3(aa2,b2,cc2);
+
+			y = vMIN3(a0,a1,a2);
+
+			a0 = b0; a1 = b1; a2 = b2;
+			b0 = c0; b1 = c1; b2 = c2;
+
+			c0 = vec_load2(vE, i-1, j+1);
+			a0 = vMIN3(aa0,b0,cc0);
+			c1 = vec_load2(vE, i, j+1);
+			c2 = vec_load2(vE, i+1, j+1);
+
+			vec_store2(vOut, i, j-1, y);
+		}
+		aa0 = vec_left1(a0,b0);
+		cc0 = vec_right1(b0,c0);
+
+
+		aa1 = vec_left1(a1,b1);
+		cc1 = vec_right1(b1,c1);
+
+		a1 = vMIN3(aa1,b1,cc1);
+
+		aa2 = vec_left1(a2,b2);
+		cc2 = vec_right1(b2,c2);
+
+		a2 = vMIN3(aa2,b2,cc2);
+
+		y = vMIN3(a0,a1,a2);
+		vec_store2(vOut, i, j, y);
+	}
+}
+
+//Optimisation par réduction et déroulage de boucle
+void erosion_SIMD_red(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+}
+
 
 void erosion2_SIMD(vuint8 **vE, int n, vuint8 **vOut){
 	/*
@@ -248,7 +322,7 @@ void dilatation_SIMD(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int 
 		    c0 = vec_load2(vE,i-1, j+1);
 		    c1 = vec_load2(vE,i  , j+1);
 		    c2 = vec_load2(vE,i+1, j+1);
-		    
+
 		    aa0 = vec_left1(a0,b0);
 		    cc0 = vec_right1(b0,c0);
 
@@ -269,6 +343,79 @@ void dilatation_SIMD(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int 
 		    vec_store2(vOut, i, j, y);
 	    }
   	}
+}
+
+//Optimisation par rotation de registre
+void dilatation_SIMD_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+	int i, j;
+	vuint8 a0, b0, c0;
+	vuint8 a1, b1, c1;
+	vuint8 a2, b2, c2;
+
+	vuint8 aa0, cc0;
+	vuint8 aa1, cc1;
+	vuint8 aa2, cc2;
+	vuint8 y;
+
+	for(i = vi0; i <= vi1; i++){
+		a0 = vec_load2(vE,i-1, -1);
+		a1 = vec_load2(vE,i  , -1);
+		a2 = vec_load2(vE,i+1, -1);
+
+		b0 = vec_load2(vE,i-1, 0);
+		b1 = vec_load2(vE,i  , 0);
+		b2 = vec_load2(vE,i+1, 0);
+
+		c0 = vec_load2(vE,i-1, 1);
+		c1 = vec_load2(vE,i  , 1);
+		c2 = vec_load2(vE,i+1, 1);
+
+		for(j = 1; j <= vj1; j++){
+
+			aa0 = vec_left1(a0,b0);
+			cc0 = vec_right1(b0,c0);
+
+			a0 = vMAX3(aa0,b0,cc0);
+
+			aa1 = vec_left1(a1,b1);
+			cc1 = vec_right1(b1,c1);
+
+			a1 = vMAX3(aa1,b1,cc1);
+
+			aa2 = vec_left1(a2,b2);
+			cc2 = vec_right1(b2,c2);
+
+			a2 = vMAX3(aa2,b2,cc2);
+
+			y = vMAX3(a0,a1,a2);
+
+			a0 = b0; a1 = b1; a2 = b2;
+			b0 = c0; b1 = c1; b2 = c2;
+
+			c0 = vec_load2(vE, i-1, j+1);
+			a0 = vMAX3(aa0,b0,cc0);
+			c1 = vec_load2(vE, i, j+1);
+			c2 = vec_load2(vE, i+1, j+1);
+
+			vec_store2(vOut, i, j-1, y);
+		}
+		aa0 = vec_left1(a0,b0);
+		cc0 = vec_right1(b0,c0);
+
+
+		aa1 = vec_left1(a1,b1);
+		cc1 = vec_right1(b1,c1);
+
+		a1 = vMAX3(aa1,b1,cc1);
+
+		aa2 = vec_left1(a2,b2);
+		cc2 = vec_right1(b2,c2);
+
+		a2 = vMAX3(aa2,b2,cc2);
+
+		y = vMAX3(a0,a1,a2);
+		vec_store2(vOut, i, j, y);
+	}
 }
 
 void dilatation2_SIMD(vuint8 **vE, int n, vuint8 **vOut){/*
@@ -434,16 +581,16 @@ void morpho_SIMD(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, 
 	zero_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
 
 	init_bord(vE,vi0,vi1,vj0,vj1,vj0b,vj1b);
-	erosion_SIMD(vE, vinter1, vi0, vi1, vj0, vj1);
+	erosion_SIMD_rot(vE, vinter1, vi0, vi1, vj0, vj1);
 
 	init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
-	dilatation_SIMD(vinter1, vinter2, vi0, vi1, vj0, vj1);
+	dilatation_SIMD_rot(vinter1, vinter2, vi0, vi1, vj0, vj1);
 
 	init_bord(vinter2,vi0,vi1,vj0,vj1,vj0b,vj1b);
-	dilatation_SIMD(vinter2, vinter1, vi0, vi1, vj0, vj1);
+	dilatation_SIMD_rot(vinter2, vinter1, vi0, vi1, vj0, vj1);
 
 	init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
-	erosion_SIMD(vinter1, vOut, vi0, vi1, vj0, vj1);
+	erosion_SIMD_rot(vinter1, vOut, vi0, vi1, vj0, vj1);
 
   	free_vui8matrix(vinter1, vi0b, vi1b, vj0b, vj1b);
     free_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);

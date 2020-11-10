@@ -68,11 +68,11 @@ void test_morpho_SIMD(){
 
 	int k, ndigit=0;
 
-  	//char *sdout_path = "/home/melissa/Documents/HPC/Projet-HPC/sdout_SIMD/"; 
-	//char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SIMD/";
-	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SIMD/";	
-	char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_SIMD/";	
-	
+  char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_SIMD/";
+	char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SIMD/";
+	// char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SIMD/";
+	// char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_SIMD/";
+
 	char *filename = "car_";
 	char *extension = "pgm";
 	char  complete_filename[50];
@@ -93,6 +93,6 @@ void test_morpho_SIMD(){
 
   }
   printf(" - %-*s completed %8" PRId64 " ms\n", 20, "Morphologie SIMD", timer_morpho);
-	
+
 
 }
