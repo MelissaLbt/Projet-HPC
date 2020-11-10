@@ -22,6 +22,9 @@ extern "C" {
     
 #include "nrdef.h"
 #include "vnrdef.h"
+
+#define vec_load2(T,i,j)  	_mm_load_si128 ((vuint8*) &T[i][j])
+#define vec_store2(T,i,j,x) _mm_store_si128((vuint8*) &T[i][j], x)
     
     
 //#pragma message(" - include vnralloc.h")

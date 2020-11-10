@@ -6,8 +6,8 @@
 #define __MOUVEMENT_SIMD_H__
 
 
-#define vec_load2(T,i,j)  	_mm_load_si128((vuint8*) &T[i][j])
-#define vec_store2(T,i,j,x) _mm_store_si128((vuint8*) &T[i][j], x)
+//#define vec_load2(T,i,j)  	_mm_load_si128((vuint8*) &T[i][j])  mis dans  vnrutil.h
+//#define vec_store2(T,i,j,x) _mm_store_si128((vuint8*) &T[i][j], x)
 
 #define vec_set(x)  		_mm_set1_epi8(x)
 #define vec_setmask(x,m)	_mm_and_si128(x,m)

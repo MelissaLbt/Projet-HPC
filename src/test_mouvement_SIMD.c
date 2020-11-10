@@ -9,6 +9,7 @@
 #include "vnrutil.h"
 
 #include "mutil.h"
+#include "mymacro.h"
 
 #include "mouvement_SIMD.h"
 #include "test_mouvement_SIMD.h"
@@ -81,7 +82,7 @@ void test_mouvement_SIMD(){
     
 	generate_path_filename_k_ndigit_extension(path, filename, 3000, ndigit, extension, complete_filename);
 	MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sI0);
-	
+
 	zero_vui8matrix(vI1, vi0, vi1, vj0, vj1);
     zero_vui8matrix(vM, vi0, vi1, vj0, vj1);
     zero_vui8matrix(vV, vi0, vi1, vj0, vj1);
