@@ -5,6 +5,6 @@
 #ifndef __TEST_MOUVEMENT_H__
 #define __TEST_MOUVEMENT_H__
 
-void test_mouvement();
+int64_t test_mouvement();
 
 #endif

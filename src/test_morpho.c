@@ -15,12 +15,12 @@
 #include "test_morpho.h"
 // Ajouter pour test pour cas 5*5
 
-void test_morpho(){
+int64_t test_morpho(){
 
-	long nrl = 0;
-	long nrh = 240-1;
-	long ncl = 0;
-	long nch = 320-1;
+	long i0 = 0;
+	long i1 = 240-1;
+	long j0 = 0;
+	long j1 = 320-1;
 
 	int b = 1; // pour 3*3
 	int k, ndigit=0;
@@ -42,8 +42,8 @@ void test_morpho(){
 	int64_t start, end;
 	int64_t timer_morpho = 0;
 
-	E   = ui8matrix(nrl, nrh, ncl, nch);
-	out = ui8matrix(nrl, nrh, ncl, nch);
+	E   = ui8matrix(i0, i1, j0, j1);
+	out = ui8matrix(i0, i1, j0, j1);
 
 	//--------Morphologie Mathematique--------
 
@@ -52,21 +52,20 @@ void test_morpho(){
 
 		k = i+3000;
 		generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
-		MLoadPGM_ui8matrix(complete_filename, nrl, nrh, ncl, nch, E);
+		MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, E);
 
 		start  = clocktime();
-		morpho(E,out,b,nrl,nrh,ncl,nch);
+		morpho(E,out,b,i0,i1,j0,j1);
 		end = clocktime();
 		timer_morpho += (end-start);
 
 		generate_path_filename_k_ndigit_extension(morout_path, filename, i+3000, ndigit, extension, complete_filename);
-		SavePGM_ui8matrix(out, nrl, nrh, ncl, nch, complete_filename);
+		SavePGM_ui8matrix(out, i0, i1, j0, j1, complete_filename);
 	}
 
-	printf(" - %-*s completed %8" PRId64 " ms\n", 20, "Morphologie naive", timer_morpho);
-
-
 	// Desallocation
-	free_ui8matrix(E, nrl, nrh, ncl, nch);
-	free_ui8matrix(out, nrl, nrh, ncl, nch);
+	free_ui8matrix(E, i0, i1, j0, j1);
+	free_ui8matrix(out, i0, i1, j0, j1);
+
+	return timer_morpho;
 }

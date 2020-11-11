@@ -17,7 +17,7 @@
 
 
 
-void test_morpho_SIMD(){
+int64_t test_morpho_SIMD(){
 
   int b = 2; // border
   char *format = "%6.2f ";
@@ -68,15 +68,14 @@ void test_morpho_SIMD(){
 
 	int k, ndigit=0;
 
-  char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_SIMD/";
-	char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SIMD/";
-	// char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SIMD/";
-	// char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_SIMD/";
+  //char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_SIMD/";
+	//char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SIMD/";
+	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SIMD/";
+	char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_SIMD/";
 
 	char *filename = "car_";
 	char *extension = "pgm";
 	char  complete_filename[50];
-
   for(int i=1; i<200; i++){
     k = i+3000;
 
@@ -92,7 +91,7 @@ void test_morpho_SIMD(){
     SavePGM_ui8matrix(sOut, si0, si1, sj0, sj1, complete_filename);
 
   }
-  printf(" - %-*s completed %8" PRId64 " ms\n", 20, "Morphologie SIMD", timer_morpho);
-
-
+  free_vui8matrix(vE, vi0b, vi1b, vj0b, vj1b);
+  free_vui8matrix(vOut, vi0, vi1, vj0, vj1);
+  return timer_morpho;
 }

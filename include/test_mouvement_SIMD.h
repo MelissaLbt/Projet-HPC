@@ -5,6 +5,6 @@
 #ifndef __TEST_MOUVEMENT_SIMD_H__
 #define __TEST_MOUVEMENT_SIMD_H__
 
-void test_mouvement_SIMD();
+int64_t test_mouvement_SIMD();
 
 #endif

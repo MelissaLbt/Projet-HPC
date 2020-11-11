@@ -581,18 +581,22 @@ void morpho_SIMD(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, 
 	zero_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
 
 	init_bord(vE,vi0,vi1,vj0,vj1,vj0b,vj1b);
-	erosion_SIMD_rot(vE, vinter1, vi0, vi1, vj0, vj1);
+	//erosion_SIMD_rot(vE, vinter1, vi0, vi1, vj0, vj1);
+  erosion_SIMD(vE, vinter1, vi0, vi1, vj0, vj1);
 
 	init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
-	dilatation_SIMD_rot(vinter1, vinter2, vi0, vi1, vj0, vj1);
+	//dilatation_SIMD_rot(vinter1, vinter2, vi0, vi1, vj0, vj1);
+  dilatation_SIMD(vinter1, vinter2, vi0, vi1, vj0, vj1);
 
 	init_bord(vinter2,vi0,vi1,vj0,vj1,vj0b,vj1b);
-	dilatation_SIMD_rot(vinter2, vinter1, vi0, vi1, vj0, vj1);
+	//dilatation_SIMD_rot(vinter2, vinter1, vi0, vi1, vj0, vj1);
+  dilatation_SIMD(vinter2, vinter1, vi0, vi1, vj0, vj1);
 
 	init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
-	erosion_SIMD_rot(vinter1, vOut, vi0, vi1, vj0, vj1);
+	//erosion_SIMD_rot(vinter1, vOut, vi0, vi1, vj0, vj1);
+  erosion_SIMD(vinter1, vOut, vi0, vi1, vj0, vj1);
 
-  	free_vui8matrix(vinter1, vi0b, vi1b, vj0b, vj1b);
-    free_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
+  free_vui8matrix(vinter1, vi0b, vi1b, vj0b, vj1b);
+  free_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
 
 }

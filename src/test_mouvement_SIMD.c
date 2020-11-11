@@ -14,7 +14,7 @@
 #include "mouvement_SIMD.h"
 #include "test_mouvement_SIMD.h"
 
-void test_mouvement_SIMD(){
+int64_t test_mouvement_SIMD(){
 
 	int h,w;
 	int card;
@@ -115,8 +115,6 @@ void test_mouvement_SIMD(){
 		SavePGM_ui8matrix(sE, si0, si1, sj0, sj1, complete_filename);
 		
 	}
-
-	printf(" - %-*s completed %8" PRId64 " ms\n", 20, "Sigma_Delta SIMD", timer_sd);
 	
 	// ------------------- //
     // -- Desallocation -- //
@@ -126,4 +124,6 @@ void test_mouvement_SIMD(){
 	free_vui8matrix(vM, vi0, vi1, vj0, vj1);
 	free_vui8matrix(vV, vi0, vi1, vj0, vj1);
 	free_vui8matrix(vE , vi0, vi1, vj0, vj1);
+
+	return timer_sd;
 }

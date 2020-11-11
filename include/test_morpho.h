@@ -5,6 +5,6 @@
 #ifndef __TEST_MORPHO_H__
 #define __TEST_MORPHO_H__
 
-void test_morpho();
+int64_t test_morpho();
 
 #endif
