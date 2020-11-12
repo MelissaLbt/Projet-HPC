@@ -22,7 +22,7 @@ int64_t test_morpho(){
 	long j0 = 0;
 	long j1 = 320-1;
 
-	int b = 1; // pour 3*3
+	int b = 2; // pour 3*3
 	int k, ndigit=0;
 
 	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";
@@ -46,7 +46,10 @@ int64_t test_morpho(){
 	out = ui8matrix(i0, i1, j0, j1);
 
 	//--------Morphologie Mathematique--------
+	// generate_path_filename_k_ndigit_extension(sdout_path, filename, 3001, ndigit, extension, complete_filename);
+	// MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, E);
 
+	// morpho(E,out,b,i0,i1,j0,j1);
 
 	for(int i=1; i<200; i++){
 
@@ -59,7 +62,7 @@ int64_t test_morpho(){
 		end = clocktime();
 		timer_morpho += (end-start);
 
-		generate_path_filename_k_ndigit_extension(morout_path, filename, i+3000, ndigit, extension, complete_filename);
+		generate_path_filename_k_ndigit_extension(morout_path, filename, k, ndigit, extension, complete_filename);
 		SavePGM_ui8matrix(out, i0, i1, j0, j1, complete_filename);
 	}
 

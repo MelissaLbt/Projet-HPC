@@ -12,6 +12,7 @@
 #include "mutil.h"
 
 #include "morpho.h"
+#include "morpho_SIMD.h"
 
 /* --------------------- */
 /* E: Image d'entree     */
@@ -53,6 +54,8 @@ void copy_duplication(uint8 **E, uint8 **I, int b, long i0, long i1, long j0, lo
 	      I[i][j1+2] = I[i][j1+1] = I[i][j1];      
 	    }
 	}
+	//display_ui8matrix(I,i0,i1,j0,j1,"%4d","I(E bord)");
+
 }
 
 
@@ -63,6 +66,7 @@ void erosion(uint8 **E, uint8 **img, int b, long i0, long i1, long j0, long j1){
    	uint8 **I;
   	I = ui8matrix(i0-b, i1+b, j0-b, j1+b);
   	copy_duplication(E,I,b,i0,i1,j0,j1);
+
     //Erosion
  	for (int i = 0; i <= i1; i++) {
  	   	for(int j = 0; j <= j1; j++){
@@ -96,37 +100,21 @@ void dilatation(uint8 **E, uint8 **img, int b, long i0, long i1, long j0, long j
  	free_ui8matrix(I, i0-b, i1+b, j0-b, j1+b);
 }
 
-void ouverture(uint8 **E, uint8 **res, int b, long i0, long i1, long j0, long j1){
-  	uint8 **intermediaire;
-  	intermediaire = ui8matrix(i0,i1,j0,j1);
-
-  	erosion(E,intermediaire,b,i0,i1,j0,j1);
-  	dilatation(intermediaire,res,b,i0,i1,j0,j1);
-
-  	free_ui8matrix(intermediaire,i0,i1,j0,j1);
-}
-
-
-void fermeture(uint8 **E, uint8 **res, int b, long i0, long i1, long j0, long j1){
-	uint8 **intermediaire;
-    intermediaire = ui8matrix(i0,i1,j0,j1);
-
-    dilatation(E,intermediaire,b,i0,i1,j0,j1);
-	erosion(intermediaire,res,b,i0,i1,j0,j1);
-
-    free_ui8matrix(intermediaire,i0,i1,j0,j1);
-
-}
 
 
 void morpho(uint8 **E, uint8 **res, int b, long i0, long i1, long j0, long j1){
 
-	uint8 **intermediaire;
+	uint8 **inter1, **inter2;
+    inter1 = ui8matrix(i0,i1,j0,j1);
+    inter2 = ui8matrix(i0,i1,j0,j1);
 
-    intermediaire = ui8matrix(i0,i1,j0,j1);
-    ouverture(E,intermediaire,b,i0,i1,j0,j1);
-	fermeture(intermediaire,res,b,i0,i1,j0,j1);
+    erosion(E,inter1,b,i0,i1,j0,j1);
+  	dilatation(inter1,inter2,b,i0,i1,j0,j1);
+  	dilatation(inter2,inter1,b,i0,i1,j0,j1);
+	erosion(inter1,res,b,i0,i1,j0,j1);
+    
+	free_ui8matrix(inter1,i0,i1,j0,j1);
+	free_ui8matrix(inter2,i0,i1,j0,j1);
 
-	free_ui8matrix(intermediaire,i0,i1,j0,j1);
 
 }

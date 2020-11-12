@@ -36,7 +36,7 @@ void init_bord(vuint8 **vE,int vi0,int vi1,int vj0,int vj1,int vj0b,int vj1b){//
 		vcst = vec_load2(vE,i,vj0); cst = vec_extractl(vcst); vec_store2(vE,i,vj0-1,vec_set(cst));
 		vcst = vec_load2(vE,i,vj1); cst = vec_extractr(vcst); vec_store2(vE,i,vj1+1,vec_set(cst));
 	}
-
+    //display_vui8matrix(vE,vi0-2,vi0-2,vj0b,vj0b,"%4d","vE_simd");
 }
 
 void test(vuint8 **vE, int vi1, int vj1){
@@ -172,8 +172,114 @@ void erosion_SIMD_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int
 	}
 }
 
-//Optimisation par réduction et déroulage de boucle
+//Optimisation par réduction pqr colonne et déroulage de boucle
 void erosion_SIMD_red(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+    
+    int i, j;
+    int r = (vj1-vj0+1)%3;
+    vuint8 a0, b0, c0;
+    vuint8 a1, b1, c1;
+    vuint8 a2, b2, c2;
+
+    vuint8 ra, rb, rc;
+    vuint8 opl, opr;
+    vuint8 y0, y1, y2, y;
+
+    for(i = vi0; i <= vi1; i++){
+        j = 0;
+        a0 = vec_load2(vE,i-1, j-1);
+        a1 = vec_load2(vE,i  , j-1);
+        a2 = vec_load2(vE,i+1, j-1);
+
+        b0 = vec_load2(vE,i-1, j);
+        b1 = vec_load2(vE,i  , j);
+        b2 = vec_load2(vE,i+1, j);
+
+        ra = vMIN3(a0, a1, a2);
+        rb = vMIN3(b0, b1, b2);
+
+        for(j = vj0; j <= vj1-r; j+=3){
+            // centre: rb
+            c0 = vec_load2(vE,i-1, j+1);
+            c1 = vec_load2(vE,i  , j+1);
+            c2 = vec_load2(vE,i+1, j+1);
+            rc = vMIN3(c0, c1, c2);
+
+            opl = vec_left1(ra, rb);
+            opr = vec_right1(rb, rc);
+            y0 = vMIN3(opl, rb, opr);
+            vec_store2(vOut,i,j, y0);
+
+            // centre: rc
+            a0 = vec_load2(vE,i-1, j+2);
+            a1 = vec_load2(vE,i  , j+2);
+            a2 = vec_load2(vE,i+1, j+2);
+            ra = vMIN3(a0, a1, a2);
+
+            opl = vec_left1(rb, rc);
+            opr = vec_right1(rc, ra);
+            y1 = vMIN3(opl, rc, opr);
+            vec_store2(vOut,i,j+1, y1);
+
+            // centre: ra
+            b0 = vec_load2(vE,i-1, j+3);
+            b1 = vec_load2(vE,i  , j+3);
+            b2 = vec_load2(vE,i+1, j+3);
+            rb = vMIN3(b0, b1, b2);
+
+            opl = vec_left1(rc, ra); 
+            opr = vec_right1(ra, rb);
+            y2 = vMIN3(opl, ra, opl);
+
+            vec_store2(vOut,i,j+2, y2);
+        }
+        //epilogue
+        switch(r){
+            case 2:
+                a0 = vec_load2(vE,i-1, vj1-2);
+                a1 = vec_load2(vE,i  , vj1-2);
+                a2 = vec_load2(vE,i+1, vj1-2);
+
+                b0 = vec_load2(vE,i-1, vj1-1);
+                b1 = vec_load2(vE,i  , vj1-1);
+                b2 = vec_load2(vE,i+1, vj1-1);
+
+                c0 = vec_load2(vE,i-1, vj1);
+                c1 = vec_load2(vE,i  , vj1);
+                c2 = vec_load2(vE,i+1, vj1);
+
+                ra = vMIN3(a0, a1, a2);
+                rb = vMIN3(b0, b1, b2);
+                rc = vMIN3(c0, c1, c2);
+                opl = vec_left1(ra, rb); 
+                opr = vec_right1(rb, rc);
+                y   = vMIN3(opl, rb, opr);
+                vec_store2(vOut,i,vj1-1, y);
+            
+            case 1:
+                a0 = vec_load2(vE,i-1, vj1-1);
+                a1 = vec_load2(vE,i  , vj1-1);
+                a2 = vec_load2(vE,i+1, vj1-1);
+
+                b0 = vec_load2(vE,i-1, vj1);
+                b1 = vec_load2(vE,i  , vj1);
+                b2 = vec_load2(vE,i+1, vj1);
+
+                c0 = vec_load2(vE,i-1, vj1+1);
+                c1 = vec_load2(vE,i  , vj1+1);
+                c2 = vec_load2(vE,i+1, vj1+1);
+
+                ra = vMIN3(a0, a1, a2);
+                rb = vMIN3(b0, b1, b2);
+                rc = vMIN3(c0, c1, c2);
+                opl = vec_left1(ra, rb); 
+                opr = vec_right1(rb, rc);
+                y   = vMIN3(opl, rb, opr);
+                vec_store2(vOut,i,vj1, y);
+                break;
+        }
+    }
+
 }
 
 
@@ -418,6 +524,115 @@ void dilatation_SIMD_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, 
 	}
 }
 
+void dilatation_SIMD_red(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+
+    int i, j;
+    int r = (vj1-vj0+1)%3;
+    vuint8 a0, b0, c0;
+    vuint8 a1, b1, c1;
+    vuint8 a2, b2, c2;
+
+    vuint8 ra, rb, rc;
+    vuint8 opl, opr;
+    vuint8 y0, y1, y2, y;
+
+    for(i = vi0; i <= vi1; i++){
+        j = 0;
+        a0 = vec_load2(vE,i-1, j-1);
+        a1 = vec_load2(vE,i  , j-1);
+        a2 = vec_load2(vE,i+1, j-1);
+
+        b0 = vec_load2(vE,i-1, j);
+        b1 = vec_load2(vE,i  , j);
+        b2 = vec_load2(vE,i+1, j);
+
+        ra = vMAX3(a0, a1, a2);
+        rb = vMAX3(b0, b1, b2);
+
+        for(j = vj0; j <= vj1-r; j+=3){
+            // centre: rb
+            c0 = vec_load2(vE,i-1, j+1);
+            c1 = vec_load2(vE,i  , j+1);
+            c2 = vec_load2(vE,i+1, j+1);
+            rc = vMAX3(c0, c1, c2);
+
+            opl = vec_left1(ra, rb);
+            opr = vec_right1(rb, rc);
+            y0 = vMAX3(opl, rb, opr);
+            vec_store2(vOut,i,j, y0);
+
+            // centre: rc
+            a0 = vec_load2(vE,i-1, j+2);
+            a1 = vec_load2(vE,i  , j+2);
+            a2 = vec_load2(vE,i+1, j+2);
+            ra = vMAX3(a0, a1, a2);
+
+            opl = vec_left1(rb, rc);
+            opr = vec_right1(rc, ra);
+            y1 = vMAX3(opl, rc, opr);
+            vec_store2(vOut,i,j+1, y1);
+
+            // centre: ra
+            b0 = vec_load2(vE,i-1, j+3);
+            b1 = vec_load2(vE,i  , j+3);
+            b2 = vec_load2(vE,i+1, j+3);
+            rb = vMAX3(b0, b1, b2);
+
+            opl = vec_left1(rc, ra); 
+            opr = vec_right1(ra, rb);
+            y2 = vMAX3(opl, ra, opl);
+
+            vec_store2(vOut,i,j+2, y2);
+        }
+        //epilogue
+        switch(r){
+            case 2:
+                a0 = vec_load2(vE,i-1, vj1-2);
+                a1 = vec_load2(vE,i  , vj1-2);
+                a2 = vec_load2(vE,i+1, vj1-2);
+
+                b0 = vec_load2(vE,i-1, vj1-1);
+                b1 = vec_load2(vE,i  , vj1-1);
+                b2 = vec_load2(vE,i+1, vj1-1);
+
+                c0 = vec_load2(vE,i-1, vj1);
+                c1 = vec_load2(vE,i  , vj1);
+                c2 = vec_load2(vE,i+1, vj1);
+
+                ra = vMAX3(a0, a1, a2);
+                rb = vMAX3(b0, b1, b2);
+                rc = vMAX3(c0, c1, c2);
+                opl = vec_left1(ra, rb); 
+                opr = vec_right1(rb, rc);
+                y   = vMAX3(opl, rb, opr);
+                vec_store2(vOut,i,vj1-1, y);
+            
+            case 1:
+                a0 = vec_load2(vE,i-1, vj1-1);
+                a1 = vec_load2(vE,i  , vj1-1);
+                a2 = vec_load2(vE,i+1, vj1-1);
+
+                b0 = vec_load2(vE,i-1, vj1);
+                b1 = vec_load2(vE,i  , vj1);
+                b2 = vec_load2(vE,i+1, vj1);
+
+                c0 = vec_load2(vE,i-1, vj1+1);
+                c1 = vec_load2(vE,i  , vj1+1);
+                c2 = vec_load2(vE,i+1, vj1+1);
+
+                ra = vMAX3(a0, a1, a2);
+                rb = vMAX3(b0, b1, b2);
+                rc = vMAX3(c0, c1, c2);
+                opl = vec_left1(ra, rb); 
+                opr = vec_right1(rb, rc);
+                y   = vMAX3(opl, rb, opr);
+                vec_store2(vOut,i,vj1, y);
+                break;
+        }
+    }
+
+}
+
 void dilatation2_SIMD(vuint8 **vE, int n, vuint8 **vOut){/*
   int i, j;
   vuint8 a0, b0, c0, d0, e0;
@@ -536,40 +751,6 @@ void dilatation2_SIMD(vuint8 **vE, int n, vuint8 **vOut){/*
 }
 
 
-void ouverture_SIMD(vuint8 **vE, vuint8 **vOut, int n, int b, int vi0, int vi1, int vj0, int vj1){
-/*
-  vuint8 **vinter;
-  zero_vui8matrix(vinter, vi0, vi1, vj0, vj1);
-
-  if(b == 1){
-    erosion_r1(vE, n, vinter);
-    dilatation_r1(vinter, n, vOut);
-  }
-  else if(b == 2){
-    erosion_r2(vE, n, vinter);
-    dilatation_r2(vinter, n, vOut);
-  }
-
-  free_vui8matrix(vinter, vi0, vi1, vj0, vj1);*/
-}
-
-void fermeture_SIMD(vuint8 **vE, vuint8 **vOut, int n, int b, int vi0, int vi1, int vj0, int vj1){
-/*
-  vuint8 **vinter;
-  zero_vui8matrix(vinter, vi0, vi1, vj0, vj1);
-
-  if(b == 1){
-    dilatation_r1(vE, n, vinter);
-    erosion_r1(vinter, n, vOut);
-  }
-  else if(b == 2){
-    dilatation_r2(vE, n, vinter);
-    erosion_r2(vinter, n, vOut);
-  }
-
-  free_vui8matrix(vinter, vi0, vi1, vj0, vj1);
-  */
-}
 
 void morpho_SIMD(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b){
 

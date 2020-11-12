@@ -15,83 +15,113 @@
 #include "test_morpho_SIMD.h"
 #include "mymacro.h"
 
+#include "morpho.h"
+#include "test_morpho.h"
 
 
 int64_t test_morpho_SIMD(){
 
-  int b = 2; // border
-  char *format = "%6.2f ";
+    int b = 2; // border
+    char *format = "%6.2f ";
 
-  int si0, si1, sj0, sj1; // scalar indices
-  int vi0, vi1, vj0, vj1; // vector indices
-  int mi0, mi1, mj0, mj1; // memory (bounded) indices
+    int si0, si1, sj0, sj1; // scalar indices
+    int vi0, vi1, vj0, vj1; // vector indices
+    int mi0, mi1, mj0, mj1; // memory (bounded) indices
 
-  int si0b, si1b, sj0b, sj1b; // scalar indices with border
-  int vi0b, vi1b, vj0b, vj1b; // vector indices with border
-  int mi0b, mi1b, mj0b, mj1b; // memory (bounded) indices  with border
+    int si0b, si1b, sj0b, sj1b; // scalar indices with border
+    int vi0b, vi1b, vj0b, vj1b; // vector indices with border
+    int mi0b, mi1b, mj0b, mj1b; // memory (bounded) indices  with border
 
-  si0 = 0; si1 = 240 - 1;
-  sj0 = 0; sj1 = 320 - 1;
+    si0 = 0; si1 = 240 - 1;
+    sj0 = 0; sj1 = 320 - 1;
 
-  si0b = si0 - b; si1b = si1 + b;
-  sj0b = sj0 - b; sj1b = sj1 + b;
+    si0b = si0 - b; si1b = si1 + b;
+    sj0b = sj0 - b; sj1b = sj1 + b;
 
-  uint8  **sE, **sOut;
-  vuint8 **vE, **vOut;
+    uint8  **sE, **sOut;
+    vuint8 **vE, **vOut;
 
-  int64_t start, end;
-  int64_t timer_morpho = 0;
+    int64_t start, end;
+    int64_t timer_morpho = 0;
 
-  int card = card_vuint8(); //Peut-être card = card_vuint8   240
+    int card = card_vuint8(); //Peut-être card = card_vuint8   240
 
-  s2v(si0, si1, sj0, sj1, card, &vi0, &vi1, &vj0, &vj1);
-  v2m(vi0, vi1, vj0, vj1, card, &mi0, &mi1, &mj0, &mj1);
+    s2v(si0, si1, sj0, sj1, card, &vi0, &vi1, &vj0, &vj1);
+    v2m(vi0, vi1, vj0, vj1, card, &mi0, &mi1, &mj0, &mj1);
 
-  s2v(si0b, si1b, sj0b, sj1b, card, &vi0b, &vi1b, &vj0b, &vj1b);
-  v2m(vi0b, vi1b, vj0b, vj1b, card, &mi0b, &mi1b, &mj0b, &mj1b);
+    s2v(si0b, si1b, sj0b, sj1b, card, &vi0b, &vi1b, &vj0b, &vj1b);
+    v2m(vi0b, vi1b, vj0b, vj1b, card, &mi0b, &mi1b, &mj0b, &mj1b);
 
-  // allocation
-  vE  = vui8matrix(vi0b, vi1b, vj0b, vj1b);
-  vOut = vui8matrix(vi0,  vi1,  vj0,  vj1);
+    // allocation
+    vE  = vui8matrix(vi0b, vi1b, vj0b, vj1b);
+    vOut = vui8matrix(vi0,  vi1,  vj0,  vj1);
 
-  // wrappers scalaires
-  sE  = (uint8**) vE;
-  sOut = (uint8**) vOut;
+    // wrappers scalaires
+    sE  = (uint8**) vE;
+    sOut = (uint8**) vOut;
 
-  // ---------- //
-  // -- init -- //
-  // ---------- //
+    int k, ndigit=0;
 
-  zero_vui8matrix(vE,  vi0b, vi1b, vj0b, vj1b);
-  zero_vui8matrix(vOut, vi0, vi1, vj0, vj1);
+    //char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_SIMD/";
+    //char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SIMD/";
+    char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SIMD/";
+    char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_SIMD/";
+
+    char *filename = "car_";
+    char *extension = "pgm";
+    char  complete_filename[50];
+
+// ==================no simd
+    long i0 = 0;
+    long i1 = 240-1;
+    long j0 = 0;
+    long j1 = 320-1;
+    uint8 **E;
+    uint8 **out; //sortie du Morpho
 
 
-	int k, ndigit=0;
+    E   = ui8matrix(i0, i1, j0, j1);
+    out = ui8matrix(i0, i1, j0, j1);
 
-  //char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_SIMD/";
-	//char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SIMD/";
-	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SIMD/";
-	char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_SIMD/";
 
-	char *filename = "car_";
-	char *extension = "pgm";
-	char  complete_filename[50];
-  for(int i=1; i<200; i++){
-    k = i+3000;
 
-    generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
-    MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
+    // ---------- //
+    // -- init -- //
+    // ---------- //
 
-    start  = clocktime();
-    morpho_SIMD(vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
-    end  = clocktime();
-    timer_morpho += (end-start);
+    zero_vui8matrix(vE,  vi0b, vi1b, vj0b, vj1b);
+    zero_vui8matrix(vOut, vi0, vi1, vj0, vj1);
 
-    generate_path_filename_k_ndigit_extension(morout_path, filename, k, ndigit, extension, complete_filename);
-    SavePGM_ui8matrix(sOut, si0, si1, sj0, sj1, complete_filename);
 
-  }
-  free_vui8matrix(vE, vi0b, vi1b, vj0b, vj1b);
-  free_vui8matrix(vOut, vi0, vi1, vj0, vj1);
-  return timer_morpho;
+    // generate_path_filename_k_ndigit_extension(sdout_path, filename, 3001, ndigit, extension, complete_filename);
+    // MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
+    // morpho_SIMD(vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
+
+
+    
+    for(int i=1; i<200; i++){
+        k = i+3000;
+
+        generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
+        MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
+        //MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, E);
+
+        start  = clocktime();
+
+        morpho_SIMD(vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
+        
+        end  = clocktime();
+        timer_morpho += (end-start);
+
+        generate_path_filename_k_ndigit_extension(morout_path, filename, k, ndigit, extension, complete_filename);
+        SavePGM_ui8matrix(sOut, si0, si1, sj0, sj1, complete_filename);
+        //SavePGM_ui8matrix(out, i0, i1, j0, j1, complete_filename);
+
+    }
+    free_vui8matrix(vE, vi0b, vi1b, vj0b, vj1b);
+    free_vui8matrix(vOut, vi0, vi1, vj0, vj1);
+
+    // printf("vi0=%d,vi1=%d,vj0=%d,vj1=%d\n",vi0,vi1,vj0,vj1);
+    // printf("vi0b=%d,vi1b=%d,vj0b=%d,vj1b=%d\n",vi0b,vi1b,vj0b,vj1b);
+    return timer_morpho;
 }
