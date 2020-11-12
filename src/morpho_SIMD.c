@@ -19,22 +19,22 @@
 /* I: Image avec bord    */
 /* img: Image de sortie  */
 /* --------------------- */
-void init_bord(vuint8 **vE,int vi0,int vi1,int vj0,int vj1,int vj0b,int vj1b){//b = 2 等到5*5不用重新写,E: deja init avec b=2
-
+void init_bord(vuint8 **vE,int vi0,int vi1,int vj0,int vj1,int vj0b,int vj1b){//E: deja init avec b=2
+  int cst;
 	vuint8 vcst;
 
-	vcst = vec_load2(vE,vi0,vj0); vec_store2(vE,vi0,vj0b,vcst);
-	vcst = vec_load2(vE,vi0,vj1); vec_store2(vE,vi0,vj1b,vcst);
-	vcst = vec_load2(vE,vi1,vj0); vec_store2(vE,vi1,vj0b,vcst);
-	vcst = vec_load2(vE,vi1,vj1); vec_store2(vE,vi1,vj1b,vcst);
+	vcst = vec_load2(vE,vi0,vj0); cst = vec_extractl(vcst); vec_store2(vE,vi0,vj0b,vec_set(cst));
+	vcst = vec_load2(vE,vi0,vj1); cst = vec_extractr(vcst); vec_store2(vE,vi0,vj1b,vec_set(cst));
+	vcst = vec_load2(vE,vi1,vj0); cst = vec_extractl(vcst); vec_store2(vE,vi1,vj0b,vec_set(cst));
+	vcst = vec_load2(vE,vi1,vj1); cst = vec_extractr(vcst); vec_store2(vE,vi1,vj1b,vec_set(cst));
 
 	for(int j = vj0b; j <= vj1b; j++){
 		vcst = vec_load2(vE,vi0,j); vec_store2(vE,vi0-1,j,vcst); vec_store2(vE,vi0-2,j,vcst);
 		vcst = vec_load2(vE,vi1,j); vec_store2(vE,vi1+1,j,vcst); vec_store2(vE,vi1+2,j,vcst);
 	}
 	for(int i = vi0; i <= vi1; i++){
-		vcst = vec_load2(vE,i,vj0); vec_store2(vE,i,vj0-1,vcst);
-		vcst = vec_load2(vE,i,vj1); vec_store2(vE,i,vj1+1,vcst);
+		vcst = vec_load2(vE,i,vj0); cst = vec_extractl(vcst); vec_store2(vE,i,vj0-1,vec_set(cst));
+		vcst = vec_load2(vE,i,vj1); cst = vec_extractr(vcst); vec_store2(vE,i,vj1+1,vec_set(cst));
 	}
 
 }

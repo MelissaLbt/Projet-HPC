@@ -39,7 +39,7 @@ void info(void)
 }
 
 int main(int argc, char *argv[])
-{
+{	int64_t time;
     info();
 //-------- test unitaire pour valider l'algo Sigma_Delta ---------//
     puts("===========================");
@@ -60,10 +60,12 @@ int main(int argc, char *argv[])
     puts("==========================");
     puts("=== Tests formal begin ===");
     puts("==========================");
-    printf(" - %-*s completed %8" PRId64 " ms\n", 25, "Sigma_Delta Naive", test_mouvement());
-    printf(" - %-*s completed %8" PRId64 " ms\n", 25, "Morphologie naive", test_morpho());
-    printf(" - %-*s completed %8" PRId64 " ms\n", 25, "Sigma_Delta SIMD", test_mouvement_SIMD());
-    printf(" - %-*s completed %8" PRId64 " ms\n", 25, "Morphologie SIMD", test_morpho_SIMD());
+    printf(" - %-*s completed %8" PRId64 " ms  \n", 25, "Sigma_Delta Naive", test_mouvement());
+    printf(" - %-*s completed %8" PRId64 " ms  \n", 25, "Morphologie Naive", test_morpho());
+    time = test_mouvement_SIMD();
+    printf(" - %-*s completed %8" PRId64 " ms  %s\n", 25, "Sigma_Delta SIMD", time, check_results(1) ? "[OK]" : "[KO]");
+    time = test_morpho_SIMD();
+    printf(" - %-*s completed %8" PRId64 " ms  %s\n", 25, "Morphologie SIMD", time, check_results(2) ? "[OK]" : "[KO]");
 
 
     puts("====================");
@@ -71,11 +73,11 @@ int main(int argc, char *argv[])
     puts("====================");
  
 
-    printf("\nCongratulations!! \n\nCheck the pictures in the project folder:\n");
+    printf("\nCheck the pictures in the project folder:\n");
     printf("Output of Sigma_Delta       : Projet-HPC/sdout\n");
     printf("Output of Morphologie       : Projet-HPC/morphoout\n");
     printf("Output of Sigma_Delta SIMD  : Projet-HPC/sdout_SIMD\n");
-
+    printf("Output of Morphologie SIMD  : Projet-HPC/morphoout_SIMD\n");
     
     return 0;   
 

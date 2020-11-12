@@ -8,7 +8,8 @@
 
 //#define vec_load2(T,i,j)  	_mm_load_si128 ((vuint8*) &T[i][j])    mis dans  vnrutil.h
 //#define vec_store2(T,i,j,x) _mm_store_si128((vuint8*) &T[i][j], x)
-
+#define vec_extractl(v) _mm_extract_epi16(_mm_srli_si128(v,15),0)
+#define vec_extractr(v) _mm_extract_epi16(_mm_srli_si128(_mm_slli_si128(v,15),15),0)
 
 #define vec_right1(v1, v2) _mm_or_si128(_mm_slli_si128(v1,1),_mm_srli_si128(v2,15))
 #define vec_right2(v1, v2) _mm_or_si128(_mm_slli_si128(v1,2),_mm_srli_si128(v2,14))

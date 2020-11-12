@@ -14,6 +14,7 @@ int SigmaDelta_step4_tu();
 int Morpho_gesbord();
 int Morpho_erosion();
 int Morpho_dilatation();
+int check_results(int i);
 
 
 #endif

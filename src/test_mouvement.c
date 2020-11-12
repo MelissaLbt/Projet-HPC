@@ -56,7 +56,7 @@ int64_t test_mouvement(){
 	SigmaDelta_step0(I0,M0,V0,i0,i1,j0,j1);
 	end = clocktime();
 	timer_sd += (end-start);
-
+	
 	for(int i=1; i<200; i++){   //traitement a partir de 1
 
 		k = i + 3000;
@@ -68,6 +68,7 @@ int64_t test_mouvement(){
 		SigmaDelta_step2(I1,M1,O,i0,i1,j0,j1);
 		SigmaDelta_step3(O,V0,V1,i0,i1,j0,j1);
 		SigmaDelta_step4(O,V1,E,i0,i1,j0,j1);
+		
 		end = clocktime();
 		timer_sd += (end-start);
 
