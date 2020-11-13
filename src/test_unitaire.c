@@ -35,13 +35,22 @@ int SigmaDelta_step0_tu(){
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
 			if(M0[i][j]!=I0[i][j]){
+				free_ui8matrix(I0,0,3,0,3);
+				free_ui8matrix(M0,0,3,0,3);
+				free_ui8matrix(V0,0,3,0,3);
 				return 0;
 			}
 			if(V0[i][j]!= 1){
+				free_ui8matrix(I0,0,3,0,3);
+				free_ui8matrix(M0,0,3,0,3);
+				free_ui8matrix(V0,0,3,0,3);
 				return 0;
 			}
 		}
 	}
+	free_ui8matrix(I0,0,3,0,3);
+	free_ui8matrix(M0,0,3,0,3);
+	free_ui8matrix(V0,0,3,0,3);
 	return 1;
 }
 
@@ -73,10 +82,18 @@ int SigmaDelta_step1_tu(){
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
 			if(M1[i][j]!= M1_ref[i][j] || M0[i][j]!= M1_ref[i][j]){
+				free_ui8matrix(I1,0,3,0,3);
+				free_ui8matrix(M0,0,3,0,3);
+				free_ui8matrix(M1,0,3,0,3);
+				free_ui8matrix(M1_ref,0,3,0,3);
 				return 0;
 			}
 		}
 	}
+	free_ui8matrix(I1,0,3,0,3);
+	free_ui8matrix(M0,0,3,0,3);
+	free_ui8matrix(M1,0,3,0,3);
+	free_ui8matrix(M1_ref,0,3,0,3);
 	return 1;	
 }
 
@@ -98,20 +115,24 @@ int SigmaDelta_step2_tu(){
 	O_ref[1][0] = 2; O_ref[1][1] = 1; O_ref[1][2] =	0; O_ref[1][3] = 1;
 	O_ref[2][0] = 1; O_ref[2][1] = 0; O_ref[2][2] = 1; O_ref[2][3] = 2;
 	O_ref[3][0] = 0; O_ref[3][1] = 1; O_ref[3][2] = 2; O_ref[3][3] = 3;
-	//display_ui8matrix (I1,0,3,0,3,"%6d ","I1");
-	//display_ui8matrix (M1,0,3,0,3,"%6d ","M1");
-	//display_ui8matrix (O_ref,0,3,0,3,"%6d ","O_ref");
 
 	SigmaDelta_step2(I1,M1,O,0,3,0,3);
-	//display_ui8matrix (O,0,3,0,3,"%6d ","O");
 
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
 			if(O[i][j]!= O_ref[i][j]){
+				free_ui8matrix(I1,0,3,0,3);
+				free_ui8matrix(M1,0,3,0,3);
+				free_ui8matrix(O,0,3,0,3);
+				free_ui8matrix(O_ref,0,3,0,3);
 				return 0;
 			}
 		}
 	}
+	free_ui8matrix(I1,0,3,0,3);
+	free_ui8matrix(M1,0,3,0,3);
+	free_ui8matrix(O,0,3,0,3);
+	free_ui8matrix(O_ref,0,3,0,3);
 	return 1;	
 	
 }
@@ -134,20 +155,24 @@ int SigmaDelta_step3_tu(){
 	V1_ref[1][0] =    V1_ref[1][1] = 	V1_ref[1][2] = 2; V1_ref[1][3] = 3;
 	V1_ref[2][0] = 	  V1_ref[2][1] = 2; V1_ref[2][2] = 3; V1_ref[2][3] = 4;
 	V1_ref[3][0] = 2; V1_ref[3][1] = 3;	V1_ref[3][2] = 4; V1_ref[3][3] = 5;
-	//display_ui8matrix (O,0,3,0,3,"%6d ","O");
-	//display_ui8matrix (V0,0,3,0,3,"%6d ","V0");
-	//display_ui8matrix (V1_ref,0,3,0,3,"%6d ","V1_ref");
 
 	SigmaDelta_step3(O,V0,V1,0,3,0,3);
-	//display_ui8matrix (V1,0,3,0,3,"%6d ","V1");
 
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
 			if(V1[i][j]!= V1_ref[i][j] || V0[i][j]!= V1_ref[i][j]){
+				free_ui8matrix(O,0,3,0,3);
+				free_ui8matrix(V0,0,3,0,3);
+				free_ui8matrix(V1,0,3,0,3);
+				free_ui8matrix(V1_ref,0,3,0,3);
 				return 0;
 			}
 		}
 	}
+	free_ui8matrix(O,0,3,0,3);
+	free_ui8matrix(V0,0,3,0,3);
+	free_ui8matrix(V1,0,3,0,3);
+	free_ui8matrix(V1_ref,0,3,0,3);	
 	return 1;	
 }
 
@@ -179,10 +204,18 @@ int SigmaDelta_step4_tu(){
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
 			if(E[i][j]!= E_ref[i][j]){
+				free_ui8matrix(O,0,3,0,3);
+				free_ui8matrix(V1,0,3,0,3);
+				free_ui8matrix(E,0,3,0,3);
+				free_ui8matrix(E_ref,0,3,0,3);
 				return 0;
 			}
 		}
 	}
+	free_ui8matrix(O,0,3,0,3);
+	free_ui8matrix(V1,0,3,0,3);
+	free_ui8matrix(E,0,3,0,3);
+	free_ui8matrix(E_ref,0,3,0,3);
 	return 1;	
 }
 
@@ -199,33 +232,49 @@ int Morpho_gesbord(){
 	E[0][0] = 1; E[0][1] = 2;
 	E[1][0] = 3; E[1][1] = 4;
 
-	//display_ui8matrix (E,0,1,0,1,"%6d ","E");
 	copy_duplication(E,I1,1,0,1,0,1);
 	copy_duplication(E,I2,2,0,1,0,1);
-	//display_ui8matrix (I1,-1,2,-1,2,"%6d ","I1");
-	//display_ui8matrix (I2,-2,3,-2,3,"%6d ","I2");
 
 	for(int i=0;i<=1;i++){
 		for(int j=0;j<=1;j++){
-			if(I1[i][j]!=E[i][j] || I2[i][j]!=E[i][j])
+			if(I1[i][j]!=E[i][j] || I2[i][j]!=E[i][j]){
+				free_ui8matrix(E,0,1,0,1);
+				free_ui8matrix(I1,-1,2,-1,2);
+				free_ui8matrix(I2,-2,3,-2,3);
 				return 0;
+			}
 		}
 	}
 
 	for(int i=-1;i<=2;i+=2){
 		for(int j=-1;j<=2;j+=2){
-			if(!(I1[i][j]==I1[i+1][j] && I1[i][j]==I1[i][j+1] &&I1[i][j]==I1[i+1][j+1]))
+			if(!(I1[i][j]==I1[i+1][j] && I1[i][j]==I1[i][j+1] &&I1[i][j]==I1[i+1][j+1])){
+				free_ui8matrix(E,0,1,0,1);
+				free_ui8matrix(I1,-1,2,-1,2);
+				free_ui8matrix(I2,-2,3,-2,3);
 				return 0;
+			}
 		}
 	}
 	for(int i=-2;i<=3;i+=3){
 		for(int j=-2;j<=3;j+=3){
-			if(!(I2[i][j]==I2[i+1][j] && I2[i][j]==I2[i][j+1] && I2[i][j]==I2[i+1][j+1] && I2[i][j]==I2[i+1][j+2]))
+			if(!(I2[i][j]==I2[i+1][j] && I2[i][j]==I2[i][j+1] && I2[i][j]==I2[i+1][j+1] && I2[i][j]==I2[i+1][j+2])){
+				free_ui8matrix(E,0,1,0,1);
+				free_ui8matrix(I1,-1,2,-1,2);
+				free_ui8matrix(I2,-2,3,-2,3);
 				return 0;
-			if(!(I2[i][j]==I2[i+2][j] && I2[i][j]==I2[i][j+2] && I2[i][j]==I2[i+2][j+2] && I2[i][j]==I2[i+2][j+1]))
+			}
+			if(!(I2[i][j]==I2[i+2][j] && I2[i][j]==I2[i][j+2] && I2[i][j]==I2[i+2][j+2] && I2[i][j]==I2[i+2][j+1])){
+				free_ui8matrix(E,0,1,0,1);
+				free_ui8matrix(I1,-1,2,-1,2);
+				free_ui8matrix(I2,-2,3,-2,3);
 				return 0;
+			}
 		}
 	}
+	free_ui8matrix(E,0,1,0,1);
+	free_ui8matrix(I1,-1,2,-1,2);
+	free_ui8matrix(I2,-2,3,-2,3);
 	return 1;
 }
 
@@ -256,10 +305,16 @@ int Morpho_erosion(){
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
 			if(img[i][j]!= img_ref[i][j]){
+				free_ui8matrix(E,0,3,0,3);
+				free_ui8matrix(img,0,3,0,3);
+				free_ui8matrix(img_ref,0,3,0,3);
 				return 0;
 			}
 		}
 	}	
+	free_ui8matrix(E,0,3,0,3);
+	free_ui8matrix(img,0,3,0,3);
+	free_ui8matrix(img_ref,0,3,0,3);
 	return 1;
 }
 int Morpho_dilatation(){
@@ -288,10 +343,16 @@ int Morpho_dilatation(){
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
 			if(img[i][j]!= img_ref[i][j]){
+				free_ui8matrix(E,0,3,0,3);
+				free_ui8matrix(img,0,3,0,3);
+				free_ui8matrix(img_ref,0,3,0,3);
 				return 0;
 			}
 		}
 	}	
+	free_ui8matrix(E,0,3,0,3);
+	free_ui8matrix(img,0,3,0,3);
+	free_ui8matrix(img_ref,0,3,0,3);
 	return 1;
 }
 
@@ -311,7 +372,7 @@ int check_results(int i) {
 	char *extension = "pgm";
 	char  complete_filename[50];
 
-	
+	int max=0;
 	uint8 **img_ref, **img;
 	img_ref = ui8matrix(i0,i1,j0,j1);
 	img 	= ui8matrix(i0,i1,j0,j1);
@@ -324,6 +385,10 @@ int check_results(int i) {
 		path_ref = "/home/huiling/HPC/Projet-HPC/morphoout/";	
 		path = "/home/huiling/HPC/Projet-HPC/morphoout_SIMD/";	
 	}
+	else if(i == 3){
+		path_ref = "/home/huiling/HPC/Projet-HPC/morphoout/";	
+		path = "/home/huiling/HPC/Projet-HPC/fusion/";	
+	}
 
     for(int k=3001; k<=3199; k++){
 		generate_path_filename_k_ndigit_extension(path_ref, filename, k, ndigit, extension, complete_filename);
@@ -335,7 +400,8 @@ int check_results(int i) {
 			for(int j=0; j<320; j++){
 				if(img[i][j] != img_ref[i][j]) {
 					c++;
-					if(c>=960){  //1.25%
+					if(c>=1152){  //1.5%
+
 						free_ui8matrix(img_ref,i0,i1,j0,j1);
 						free_ui8matrix(img,i0,i1,j0,j1);
 						return 0;
@@ -344,7 +410,8 @@ int check_results(int i) {
 				}
 			}
 		}
-		// printf("c = %d\n",c);
+		//if(c>max) max=c;
+		//printf("max = %d\n",max);
 	}
 	free_ui8matrix(img_ref,i0,i1,j0,j1);
 	free_ui8matrix(img,i0,i1,j0,j1);

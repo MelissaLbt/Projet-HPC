@@ -9,14 +9,15 @@
 #include "vnrdef.h"
 #include "vnrutil.h"
 
+#include "mymacro.h"
 #include "mutil.h"
 
 #include "morpho_SIMD.h"
 #include "test_morpho_SIMD.h"
-#include "mymacro.h"
 
-#include "morpho.h"
-#include "test_morpho.h"
+#include "morpho_fusion.h"
+
+
 
 
 int64_t test_morpho_SIMD(){

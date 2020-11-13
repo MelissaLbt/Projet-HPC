@@ -26,6 +26,8 @@
 #include "test_mouvement_SIMD.h"
 #include "test_morpho_SIMD.h"
 
+#include "morpho_fusion.h"
+#include "test_morpho_fusion.h"
 
 void info(void)
 {
@@ -39,9 +41,12 @@ void info(void)
 }
 
 int main(int argc, char *argv[])
-{	int64_t time;
+{	
+    int64_t time;
     info();
+
 //-------- test unitaire pour valider l'algo Sigma_Delta ---------//
+
     puts("===========================");
     puts("=== Tests unitary begin ===");
     puts("===========================");
@@ -60,12 +65,13 @@ int main(int argc, char *argv[])
     puts("==========================");
     puts("=== Tests formal begin ===");
     puts("==========================");
-    printf(" - %-*s completed %8" PRId64 " ms  \n", 25, "Sigma_Delta Naive", test_mouvement());
-    printf(" - %-*s completed %8" PRId64 " ms  \n", 25, "Morphologie Naive", test_morpho());
-    time = test_mouvement_SIMD();
-    printf(" - %-*s completed %8" PRId64 " ms  %s\n", 25, "Sigma_Delta SIMD", time, check_results(1) ? "[OK]" : "[KO]");
-    time = test_morpho_SIMD();
-    printf(" - %-*s completed %8" PRId64 " ms  %s\n", 25, "Morphologie SIMD", time, check_results(2) ? "[OK]" : "[KO]");
+    printf(" - %-*s completed %8ld ms  \n", 30, "Sigma_Delta Naive", test_mouvement());
+    printf(" - %-*s completed %8ld ms  \n", 30, "Morphologie Naive", test_morpho());
+
+
+    printf(" - %-*s completed %8ld ms  %s\n", 30, "Sigma_Delta SIMD", test_mouvement_SIMD(), check_results(1) ? "[OK]" : "[KO]");
+    printf(" - %-*s completed %8ld ms  %s\n", 30, "Morphologie SIMD", test_morpho_SIMD(), check_results(2) ? "[OK]" : "[KO]");
+    printf(" - %-*s completed %8ld ms  %s\n", 30, "Morphologie fusion", test_morpho_fusion(), check_results(3) ? "[OK]" : "[KO]");
 
 
     puts("====================");
@@ -74,10 +80,12 @@ int main(int argc, char *argv[])
  
 
     printf("\nCheck the pictures in the project folder:\n");
-    printf("Output of Sigma_Delta       : Projet-HPC/sdout\n");
-    printf("Output of Morphologie       : Projet-HPC/morphoout\n");
-    printf("Output of Sigma_Delta SIMD  : Projet-HPC/sdout_SIMD\n");
-    printf("Output of Morphologie SIMD  : Projet-HPC/morphoout_SIMD\n");
+    printf("Output of Sigma_Delta              : Projet-HPC/sdout\n");
+    printf("Output of Morphologie              : Projet-HPC/morphoout\n");
+    printf("Output of Sigma_Delta SIMD         : Projet-HPC/sdout_SIMD\n");
+    printf("Output of Morphologie SIMD         : Projet-HPC/morphoout_SIMD\n");
+    printf("Output of Morphologie avec fusion  : Projet-HPC/fusion\n");
+
     
     return 0;   
 

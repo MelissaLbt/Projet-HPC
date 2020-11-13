@@ -20,7 +20,6 @@
 
 #define vec_sel2(a,b,m)      _mm_or_si128(_mm_and_si128(m,a),_mm_andnot_si128(m,b))
 #define vec_sel3(a,b,c,m1,m2,m3) vec_or3(_mm_and_si128(m1,a),_mm_and_si128(m2,b),_mm_and_si128(m3,c))
-#define vec_or3(x1,x2,x3)   _mm_or_si128(_mm_or_si128(x1,x2),x3)
 
 
 void SigmaDelta_step0_SIMD(vuint8 **I, vuint8 **M, vuint8 **V, int vi0, int vi1, int vj0, int vj1);
