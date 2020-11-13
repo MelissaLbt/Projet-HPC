@@ -31,6 +31,11 @@ extern "C" {
 
 extern long nr_end;
 
+/* timer: vient du tp histo*/
+int64_t clocktime();
+/* conversion image code en [0,1] vers [0.255]*/
+void convertb2i();
+void converti2b();
 
 void generate_filename_k_ndigit                 (            char *filename, int k, int ndigit,                         char *complete_filename);
 void generate_filename_k_ndigit_extension       (            char *filename, int k, int ndigit,        char *extension, char *complete_filename);
@@ -108,8 +113,6 @@ void    SavePGM_ui8matrix(uint8 **m,      int  nrl, int  nrh, int  ncl, int nch,
 rgb8 ** LoadPPM_rgb8matrix(char *filename, int *nrl, int *nrh, int *ncl, int *nch);
 void    SavePPM_rgb8matrix(rgb8 **m,       int  nrl, int  nrh, int  ncl, int  nch, char *filename);
 
-/* timer: vient du tp histo*/
-int64_t clocktime();
 
 
 #ifdef __cplusplus

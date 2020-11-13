@@ -23,6 +23,30 @@
 
 long nr_end = NR_END;
 
+int64_t clocktime() {
+   struct timeval full_time;
+
+   gettimeofday(&full_time, NULL);
+   return (int64_t) ((full_time.tv_usec + full_time.tv_sec * 1000000)/1000);
+}
+
+void convertb2i(uint8** img, int nrl, int nrh, int ncl, int nch){
+  for(int i=nrl; i<=nrh; i++) {
+    for(int j=ncl; j<=nch; j++) {
+      if(img[i][j] == 1)
+        img[i][j] = 255;
+    }
+  }
+}
+void converti2b(uint8** img, int nrl, int nrh, int ncl, int nch){
+  for(int i=nrl; i<=nrh; i++) {
+    for(int j=ncl; j<=nch; j++) {
+      if(img[i][j] == 255)
+        img[i][j] = 1;
+    }
+  }
+}
+
 /* ------------------------- */
 void nrerror(char error_text[])
 /* ------------------------- */
@@ -931,11 +955,3 @@ void SavePPM_rgb8matrix(rgb8 **m, int nrl, int nrh, int ncl, int nch, char *file
   /* fermeture du fichier */
   fclose(file);
 }
-
-int64_t clocktime() {
-   struct timeval full_time;
-
-   gettimeofday(&full_time, NULL);
-   return (int64_t) ((full_time.tv_usec + full_time.tv_sec * 1000000)/1000);
-}
-

@@ -71,20 +71,6 @@ int64_t test_morpho_SIMD(){
     char *extension = "pgm";
     char  complete_filename[50];
 
-// ==================no simd
-    long i0 = 0;
-    long i1 = 240-1;
-    long j0 = 0;
-    long j1 = 320-1;
-    uint8 **E;
-    uint8 **out; //sortie du Morpho
-
-
-    E   = ui8matrix(i0, i1, j0, j1);
-    out = ui8matrix(i0, i1, j0, j1);
-
-
-
     // ---------- //
     // -- init -- //
     // ---------- //
@@ -93,35 +79,25 @@ int64_t test_morpho_SIMD(){
     zero_vui8matrix(vOut, vi0, vi1, vj0, vj1);
 
 
-    // generate_path_filename_k_ndigit_extension(sdout_path, filename, 3001, ndigit, extension, complete_filename);
-    // MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
-    // morpho_SIMD(vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
-
-
-    
     for(int i=1; i<200; i++){
         k = i+3000;
 
         generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
         MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
-        //MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, E);
+        converti2b(sE,si0, si1, sj0, sj1);
 
         start  = clocktime();
-
         morpho_SIMD(vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
-        
+
         end  = clocktime();
         timer_morpho += (end-start);
 
+        convertb2i(sOut,si0, si1, sj0, sj1);
         generate_path_filename_k_ndigit_extension(morout_path, filename, k, ndigit, extension, complete_filename);
         SavePGM_ui8matrix(sOut, si0, si1, sj0, sj1, complete_filename);
-        //SavePGM_ui8matrix(out, i0, i1, j0, j1, complete_filename);
 
     }
     free_vui8matrix(vE, vi0b, vi1b, vj0b, vj1b);
     free_vui8matrix(vOut, vi0, vi1, vj0, vj1);
-
-    // printf("vi0=%d,vi1=%d,vj0=%d,vj1=%d\n",vi0,vi1,vj0,vj1);
-    // printf("vi0b=%d,vi1b=%d,vj0b=%d,vj1b=%d\n",vi0b,vi1b,vj0b,vj1b);
     return timer_morpho;
 }

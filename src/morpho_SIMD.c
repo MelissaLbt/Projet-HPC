@@ -80,208 +80,132 @@ void erosion_SIMD(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1
 		    aa0 = vec_left1(a0,b0);
 		    cc0 = vec_right1(b0,c0);
 
-		    a0 = vMIN3(aa0,b0,cc0);
+		    a0 = vec_and3(aa0,b0,cc0);
 
 		    aa1 = vec_left1(a1,b1);
 		    cc1 = vec_right1(b1,c1);
 
-		    a1 = vMIN3(aa1,b1,cc1);
+		    a1 = vec_and3(aa1,b1,cc1);
 
 		    aa2 = vec_left1(a2,b2);
 		    cc2 = vec_right1(b2,c2);
 
-		    a2 = vMIN3(aa2,b2,cc2);
+		    a2 = vec_and3(aa2,b2,cc2);
 
-		    y = vMIN3(a0,a1,a2);
+		    y = vec_and3(a0,a1,a2);
 
 		    vec_store2(vOut,i,j, y);
 	    }
   	}
 }
 
-//Optimisation par rotation de registre
-void erosion_SIMD_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+//Optimisation par rotation de registre +  reduction par colonne + déroulage de boucle
+void erosion_red_SIMD(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
 	int i, j;
+    int r = (vj1-vj0+1)%3;
 	vuint8 a0, b0, c0;
 	vuint8 a1, b1, c1;
 	vuint8 a2, b2, c2;
 
-	vuint8 aa0, cc0;
-	vuint8 aa1, cc1;
-	vuint8 aa2, cc2;
+    vuint8 ra, rb, rc;
+	vuint8 raa, rcc;
 	vuint8 y;
 
 	for(i = vi0; i <= vi1; i++){
-		a0 = vec_load2(vE,i-1, -1);
-		a1 = vec_load2(vE,i  , -1);
-		a2 = vec_load2(vE,i+1, -1);
 
-		b0 = vec_load2(vE,i-1, 0);
-		b1 = vec_load2(vE,i  , 0);
-		b2 = vec_load2(vE,i+1, 0);
+		a0 = vec_load2(vE,i-1, vj0-1);
+		a1 = vec_load2(vE,i  , vj0-1);
+		a2 = vec_load2(vE,i+1, vj0-1);
+        ra = vec_and3(a0,a1,a2);
 
-		c0 = vec_load2(vE,i-1, 1);
-		c1 = vec_load2(vE,i  , 1);
-		c2 = vec_load2(vE,i+1, 1);
+		b0 = vec_load2(vE,i-1, vj0);
+		b1 = vec_load2(vE,i  , vj0);
+		b2 = vec_load2(vE,i+1, vj0);
+        rb = vec_and3(b0,b1,b2);
 
-		for(j = 1; j <= vj1; j++){
-
-			aa0 = vec_left1(a0,b0);
-			cc0 = vec_right1(b0,c0);
-
-			a0 = vMIN3(aa0,b0,cc0);
-
-			aa1 = vec_left1(a1,b1);
-			cc1 = vec_right1(b1,c1);
-
-			a1 = vMIN3(aa1,b1,cc1);
-
-			aa2 = vec_left1(a2,b2);
-			cc2 = vec_right1(b2,c2);
-
-			a2 = vMIN3(aa2,b2,cc2);
-
-			y = vMIN3(a0,a1,a2);
-
-			a0 = b0; a1 = b1; a2 = b2;
-			b0 = c0; b1 = c1; b2 = c2;
-
-			c0 = vec_load2(vE, i-1, j+1);
-			a0 = vMIN3(aa0,b0,cc0);
-			c1 = vec_load2(vE, i, j+1);
-			c2 = vec_load2(vE, i+1, j+1);
-
-			vec_store2(vOut, i, j-1, y);
-		}
-		aa0 = vec_left1(a0,b0);
-		cc0 = vec_right1(b0,c0);
-
-
-		aa1 = vec_left1(a1,b1);
-		cc1 = vec_right1(b1,c1);
-
-		a1 = vMIN3(aa1,b1,cc1);
-
-		aa2 = vec_left1(a2,b2);
-		cc2 = vec_right1(b2,c2);
-
-		a2 = vMIN3(aa2,b2,cc2);
-
-		y = vMIN3(a0,a1,a2);
-		vec_store2(vOut, i, j, y);
-	}
-}
-
-//Optimisation par réduction pqr colonne et déroulage de boucle
-void erosion_SIMD_red(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
-    
-    int i, j;
-    int r = (vj1-vj0+1)%3;
-    vuint8 a0, b0, c0;
-    vuint8 a1, b1, c1;
-    vuint8 a2, b2, c2;
-
-    vuint8 ra, rb, rc;
-    vuint8 opl, opr;
-    vuint8 y0, y1, y2, y;
-
-    for(i = vi0; i <= vi1; i++){
-        j = 0;
-        a0 = vec_load2(vE,i-1, j-1);
-        a1 = vec_load2(vE,i  , j-1);
-        a2 = vec_load2(vE,i+1, j-1);
-
-        b0 = vec_load2(vE,i-1, j);
-        b1 = vec_load2(vE,i  , j);
-        b2 = vec_load2(vE,i+1, j);
-
-        ra = vMIN3(a0, a1, a2);
-        rb = vMIN3(b0, b1, b2);
-
-        for(j = vj0; j <= vj1-r; j+=3){
-            // centre: rb
+		for(j = vj0; j <= vj1-r; j+=3){
             c0 = vec_load2(vE,i-1, j+1);
             c1 = vec_load2(vE,i  , j+1);
             c2 = vec_load2(vE,i+1, j+1);
-            rc = vMIN3(c0, c1, c2);
+            rc = vec_and3(c0,c1,c2);
 
-            opl = vec_left1(ra, rb);
-            opr = vec_right1(rb, rc);
-            y0 = vMIN3(opl, rb, opr);
-            vec_store2(vOut,i,j, y0);
+			raa = vec_left1(ra,rb);
+			rcc = vec_right1(rb,rc);
+			y = vec_and3(raa,rb,rcc);
 
-            // centre: rc
+            vec_store2(vOut, i, j, y);
+
             a0 = vec_load2(vE,i-1, j+2);
             a1 = vec_load2(vE,i  , j+2);
             a2 = vec_load2(vE,i+1, j+2);
-            ra = vMIN3(a0, a1, a2);
+            ra = vec_and3(a0,a1,a2);
 
-            opl = vec_left1(rb, rc);
-            opr = vec_right1(rc, ra);
-            y1 = vMIN3(opl, rc, opr);
-            vec_store2(vOut,i,j+1, y1);
+            raa = vec_left1(rb,rc);
+            rcc = vec_right1(rc,ra);
+            y = vec_and3(raa,rc,rcc);
 
-            // centre: ra
+            vec_store2(vOut, i, j+1, y);
+
             b0 = vec_load2(vE,i-1, j+3);
             b1 = vec_load2(vE,i  , j+3);
             b2 = vec_load2(vE,i+1, j+3);
-            rb = vMIN3(b0, b1, b2);
+            rb = vec_and3(b0,b1,b2);
 
-            opl = vec_left1(rc, ra); 
-            opr = vec_right1(ra, rb);
-            y2 = vMIN3(opl, ra, opl);
+            raa = vec_left1(rc,ra);
+            rcc = vec_right1(ra,rb);
+            y = vec_and3(raa,ra,rcc);
 
-            vec_store2(vOut,i,j+2, y2);
-        }
-        //epilogue
-        switch(r){
+            vec_store2(vOut, i, j+2, y);
+		}
+
+        switch (r){
             case 2:
                 a0 = vec_load2(vE,i-1, vj1-2);
                 a1 = vec_load2(vE,i  , vj1-2);
                 a2 = vec_load2(vE,i+1, vj1-2);
+                ra = vec_and3(a0,a1,a2);
 
                 b0 = vec_load2(vE,i-1, vj1-1);
                 b1 = vec_load2(vE,i  , vj1-1);
                 b2 = vec_load2(vE,i+1, vj1-1);
+                rb = vec_and3(b0,b1,b2);
 
                 c0 = vec_load2(vE,i-1, vj1);
                 c1 = vec_load2(vE,i  , vj1);
                 c2 = vec_load2(vE,i+1, vj1);
+                rc = vec_and3(c0,c1,c2);
 
-                ra = vMIN3(a0, a1, a2);
-                rb = vMIN3(b0, b1, b2);
-                rc = vMIN3(c0, c1, c2);
-                opl = vec_left1(ra, rb); 
-                opr = vec_right1(rb, rc);
-                y   = vMIN3(opl, rb, opr);
-                vec_store2(vOut,i,vj1-1, y);
+                raa = vec_left1(ra,rb);
+                rcc = vec_right1(rb,rc);
+                y = vec_and3(raa,rb,rcc);
+
+                vec_store2(vOut, i, vj1-1, y);
             
             case 1:
                 a0 = vec_load2(vE,i-1, vj1-1);
                 a1 = vec_load2(vE,i  , vj1-1);
                 a2 = vec_load2(vE,i+1, vj1-1);
+                ra = vec_and3(a0,a1,a2);
 
                 b0 = vec_load2(vE,i-1, vj1);
                 b1 = vec_load2(vE,i  , vj1);
                 b2 = vec_load2(vE,i+1, vj1);
+                rb = vec_and3(b0,b1,b2);
 
                 c0 = vec_load2(vE,i-1, vj1+1);
                 c1 = vec_load2(vE,i  , vj1+1);
                 c2 = vec_load2(vE,i+1, vj1+1);
+                rc = vec_and3(c0,c1,c2);
 
-                ra = vMIN3(a0, a1, a2);
-                rb = vMIN3(b0, b1, b2);
-                rc = vMIN3(c0, c1, c2);
-                opl = vec_left1(ra, rb); 
-                opr = vec_right1(rb, rc);
-                y   = vMIN3(opl, rb, opr);
-                vec_store2(vOut,i,vj1, y);
-                break;
+                raa = vec_left1(ra,rb);
+                rcc = vec_right1(rb,rc);
+                y = vec_and3(raa,rb,rcc);
+
+                vec_store2(vOut, i, vj1, y);        
+
         }
-    }
-
+	}
 }
-
 
 void erosion2_SIMD(vuint8 **vE, int n, vuint8 **vOut){
 	/*
@@ -432,206 +356,133 @@ void dilatation_SIMD(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int 
 		    aa0 = vec_left1(a0,b0);
 		    cc0 = vec_right1(b0,c0);
 
-		    a0 = vMAX3(aa0,b0,cc0);
+		    a0 = vec_or3(aa0,b0,cc0);
 
 		    aa1 = vec_left1(a1,b1);
 		    cc1 = vec_right1(b1,c1);
 
-		    a1 = vMAX3(aa1,b1,cc1);
+		    a1 = vec_or3(aa1,b1,cc1);
 
 		    aa2 = vec_left1(a2,b2);
 		    cc2 = vec_right1(b2,c2);
 
-		    a2 = vMAX3(aa2,b2,cc2);
+		    a2 = vec_or3(aa2,b2,cc2);
 
-		    y = vMAX3(a0,a1,a2);
+		    y = vec_or3(a0,a1,a2);
 
 		    vec_store2(vOut, i, j, y);
 	    }
   	}
 }
 
-//Optimisation par rotation de registre
-void dilatation_SIMD_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+//Optimisation par rotation de registre +  reduction par colonne + déroulage de boucle
+void dilatation_red_SIMD(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
 	int i, j;
-	vuint8 a0, b0, c0;
-	vuint8 a1, b1, c1;
-	vuint8 a2, b2, c2;
-
-	vuint8 aa0, cc0;
-	vuint8 aa1, cc1;
-	vuint8 aa2, cc2;
-	vuint8 y;
-
-	for(i = vi0; i <= vi1; i++){
-		a0 = vec_load2(vE,i-1, -1);
-		a1 = vec_load2(vE,i  , -1);
-		a2 = vec_load2(vE,i+1, -1);
-
-		b0 = vec_load2(vE,i-1, 0);
-		b1 = vec_load2(vE,i  , 0);
-		b2 = vec_load2(vE,i+1, 0);
-
-		c0 = vec_load2(vE,i-1, 1);
-		c1 = vec_load2(vE,i  , 1);
-		c2 = vec_load2(vE,i+1, 1);
-
-		for(j = 1; j <= vj1; j++){
-
-			aa0 = vec_left1(a0,b0);
-			cc0 = vec_right1(b0,c0);
-
-			a0 = vMAX3(aa0,b0,cc0);
-
-			aa1 = vec_left1(a1,b1);
-			cc1 = vec_right1(b1,c1);
-
-			a1 = vMAX3(aa1,b1,cc1);
-
-			aa2 = vec_left1(a2,b2);
-			cc2 = vec_right1(b2,c2);
-
-			a2 = vMAX3(aa2,b2,cc2);
-
-			y = vMAX3(a0,a1,a2);
-
-			a0 = b0; a1 = b1; a2 = b2;
-			b0 = c0; b1 = c1; b2 = c2;
-
-			c0 = vec_load2(vE, i-1, j+1);
-			a0 = vMAX3(aa0,b0,cc0);
-			c1 = vec_load2(vE, i, j+1);
-			c2 = vec_load2(vE, i+1, j+1);
-
-			vec_store2(vOut, i, j-1, y);
-		}
-		aa0 = vec_left1(a0,b0);
-		cc0 = vec_right1(b0,c0);
-
-
-		aa1 = vec_left1(a1,b1);
-		cc1 = vec_right1(b1,c1);
-
-		a1 = vMAX3(aa1,b1,cc1);
-
-		aa2 = vec_left1(a2,b2);
-		cc2 = vec_right1(b2,c2);
-
-		a2 = vMAX3(aa2,b2,cc2);
-
-		y = vMAX3(a0,a1,a2);
-		vec_store2(vOut, i, j, y);
-	}
-}
-
-void dilatation_SIMD_red(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
-
-    int i, j;
     int r = (vj1-vj0+1)%3;
     vuint8 a0, b0, c0;
     vuint8 a1, b1, c1;
     vuint8 a2, b2, c2;
 
     vuint8 ra, rb, rc;
-    vuint8 opl, opr;
-    vuint8 y0, y1, y2, y;
+    vuint8 raa, rcc;
+    vuint8 y;
 
     for(i = vi0; i <= vi1; i++){
-        j = 0;
-        a0 = vec_load2(vE,i-1, j-1);
-        a1 = vec_load2(vE,i  , j-1);
-        a2 = vec_load2(vE,i+1, j-1);
 
-        b0 = vec_load2(vE,i-1, j);
-        b1 = vec_load2(vE,i  , j);
-        b2 = vec_load2(vE,i+1, j);
+        a0 = vec_load2(vE,i-1, vj0-1);
+        a1 = vec_load2(vE,i  , vj0-1);
+        a2 = vec_load2(vE,i+1, vj0-1);
+        ra = vec_or3(a0,a1,a2);
 
-        ra = vMAX3(a0, a1, a2);
-        rb = vMAX3(b0, b1, b2);
+        b0 = vec_load2(vE,i-1, vj0);
+        b1 = vec_load2(vE,i  , vj0);
+        b2 = vec_load2(vE,i+1, vj0);
+        rb = vec_or3(b0,b1,b2);
 
         for(j = vj0; j <= vj1-r; j+=3){
-            // centre: rb
             c0 = vec_load2(vE,i-1, j+1);
             c1 = vec_load2(vE,i  , j+1);
             c2 = vec_load2(vE,i+1, j+1);
-            rc = vMAX3(c0, c1, c2);
+            rc = vec_or3(c0,c1,c2);
 
-            opl = vec_left1(ra, rb);
-            opr = vec_right1(rb, rc);
-            y0 = vMAX3(opl, rb, opr);
-            vec_store2(vOut,i,j, y0);
+            raa = vec_left1(ra,rb);
+            rcc = vec_right1(rb,rc);
+            y = vec_or3(raa,rb,rcc);
 
-            // centre: rc
+            vec_store2(vOut, i, j, y);
+
             a0 = vec_load2(vE,i-1, j+2);
             a1 = vec_load2(vE,i  , j+2);
             a2 = vec_load2(vE,i+1, j+2);
-            ra = vMAX3(a0, a1, a2);
+            ra = vec_or3(a0,a1,a2);
 
-            opl = vec_left1(rb, rc);
-            opr = vec_right1(rc, ra);
-            y1 = vMAX3(opl, rc, opr);
-            vec_store2(vOut,i,j+1, y1);
+            raa = vec_left1(rb,rc);
+            rcc = vec_right1(rc,ra);
+            y = vec_or3(raa,rc,rcc);
 
-            // centre: ra
+            vec_store2(vOut, i, j+1, y);
+
             b0 = vec_load2(vE,i-1, j+3);
             b1 = vec_load2(vE,i  , j+3);
             b2 = vec_load2(vE,i+1, j+3);
-            rb = vMAX3(b0, b1, b2);
+            rb = vec_or3(b0,b1,b2);
 
-            opl = vec_left1(rc, ra); 
-            opr = vec_right1(ra, rb);
-            y2 = vMAX3(opl, ra, opl);
+            raa = vec_left1(rc,ra);
+            rcc = vec_right1(ra,rb);
+            y = vec_or3(raa,ra,rcc);
 
-            vec_store2(vOut,i,j+2, y2);
+            vec_store2(vOut, i, j+2, y);
         }
-        //epilogue
-        switch(r){
+
+        switch (r){
             case 2:
                 a0 = vec_load2(vE,i-1, vj1-2);
                 a1 = vec_load2(vE,i  , vj1-2);
                 a2 = vec_load2(vE,i+1, vj1-2);
+                ra = vec_or3(a0,a1,a2);
 
                 b0 = vec_load2(vE,i-1, vj1-1);
                 b1 = vec_load2(vE,i  , vj1-1);
                 b2 = vec_load2(vE,i+1, vj1-1);
+                rb = vec_or3(b0,b1,b2);
 
                 c0 = vec_load2(vE,i-1, vj1);
                 c1 = vec_load2(vE,i  , vj1);
                 c2 = vec_load2(vE,i+1, vj1);
+                rc = vec_or3(c0,c1,c2);
 
-                ra = vMAX3(a0, a1, a2);
-                rb = vMAX3(b0, b1, b2);
-                rc = vMAX3(c0, c1, c2);
-                opl = vec_left1(ra, rb); 
-                opr = vec_right1(rb, rc);
-                y   = vMAX3(opl, rb, opr);
-                vec_store2(vOut,i,vj1-1, y);
+                raa = vec_left1(ra,rb);
+                rcc = vec_right1(rb,rc);
+                y = vec_or3(raa,rb,rcc);
+
+                vec_store2(vOut, i, vj1-1, y);
             
             case 1:
                 a0 = vec_load2(vE,i-1, vj1-1);
                 a1 = vec_load2(vE,i  , vj1-1);
                 a2 = vec_load2(vE,i+1, vj1-1);
+                ra = vec_or3(a0,a1,a2);
 
                 b0 = vec_load2(vE,i-1, vj1);
                 b1 = vec_load2(vE,i  , vj1);
                 b2 = vec_load2(vE,i+1, vj1);
+                rb = vec_or3(b0,b1,b2);
 
                 c0 = vec_load2(vE,i-1, vj1+1);
                 c1 = vec_load2(vE,i  , vj1+1);
                 c2 = vec_load2(vE,i+1, vj1+1);
+                rc = vec_or3(c0,c1,c2);
 
-                ra = vMAX3(a0, a1, a2);
-                rb = vMAX3(b0, b1, b2);
-                rc = vMAX3(c0, c1, c2);
-                opl = vec_left1(ra, rb); 
-                opr = vec_right1(rb, rc);
-                y   = vMAX3(opl, rb, opr);
-                vec_store2(vOut,i,vj1, y);
-                break;
+                raa = vec_left1(ra,rb);
+                rcc = vec_right1(rb,rc); 
+                y = vec_or3(raa,rb,rcc);
+
+                vec_store2(vOut, i, vj1, y);       
+
         }
     }
-
 }
+
 
 void dilatation2_SIMD(vuint8 **vE, int n, vuint8 **vOut){/*
   int i, j;
@@ -762,22 +613,22 @@ void morpho_SIMD(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, 
 	zero_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
 
 	init_bord(vE,vi0,vi1,vj0,vj1,vj0b,vj1b);
-	//erosion_SIMD_rot(vE, vinter1, vi0, vi1, vj0, vj1);
-  erosion_SIMD(vE, vinter1, vi0, vi1, vj0, vj1);
+	erosion_red_SIMD(vE, vinter1, vi0, vi1, vj0, vj1);
+    // erosion_SIMD(vE, vinter1, vi0, vi1, vj0, vj1);
 
-	init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
-	//dilatation_SIMD_rot(vinter1, vinter2, vi0, vi1, vj0, vj1);
-  dilatation_SIMD(vinter1, vinter2, vi0, vi1, vj0, vj1);
+    init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
+    dilatation_red_SIMD(vinter1, vinter2, vi0, vi1, vj0, vj1);
+    // dilatation_SIMD(vinter1, vinter2, vi0, vi1, vj0, vj1);
 
-	init_bord(vinter2,vi0,vi1,vj0,vj1,vj0b,vj1b);
-	//dilatation_SIMD_rot(vinter2, vinter1, vi0, vi1, vj0, vj1);
-  dilatation_SIMD(vinter2, vinter1, vi0, vi1, vj0, vj1);
+    init_bord(vinter2,vi0,vi1,vj0,vj1,vj0b,vj1b);
+    dilatation_red_SIMD(vinter2, vinter1, vi0, vi1, vj0, vj1);
+    // dilatation_SIMD(vinter2, vinter1, vi0, vi1, vj0, vj1);
 
-	init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
-	//erosion_SIMD_rot(vinter1, vOut, vi0, vi1, vj0, vj1);
-  erosion_SIMD(vinter1, vOut, vi0, vi1, vj0, vj1);
+    init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
+    erosion_red_SIMD(vinter1, vOut, vi0, vi1, vj0, vj1);
+    // erosion_SIMD(vinter1, vOut, vi0, vi1, vj0, vj1);
 
-  free_vui8matrix(vinter1, vi0b, vi1b, vj0b, vj1b);
-  free_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
+    free_vui8matrix(vinter1, vi0b, vi1b, vj0b, vj1b);
+    free_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
 
 }
