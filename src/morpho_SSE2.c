@@ -19,7 +19,7 @@
 /* I: Image avec bord    */
 /* img: Image de sortie  */
 /* --------------------- */
-void init_bord(vuint8 **vE,int vi0,int vi1,int vj0,int vj1,int vj0b,int vj1b){//E: deja init avec b=2
+void init_bord(vuint8 **vE,int vi0,int vi1,int vj0,int vj1,int vj0b,int vj1b){//E: deja init avec b=2(4)
   int cst;
 	vuint8 vcst;
 
@@ -158,6 +158,40 @@ void morpho_SSE2(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, 
 
     init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
     erosion_SSE2(vinter1, vOut, vi0, vi1, vj0, vj1);
+
+    free_vui8matrix(vinter1, vi0b, vi1b, vj0b, vj1b);
+    free_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
+}
+
+//Optimisation par rotaton des registre (RR)
+void erosion_SSE2_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+
+}
+
+void dilatation_SSE2_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+
+}
+
+void morpho_SSE2_rot(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b){
+
+    vuint8 **vinter1, **vinter2;
+    vinter1  = vui8matrix(vi0b, vi1b, vj0b, vj1b);
+    vinter2  = vui8matrix(vi0b, vi1b, vj0b, vj1b);
+
+    zero_vui8matrix(vinter1, vi0b, vi1b, vj0b, vj1b);
+    zero_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
+
+    init_bord(vE,vi0,vi1,vj0,vj1,vj0b,vj1b);
+    erosion_SSE2_rot(vE, vinter1, vi0, vi1, vj0, vj1);
+
+    init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
+    dilatation_SSE2_rot(vinter1, vinter2, vi0, vi1, vj0, vj1);
+
+    init_bord(vinter2,vi0,vi1,vj0,vj1,vj0b,vj1b);
+    dilatation_SSE2_rot(vinter2, vinter1, vi0, vi1, vj0, vj1);
+
+    init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
+    erosion_SSE2_rot(vinter1, vOut, vi0, vi1, vj0, vj1);
 
     free_vui8matrix(vinter1, vi0b, vi1b, vj0b, vj1b);
     free_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
@@ -405,6 +439,7 @@ void morpho_SSE2_red(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int v
     free_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
 }
 
+//Optimisation fusion des operateur
 void dilatation_fusion(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
     int i, j;
     int r = (vj1-vj0+1)%3;
@@ -567,4 +602,47 @@ void morpho_fusion(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1
     free_vui8matrix(vinter1, vi0b, vi1b, vj0b, vj1b);
     free_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
 
+}
+
+
+//Optimisation pipeline en ligne, calcul utilisant erosion_SSE2_red et dilatation_fusion
+void morpho_pipeline(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b){
+    
+    vuint8 vcst;
+    vuint8 **X, **Y;
+    X  = vui8matrix(vi0b, vi1b, vj0b, vj1b); //E->erosion->X
+    Y  = vui8matrix(vi0b, vi1b, vj0b, vj1b); //X->dila_fusion->Y
+    zero_vui8matrix(X, vi0b, vi1b, vj0b, vj1b);
+    zero_vui8matrix(Y, vi0b, vi1b, vj0b, vj1b);
+
+    init_bord(vE,vi0,vi1,vj0,vj1,vj0b,vj1b);// bord vertical et orizontal(2)
+
+    //bord haut
+    for(int j = vj0b; j <= vj1b; j++){
+        vcst = vec_load2(vE,0,j); vec_store2(vE,-3,j,vcst); vec_store2(vE,-4,j,vcst);
+    }
+
+    //prologue X[-3~2] Y[-1~0]
+    erosion_SSE2_red(vE,X,-3,2,vj0,vj1);
+    dilatation_fusion(X,Y,-1,0,vj0,vj1);
+
+    //pipeline en ligne
+    for(int i=0;i<=vi1-4;i++){
+        erosion_SSE2_red(vE,X,i+3,i+3,vj0,vj1);
+        dilatation_fusion(X,Y,i+1,i+1,vj0,vj1);
+        erosion_SSE2_red(Y,vOut,i,i,vj0,vj1);
+    }
+
+    //bord bas
+    for(int j = vj0b; j <= vj1b; j++){
+        vcst = vec_load2(vE,vi1,j); vec_store2(vE,vi1+3,j,vcst); vec_store2(vE,vi1+4,j,vcst);
+    }
+
+    //epilogue X[vi1~vi1+3] Y[vi1-2~vi1+1] vOut[vi1-3~vi1]
+    erosion_SSE2_red(vE,X,vi1,vi1+3,vj0,vj1);
+    dilatation_fusion(X,Y,vi1-2,vi1+1,vj0,vj1);
+    erosion_SSE2_red(Y,vOut,vi1-3,vi1,vj0,vj1);
+
+    free_vui8matrix(X, vi0b, vi1b, vj0b, vj1b);
+    free_vui8matrix(Y, vi0b, vi1b, vj0b, vj1b);
 }

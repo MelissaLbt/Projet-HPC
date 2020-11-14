@@ -17,10 +17,9 @@
 
 int64_t test_morpho_SSE2(int v){
 
-    //typedef void * (*morpho_func_t)(vuint8 **,vuint8 **,int,int,int,int,int,int,int,int);
-    void (*morpho_func_t[])(vuint8 **,vuint8 **,int,int,int,int,int,int,int,int) = {morpho_SSE2, morpho_SSE2_red, morpho_fusion};
+    void (*morpho_func_t[])(vuint8 **,vuint8 **,int,int,int,int,int,int,int,int) = {morpho_SSE2, morpho_SSE2_red, morpho_fusion, morpho_pipeline};
 
-    int b = 2; // border
+    int b = 4; // border
     char *format = "%6.2f ";
 
     int si0, si1, sj0, sj1; // scalar indices
@@ -98,5 +97,7 @@ int64_t test_morpho_SSE2(int v){
     }
     free_vui8matrix(vE, vi0b, vi1b, vj0b, vj1b);
     free_vui8matrix(vOut, vi0, vi1, vj0, vj1);
+
+    //printf("%d,%d,%d,%d\n",vi0b, vi1b, vj0b, vj1b);
     return timer_morpho;
 }

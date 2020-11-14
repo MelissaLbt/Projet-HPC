@@ -99,6 +99,10 @@ int main(int argc, char *argv[])
     printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie fusion", time, check_results(2) ? "[OK]" : "[KO]");
     BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
 
+    CHRONO(time = test_morpho_SSE2(3),cycles);
+    printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie pipeline", time, check_results(2) ? "[OK]" : "[KO]");
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
+
 
     puts("====================");
     puts("=== End of tests ===");
