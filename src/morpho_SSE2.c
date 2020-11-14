@@ -145,16 +145,16 @@ void morpho_SSE2_r1(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj
     zero_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
 
     init_bord(vE,vi0,vi1,vj0,vj1,vj0b,vj1b);
-    erosion_SSE2(vE, vinter1, vi0, vi1, vj0, vj1);
+    erosion_SSE2_r1(vE, vinter1, vi0, vi1, vj0, vj1);
 
     init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
-    dilatation_SSE2(vinter1, vinter2, vi0, vi1, vj0, vj1);
+    dilatation_SSE2_r1(vinter1, vinter2, vi0, vi1, vj0, vj1);
 
     init_bord(vinter2,vi0,vi1,vj0,vj1,vj0b,vj1b);
-    dilatation_SSE2(vinter2, vinter1, vi0, vi1, vj0, vj1);
+    dilatation_SSE2_r1(vinter2, vinter1, vi0, vi1, vj0, vj1);
 
     init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
-    erosion_SSE2(vinter1, vOut, vi0, vi1, vj0, vj1);
+    erosion_SSE2_r1(vinter1, vOut, vi0, vi1, vj0, vj1);
 
     free_vui8matrix(vinter1, vi0b, vi1b, vj0b, vj1b);
     free_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);

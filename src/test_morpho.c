@@ -25,11 +25,11 @@ int64_t test_morpho(){
 	int b = 2; // pour 3*3
 	int k, ndigit=0;
 
-	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";
-	char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout/";
+	// char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";
+	// char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout/";
 
-	//char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout/";
-	//char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout/";
+	char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout/";
+	char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout/";
 
 	char *filename = "car_";
 	char *extension = "pgm";

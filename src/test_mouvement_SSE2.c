@@ -23,8 +23,10 @@ int64_t test_mouvement_SSE2(){
     int vi0, vi1, vj0, vj1; // vector indices
     int mi0, mi1, mj0, mj1; // memory (bounded) indices
 
-    char *path = "/home/huiling/HPC/Projet-HPC/car3/";	
-	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";	
+  // char *path = "/home/huiling/HPC/Projet-HPC/car3/";
+	// char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";
+	char *path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/car3/";
+	char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_SSE2/";
 
 	char *filename = "car_";
 	char *extension = "pgm";
@@ -45,16 +47,16 @@ int64_t test_mouvement_SSE2(){
     // ------------------------- //
     // -- calculs des indices -- //
     // ------------------------- //
- 
- 
+
+
     card = card_vuint8();
-    
+
     si0 = 0; si1 = 240-1;
     sj0 = 0; sj1 = 320-1;
-     
+
     s2v(si0, si1, sj0, sj1, card, &vi0, &vi1, &vj0, &vj1);
     v2m(vi0, vi1, vj0, vj1, card, &mi0, &mi1, &mj0, &mj1);
-  
+
 
     // allocation
 	vI0 = vui8matrix(vi0, vi1, vj0, vj1);
@@ -62,19 +64,19 @@ int64_t test_mouvement_SSE2(){
 	vM = vui8matrix(vi0, vi1, vj0, vj1);
 	vV = vui8matrix(vi0, vi1, vj0, vj1);
 	vE  = vui8matrix(vi0, vi1, vj0, vj1);
-    
+
     // wrappers scalaires
-  
+
 	sI0 = (uint8**) vI0;
 	sI1 = (uint8**) vI1;
 	sM  = (uint8**) vM;
 	sV  = (uint8**) vV;
 	sE  = (uint8**) vE;
-	 
+
 	// ---------- //
     // -- init -- //
     // ---------- //
-   
+
 	generate_path_filename_k_ndigit_extension(path, filename, 3000, ndigit, extension, complete_filename);
 	MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sI0);
 
@@ -92,7 +94,7 @@ int64_t test_mouvement_SSE2(){
 
 	end = clocktime();
 	timer_sd += (end-start);
-	
+
 	for(int i=1; i<200; i++){   //traitement a partir de 1
 
 		k = i + 3000;
@@ -101,7 +103,7 @@ int64_t test_mouvement_SSE2(){
 
 		start  = clocktime();
 		SigmaDelta_1step_SSE2(vI1,vM,vV,vE,vi0,vi1,vj0,vj1);
-		
+
 		end = clocktime();
 		timer_sd += (end-start);
 
