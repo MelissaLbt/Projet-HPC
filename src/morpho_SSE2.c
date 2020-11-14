@@ -161,8 +161,80 @@ void morpho_SSE2_r1(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj
 }
 
 //SIMD pour b = 2
+//Faire macro vec_and5
 void erosion_SSE2_r2(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+  int i, j;
+  vuint8 a0, a1, a2, a3, a4;
+  vuint8 b0, b1, b2, b3, b4;
+  vuint8 c0, c1, c2, c3, c4;
 
+  vuint8 aa0, aa1, aa2, aa3, aa4;
+  vuint8 bb0, bb1, bb2, bb3, bb4;
+  vuint8 cc0, cc1, cc2, cc3, cc4;
+  vuint8 dd0, dd1, dd2, dd3, dd4;
+  vuint8 y;
+
+  for(i = vi0; i <= vi1; i++){
+    for(j = vj0; j <= vj1; j++){
+      a0 = vec_load2(vE,i-2, j-1);
+      a1 = vec_load2(vE,i-1, j-1);
+      a2 = vec_load2(vE,i  , j-1);
+      a3 = vec_load2(vE,i+1, j-1);
+      a4 = vec_load2(vE,i+2, j-1);
+
+      b0 = vec_load2(vE,i-2, j);
+      b1 = vec_load2(vE,i-1, j);
+      b2 = vec_load2(vE,i  , j);
+      b3 = vec_load2(vE,i+1, j);
+      b4 = vec_load2(vE,i+2, j);
+
+      c0 = vec_load2(vE,i-2, j+1);
+      c1 = vec_load2(vE,i-1, j+1);
+      c2 = vec_load2(vE,i  , j+1);
+      c3 = vec_load2(vE,i+1, j-1);
+      c4 = vec_load2(vE,i+2, j-1);
+
+      aa0 = vec_left2(a0,b0);
+      bb0 = vec_left1(a0,b0);
+      cc0 = vec_right1(b0,c0);
+      dd0 = vec_right2(b0,c0);
+
+      a0 = vec_and5(aa0,bb0,b0,cc0,dd0);
+
+      aa1 = vec_left2(a1,b1);
+      bb1 = vec_left1(a1,b1);
+      cc1 = vec_right1(b1,c1);
+      dd1 = vec_right2(b1,c1);
+
+      a1 = vec_and5(aa1,bb1,b1,cc1,dd1);
+
+
+      aa2 = vec_left2(a2,b2);
+      bb2 = vec_left1(a2,b2);
+      cc2 = vec_right1(b2,c2);
+      dd2 = vec_right2(b2,c2);
+
+      a2 = vec_and5(aa2,bb2,b2,cc2,dd2);
+
+      aa3 = vec_left2(a3,b3);
+      bb3 = vec_left1(a3,b3);
+      cc3 = vec_right1(b3,c3);
+      dd3 = vec_right2(b3,c3);
+
+      a3 = vec_and5(aa3,bb3,b3,cc3,dd3);
+
+      aa4 = vec_left2(a4,b4);
+      bb4 = vec_left1(a4,b4);
+      cc4 = vec_right1(b4,c4);
+      dd4 = vec_right2(b4,c4);
+
+      a4 = vec_and5(aa4,bb4,b4,cc4,dd4);
+
+      y = vec_and5(a0,a1,a2,a3,a4);
+
+      vec_store2(vOut, i, j, y);
+    }
+  }
 }
 
 void dilatation_SSE2_r2(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
