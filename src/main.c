@@ -13,6 +13,7 @@
 #include "vnrutil.h"
 
 #include "mutil.h"
+#include "mymacro.h"
 
 #include "test_unitaire.h"
 
@@ -21,13 +22,13 @@
 #include "test_mouvement.h"
 #include "test_morpho.h"
 
-#include "mouvement_SIMD.h"
-#include "morpho_SIMD.h"
-#include "test_mouvement_SIMD.h"
-#include "test_morpho_SIMD.h"
+#include "mouvement_SSE2.h"
+#include "morpho_SSE2.h"
+#include "test_mouvement_SSE2.h"
+#include "test_morpho_SSE2.h"
 
-#include "morpho_fusion.h"
-#include "test_morpho_fusion.h"
+
+#define N_PIXEL (200*320*240)
 
 void info(void)
 {
@@ -42,7 +43,15 @@ void info(void)
 
 int main(int argc, char *argv[])
 {	
+    char *format = "%6.2f ";
     int64_t time;
+
+    // chronometrie
+    int iter, niter = 4;
+    int run, nrun = 5;
+    double t0, t1, dt, tmin, t;
+    double cycles;
+
     info();
 
 //-------- test unitaire pour valider l'algo Sigma_Delta ---------//
@@ -65,13 +74,30 @@ int main(int argc, char *argv[])
     puts("==========================");
     puts("=== Tests formal begin ===");
     puts("==========================");
-    printf(" - %-*s completed %8ld ms  \n", 30, "Sigma_Delta Naive", test_mouvement());
-    printf(" - %-*s completed %8ld ms  \n", 30, "Morphologie Naive", test_morpho());
 
+    CHRONO(time = test_mouvement(),cycles);
+    printf(" - %-*s completed %7ld ms        ", 25, "Sigma_Delta Naive", time); 
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
 
-    printf(" - %-*s completed %8ld ms  %s\n", 30, "Sigma_Delta SIMD", test_mouvement_SIMD(), check_results(1) ? "[OK]" : "[KO]");
-    printf(" - %-*s completed %8ld ms  %s\n", 30, "Morphologie SIMD", test_morpho_SIMD(), check_results(2) ? "[OK]" : "[KO]");
-    printf(" - %-*s completed %8ld ms  %s\n", 30, "Morphologie fusion", test_morpho_fusion(), check_results(3) ? "[OK]" : "[KO]");
+    CHRONO(time = test_morpho(),cycles);
+    printf(" - %-*s completed %7ld ms        ", 25, "Morphologie Naive", time); 
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
+
+    CHRONO(time = test_mouvement_SSE2(),cycles);
+    printf(" - %-*s completed %7ld ms %s   ", 25, "Sigma_Delta SSE2", time, check_results(1) ? "[OK]" : "[KO]");
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
+
+    CHRONO(time = test_morpho_SSE2(0),cycles);
+    printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie SSE2", time, check_results(2) ? "[OK]" : "[KO]");
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
+
+    CHRONO(time = test_morpho_SSE2(1),cycles);
+    printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie red", time, check_results(2) ? "[OK]" : "[KO]");
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
+
+    CHRONO(time = test_morpho_SSE2(2),cycles);
+    printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie fusion", time, check_results(2) ? "[OK]" : "[KO]");
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
 
 
     puts("====================");
@@ -82,9 +108,9 @@ int main(int argc, char *argv[])
     printf("\nCheck the pictures in the project folder:\n");
     printf("Output of Sigma_Delta              : Projet-HPC/sdout\n");
     printf("Output of Morphologie              : Projet-HPC/morphoout\n");
-    printf("Output of Sigma_Delta SIMD         : Projet-HPC/sdout_SIMD\n");
-    printf("Output of Morphologie SIMD         : Projet-HPC/morphoout_SIMD\n");
-    printf("Output of Morphologie avec fusion  : Projet-HPC/fusion\n");
+    printf("Output of Sigma_Delta SSE2         : Projet-HPC/sdout_SSE2\n");
+    printf("Output of Morphologie SSE2         : Projet-HPC/morphoout_SSE2\n");
+    printf("Output of Morphologie avec fusion  : Projet-HPC/morphoout_SSE2\n");
 
     
     return 0;   

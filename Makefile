@@ -7,7 +7,7 @@
 
 # -- Lile list ----------
 
-FILE = main.c nrutil.c vnrutil.c mutil.c mouvement.c morpho.c test_mouvement.c test_morpho.c mouvement_SIMD.c morpho_SIMD.c test_mouvement_SIMD.c test_morpho_SIMD.c test_unitaire.c morpho_fusion.c test_morpho_fusion.c
+FILE = main.c nrutil.c vnrutil.c mutil.c mouvement.c morpho.c test_mouvement.c test_morpho.c mouvement_SSE2.c morpho_SSE2.c test_mouvement_SSE2.c test_morpho_SSE2.c test_unitaire.c
 
 # -- Paths ----------
 SRC_PATH = src

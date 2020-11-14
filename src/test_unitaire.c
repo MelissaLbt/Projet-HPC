@@ -379,15 +379,11 @@ int check_results(int i) {
 	
 	if(i == 1){ // sd vs sd_simd
 		path_ref = "/home/huiling/HPC/Projet-HPC/sdout/";	
-		path = "/home/huiling/HPC/Projet-HPC/sdout_SIMD/";	
+		path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";	
 	}
 	else if(i == 2){
 		path_ref = "/home/huiling/HPC/Projet-HPC/morphoout/";	
-		path = "/home/huiling/HPC/Projet-HPC/morphoout_SIMD/";	
-	}
-	else if(i == 3){
-		path_ref = "/home/huiling/HPC/Projet-HPC/morphoout/";	
-		path = "/home/huiling/HPC/Projet-HPC/fusion/";	
+		path = "/home/huiling/HPC/Projet-HPC/morphoout_SSE2/";	
 	}
 
     for(int k=3001; k<=3199; k++){

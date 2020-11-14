@@ -12,7 +12,6 @@
 #include "mutil.h"
 
 #include "morpho.h"
-#include "morpho_SIMD.h"
 
 /* --------------------- */
 /* E: Image d'entree     */
@@ -58,7 +57,6 @@ void copy_duplication(uint8 **E, uint8 **I, int b, long i0, long i1, long j0, lo
 
 }
 
-
 // Erosion dans le cas B de taille 3*3
 void erosion(uint8 **E, uint8 **img, int b, long i0, long i1, long j0, long j1){
 
@@ -78,7 +76,6 @@ void erosion(uint8 **E, uint8 **img, int b, long i0, long i1, long j0, long j1){
  	}
  	free_ui8matrix(I, i0-b, i1+b, j0-b, j1+b);
 }
-
 
 // Dilatation dans le cas B de taille 3*3
 void dilatation(uint8 **E, uint8 **img, int b, long i0, long i1, long j0, long j1){
@@ -100,8 +97,6 @@ void dilatation(uint8 **E, uint8 **img, int b, long i0, long i1, long j0, long j
  	free_ui8matrix(I, i0-b, i1+b, j0-b, j1+b);
 }
 
-
-
 void morpho(uint8 **E, uint8 **res, int b, long i0, long i1, long j0, long j1){
 
 	uint8 **inter1, **inter2;
@@ -115,6 +110,4 @@ void morpho(uint8 **E, uint8 **res, int b, long i0, long i1, long j0, long j1){
     
 	free_ui8matrix(inter1,i0,i1,j0,j1);
 	free_ui8matrix(inter2,i0,i1,j0,j1);
-
-
 }

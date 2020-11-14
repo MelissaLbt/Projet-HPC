@@ -9,16 +9,16 @@
 #include "vnrdef.h"
 #include "vnrutil.h"
 
-//#include "mymacro.h"
 #include "mutil.h"
 
-#include "morpho_fusion.h"
-#include "test_morpho_fusion.h"
-
-#include "morpho_SIMD.h"
+#include "morpho_SSE2.h"
+#include "test_morpho_SSE2.h"
 
 
-int64_t test_morpho_fusion(){
+int64_t test_morpho_SSE2(int v){
+
+    //typedef void * (*morpho_func_t)(vuint8 **,vuint8 **,int,int,int,int,int,int,int,int);
+    void (*morpho_func_t[])(vuint8 **,vuint8 **,int,int,int,int,int,int,int,int) = {morpho_SSE2, morpho_SSE2_red, morpho_fusion};
 
     int b = 2; // border
     char *format = "%6.2f ";
@@ -41,7 +41,7 @@ int64_t test_morpho_fusion(){
     vuint8 **vE, **vOut;
 
     int64_t start, end;
-    int64_t timer_morpho_fusion = 0;
+    int64_t timer_morpho = 0;
 
     int card = card_vuint8(); //Peut-être card = card_vuint8   240
 
@@ -61,10 +61,10 @@ int64_t test_morpho_fusion(){
 
     int k, ndigit=0;
 
-    //char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_SIMD/";
-    //char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_fusion/";
-    char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SIMD/";
-    char *morout_path = "/home/huiling/HPC/Projet-HPC/fusion/";
+    //char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_SSE2/";
+    //char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SSE2/";
+    char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";
+    char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_SSE2/";
 
     char *filename = "car_";
     char *extension = "pgm";
@@ -86,18 +86,17 @@ int64_t test_morpho_fusion(){
         converti2b(sE,si0, si1, sj0, sj1);
 
         start  = clocktime();
-        morpho_fusion(vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
+        morpho_func_t[v](vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
+
         end  = clocktime();
-        timer_morpho_fusion += (end-start);
+        timer_morpho += (end-start);
 
         convertb2i(sOut,si0, si1, sj0, sj1);
         generate_path_filename_k_ndigit_extension(morout_path, filename, k, ndigit, extension, complete_filename);
         SavePGM_ui8matrix(sOut, si0, si1, sj0, sj1, complete_filename);
 
     }
-
     free_vui8matrix(vE, vi0b, vi1b, vj0b, vj1b);
     free_vui8matrix(vOut, vi0, vi1, vj0, vj1);
-    
-    return timer_morpho_fusion;
+    return timer_morpho;
 }
