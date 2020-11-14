@@ -22,9 +22,13 @@
 
 void init_bord(vuint8 **vE,int vi0,int vi1,int vj0,int vj1,int vj0b,int vj1b);
 
-void erosion_SSE2(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);
-void dilatation_SSE2(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);
-void morpho_SSE2(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b);
+void erosion_SSE2_r1(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);
+void dilatation_SSE2_r1(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);
+void morpho_SSE2_r1(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b);
+
+void erosion_SSE2_r2(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);
+void dilatation_SSE2_r2(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);
+void morpho_SSE2_r2(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b);
 
 void erosion_SSE2_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);
 void dilatation_SSE2_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);

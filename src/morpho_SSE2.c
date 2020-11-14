@@ -39,7 +39,8 @@ void init_bord(vuint8 **vE,int vi0,int vi1,int vj0,int vj1,int vj0b,int vj1b){//
     //display_vui8matrix(vE,vi0-2,vi0-2,vj0b,vj0b,"%4d","vE_SSE2");
 }
 
-void erosion_SSE2(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+//SIMD pour b = 1
+void erosion_SSE2_r1(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
 
   int i, j;
   vuint8 a0, b0, c0;
@@ -52,44 +53,42 @@ void erosion_SSE2(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1
   vuint8 y;
 
 	for(i = vi0; i <= vi1; i++){
+    for(j = vj0; j <= vj1; j++){
+      a0 = vec_load2(vE,i-1, j-1);
+		  a1 = vec_load2(vE,i  , j-1);
+		  a2 = vec_load2(vE,i+1, j-1);
 
-	    for(j = vj0; j <= vj1; j++){
+		  b0 = vec_load2(vE,i-1, j);
+		  b1 = vec_load2(vE,i  , j);
+		  b2 = vec_load2(vE,i+1, j);
 
-	    	a0 = vec_load2(vE,i-1, j-1);
-		    a1 = vec_load2(vE,i  , j-1);
-		    a2 = vec_load2(vE,i+1, j-1);
+		  c0 = vec_load2(vE,i-1, j+1);
+		  c1 = vec_load2(vE,i  , j+1);
+		  c2 = vec_load2(vE,i+1, j+1);
 
-		    b0 = vec_load2(vE,i-1, j);
-		    b1 = vec_load2(vE,i  , j);
-		    b2 = vec_load2(vE,i+1, j);
+		  aa0 = vec_left1(a0,b0);
+		  cc0 = vec_right1(b0,c0);
 
-		    c0 = vec_load2(vE,i-1, j+1);
-		    c1 = vec_load2(vE,i  , j+1);
-		    c2 = vec_load2(vE,i+1, j+1);
+		  a0 = vec_and3(aa0,b0,cc0);
 
-		    aa0 = vec_left1(a0,b0);
-		    cc0 = vec_right1(b0,c0);
+		  aa1 = vec_left1(a1,b1);
+		  cc1 = vec_right1(b1,c1);
 
-		    a0 = vec_and3(aa0,b0,cc0);
+		  a1 = vec_and3(aa1,b1,cc1);
 
-		    aa1 = vec_left1(a1,b1);
-		    cc1 = vec_right1(b1,c1);
+		  aa2 = vec_left1(a2,b2);
+		  cc2 = vec_right1(b2,c2);
 
-		    a1 = vec_and3(aa1,b1,cc1);
+		  a2 = vec_and3(aa2,b2,cc2);
 
-		    aa2 = vec_left1(a2,b2);
-		    cc2 = vec_right1(b2,c2);
+		  y = vec_and3(a0,a1,a2);
 
-		    a2 = vec_and3(aa2,b2,cc2);
-
-		    y = vec_and3(a0,a1,a2);
-
-		    vec_store2(vOut,i,j, y);
-	    }
-  	}
+		  vec_store2(vOut, i, j, y);
+	  }
+  }
 }
 
-void dilatation_SSE2(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+void dilatation_SSE2_r1(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
 	int i, j;
 	vuint8 a0, b0, c0;
 	vuint8 a1, b1, c1;
@@ -101,44 +100,42 @@ void dilatation_SSE2(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int 
 	vuint8 y;
 
 	for(i = vi0; i<= vi1; i++){
+    for(j = vj0; j < vj1; j++){
+      a0 = vec_load2(vE,i-1, j-1);
+		  a1 = vec_load2(vE,i  , j-1);
+		  a2 = vec_load2(vE,i+1, j-1);
 
-	    for(j = vj0; j < vj1; j++){
+		  b0 = vec_load2(vE,i-1, j);
+		  b1 = vec_load2(vE,i  , j);
+		  b2 = vec_load2(vE,i+1, j);
 
-	    	a0 = vec_load2(vE,i-1, j-1);
-		    a1 = vec_load2(vE,i  , j-1);
-		    a2 = vec_load2(vE,i+1, j-1);
+		  c0 = vec_load2(vE,i-1, j+1);
+		  c1 = vec_load2(vE,i  , j+1);
+	    c2 = vec_load2(vE,i+1, j+1);
 
-		    b0 = vec_load2(vE,i-1, j);
-		    b1 = vec_load2(vE,i  , j);
-		    b2 = vec_load2(vE,i+1, j);
+	    aa0 = vec_left1(a0,b0);
+      cc0 = vec_right1(b0,c0);
 
-		    c0 = vec_load2(vE,i-1, j+1);
-		    c1 = vec_load2(vE,i  , j+1);
-		    c2 = vec_load2(vE,i+1, j+1);
+		  a0 = vec_or3(aa0,b0,cc0);
 
-		    aa0 = vec_left1(a0,b0);
-		    cc0 = vec_right1(b0,c0);
+		  aa1 = vec_left1(a1,b1);
+		  cc1 = vec_right1(b1,c1);
 
-		    a0 = vec_or3(aa0,b0,cc0);
+		  a1 = vec_or3(aa1,b1,cc1);
 
-		    aa1 = vec_left1(a1,b1);
-		    cc1 = vec_right1(b1,c1);
+		  aa2 = vec_left1(a2,b2);
+		  cc2 = vec_right1(b2,c2);
 
-		    a1 = vec_or3(aa1,b1,cc1);
+		  a2 = vec_or3(aa2,b2,cc2);
 
-		    aa2 = vec_left1(a2,b2);
-		    cc2 = vec_right1(b2,c2);
+		  y = vec_or3(a0,a1,a2);
 
-		    a2 = vec_or3(aa2,b2,cc2);
-
-		    y = vec_or3(a0,a1,a2);
-
-		    vec_store2(vOut, i, j, y);
-	    }
-  	}
+		  vec_store2(vOut, i, j-1, y);
+	  }
+  }
 }
 
-void morpho_SSE2(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b){
+void morpho_SSE2_r1(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b){
 
     vuint8 **vinter1, **vinter2;
     vinter1  = vui8matrix(vi0b, vi1b, vj0b, vj1b);
@@ -163,13 +160,167 @@ void morpho_SSE2(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, 
     free_vui8matrix(vinter2, vi0b, vi1b, vj0b, vj1b);
 }
 
-//Optimisation par rotaton des registre (RR)
-void erosion_SSE2_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+//SIMD pour b = 2
+void erosion_SSE2_r2(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
 
 }
 
-void dilatation_SSE2_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+void dilatation_SSE2_r2(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
 
+}
+
+void morpho_SSE2_r2(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b){
+
+}
+
+
+//Optimisation par rotaton des registre (RR)
+void erosion_SSE2_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+  int i, j;
+	vuint8 a0, b0, c0;
+	vuint8 a1, b1, c1;
+	vuint8 a2, b2, c2;
+
+	vuint8 aa0, cc0;
+	vuint8 aa1, cc1;
+	vuint8 aa2, cc2;
+	vuint8 y;
+
+	for(i = vi0; i <= vi1; i++){
+	  a0 = vec_load2(vE,i-1, -1);
+		a1 = vec_load2(vE,i  , -1);
+		a2 = vec_load2(vE,i+1, -1);
+
+		b0 = vec_load2(vE,i-1, 0);
+		b1 = vec_load2(vE,i  , 0);
+		b2 = vec_load2(vE,i+1, 0);
+
+		c0 = vec_load2(vE,i-1, 1);
+		c1 = vec_load2(vE,i  , 1);
+		c2 = vec_load2(vE,i+1, 1);
+
+		printf("#################### i = %d ####################\n", i);
+
+		for(j = 1; j <= vj1; j++){
+
+			aa0 = vec_left1(a0,b0);
+			cc0 = vec_right1(b0,c0);
+
+			a0 = vec_and3(aa0,b0,cc0);
+
+			aa1 = vec_left1(a1,b1);
+			cc1 = vec_right1(b1,c1);
+
+			a1 = vec_and3(aa1,b1,cc1);
+
+			aa2 = vec_left1(a2,b2);
+			cc2 = vec_right1(b2,c2);
+
+			a2 = vec_and3(aa2,b2,cc2);
+
+			y = vec_and3(a0,a1,a2);
+
+			a0 = b0; a1 = b1; a2 = b2;
+			b0 = c0; b1 = c1; b2 = c2;
+
+			c0 = vec_load2(vE, i-1, j+1);
+			c1 = vec_load2(vE, i, j+1);
+			c2 = vec_load2(vE, i+1, j+1);
+			printf("j = %d\n", j-1);
+			vec_store2(vOut, i, j-1, y);
+		}
+		aa0 = vec_left1(a0,b0);
+		cc0 = vec_right1(b0,c0);
+
+		a0 = vec_and3(aa0,b0,cc0);
+
+		aa1 = vec_left1(a1,b1);
+		cc1 = vec_right1(b1,c1);
+
+		a1 = vec_and3(aa1,b1,cc1);
+
+		aa2 = vec_left1(a2,b2);
+		cc2 = vec_right1(b2,c2);
+
+		a2 = vec_and3(aa2,b2,cc2);
+
+		y = vec_and3(a0,a1,a2);
+		printf("j = %d\n", j-1);
+		vec_store2(vOut, i, j-1, y);
+  }
+}
+
+void dilatation_SSE2_rot(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
+  int i, j;
+  vuint8 a0, b0, c0;
+  vuint8 a1, b1, c1;
+  vuint8 a2, b2, c2;
+
+  vuint8 aa0, cc0;
+  vuint8 aa1, cc1;
+  vuint8 aa2, cc2;
+  vuint8 y;
+
+  for(i = vi0; i <= vi1; i++){
+    a0 = vec_load2(vE,i-1, -1);
+    a1 = vec_load2(vE,i  , -1);
+    a2 = vec_load2(vE,i+1, -1);
+
+    b0 = vec_load2(vE,i-1, 0);
+    b1 = vec_load2(vE,i  , 0);
+    b2 = vec_load2(vE,i+1, 0);
+
+    c0 = vec_load2(vE,i-1, 1);
+    c1 = vec_load2(vE,i  , 1);
+    c2 = vec_load2(vE,i+1, 1);
+    //printf("#################### i = %d ####################\n", i);
+    for(j = 1; j <= vj1; j++){
+
+      aa0 = vec_left1(a0,b0);
+      cc0 = vec_right1(b0,c0);
+
+      a0 = vec_or3(aa0,b0,cc0);
+
+      aa1 = vec_left1(a1,b1);
+      cc1 = vec_right1(b1,c1);
+
+      a1 = vec_or3(aa1,b1,cc1);
+
+      aa2 = vec_left1(a2,b2);
+      cc2 = vec_right1(b2,c2);
+
+      a2 = vec_or3(aa2,b2,cc2);
+
+      y = vec_or3(a0,a1,a2);
+
+      a0 = b0; a1 = b1; a2 = b2;
+      b0 = c0; b1 = c1; b2 = c2;
+
+      c0 = vec_load2(vE, i-1, j+1);
+      c1 = vec_load2(vE, i, j+1);
+      c2 = vec_load2(vE, i+1, j+1);
+      //printf("j = %d\n", j-1);
+      vec_store2(vOut, i, j-1, y);
+    }
+    aa0 = vec_left1(a0,b0);
+    cc0 = vec_right1(b0,c0);
+
+    a0 = vec_or3(aa0,b0,cc0);
+
+    aa1 = vec_left1(a1,b1);
+    cc1 = vec_right1(b1,c1);
+
+    a1 = vec_or3(aa1,b1,cc1);
+
+    aa2 = vec_left1(a2,b2);
+    cc2 = vec_right1(b2,c2);
+
+    a2 = vec_or3(aa2,b2,cc2);
+
+    y = vec_or3(a0,a1,a2);
+    //printf("j = %d\n", j-1);
+    vec_store2(vOut, i, j-1, y);
+  }
 }
 
 void morpho_SSE2_rot(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b){
@@ -279,7 +430,7 @@ void erosion_SSE2_red(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int
                 y = vec_and3(raa,rb,rcc);
 
                 vec_store2(vOut, i, vj1-1, y);
-            
+
             case 1:
                 a0 = vec_load2(vE,i-1, vj1-1);
                 a1 = vec_load2(vE,i  , vj1-1);
@@ -300,12 +451,12 @@ void erosion_SSE2_red(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int
                 rcc = vec_right1(rb,rc);
                 y = vec_and3(raa,rb,rcc);
 
-                vec_store2(vOut, i, vj1, y);        
+                vec_store2(vOut, i, vj1, y);
 
         }
     }
 }
-//Optimisation par rotation de registre +  reduction par colonne + déroulage de boucle
+
 void dilatation_SSE2_red(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1){
 	int i, j;
     int r = (vj1-vj0+1)%3;
@@ -386,7 +537,7 @@ void dilatation_SSE2_red(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, 
                 y = vec_or3(raa,rb,rcc);
 
                 vec_store2(vOut, i, vj1-1, y);
-            
+
             case 1:
                 a0 = vec_load2(vE,i-1, vj1-1);
                 a1 = vec_load2(vE,i  , vj1-1);
@@ -404,15 +555,14 @@ void dilatation_SSE2_red(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, 
                 rc = vec_or3(c0,c1,c2);
 
                 raa = vec_left1(ra,rb);
-                rcc = vec_right1(rb,rc); 
+                rcc = vec_right1(rb,rc);
                 y = vec_or3(raa,rb,rcc);
 
-                vec_store2(vOut, i, vj1, y);       
+                vec_store2(vOut, i, vj1, y);
 
         }
     }
 }
-
 
 void morpho_SSE2_red(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b){
 
@@ -547,7 +697,7 @@ void dilatation_fusion(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, in
                 y = vec_or5(rl2,rl1,rb,rr1,rr2);
 
                 vec_store2(vOut, i, vj1-1, y);
-            
+
             case 1:
                 a0 = vec_load2(vE,i-2, vj1-1);
                 a1 = vec_load2(vE,i-1, vj1-1);
@@ -576,7 +726,7 @@ void dilatation_fusion(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, in
                 rr2 = vec_right2(rb,rc);
                 y = vec_or5(rl2,rl1,rb,rr1,rr2);
 
-                vec_store2(vOut, i, vj1, y);       
+                vec_store2(vOut, i, vj1, y);
 
         }
     }
@@ -592,10 +742,10 @@ void morpho_fusion(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1
 
     init_bord(vE,vi0,vi1,vj0,vj1,vj0b,vj1b);
     erosion_SSE2_red(vE, vinter1, vi0, vi1, vj0, vj1);
-    
+
     init_bord(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
     dilatation_fusion(vinter1, vinter2, vi0, vi1, vj0, vj1);
-    
+
     init_bord(vinter2,vi0,vi1,vj0,vj1,vj0b,vj1b);
     erosion_SSE2_red(vinter2, vOut, vi0, vi1, vj0, vj1);
 
@@ -607,7 +757,7 @@ void morpho_fusion(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1
 
 //Optimisation pipeline en ligne, calcul utilisant erosion_SSE2_red et dilatation_fusion
 void morpho_pipeline(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b){
-    
+
     vuint8 vcst;
     vuint8 **X, **Y;
     X  = vui8matrix(vi0b, vi1b, vj0b, vj1b); //E->erosion->X
