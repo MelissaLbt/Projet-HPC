@@ -17,7 +17,7 @@
 #define vec_left2(v0, v1) _mm_or_si128(_mm_slli_si128(v0,14),_mm_srli_si128(v1,2))
 
 #define vec_or5(v0,v1,v2,v3,v4)	 _mm_or_si128 (_mm_or_si128 (_mm_or_si128 (_mm_or_si128 (v0,v1),v2),v3),v4)
-
+#define vec_and5(v0,v1,v2,v3,v4) _mm_and_si128 (_mm_and_si128 (_mm_and_si128 (_mm_and_si128 (v0,v1),v2),v3),v4)
 
 
 void init_bord(vuint8 **vE,int vi0,int vi1,int vj0,int vj1,int vj0b,int vj1b);
