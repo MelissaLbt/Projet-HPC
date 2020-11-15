@@ -316,6 +316,7 @@ int Morpho_erosion(){
 	free_ui8matrix(img_ref,0,3,0,3);
 	return 1;
 }
+
 int Morpho_dilatation(){
 	uint8 c = 1;
 	uint8 **E 		= ui8matrix(0,3,0,3);
@@ -385,7 +386,7 @@ int check_results(int i) {
 		path = "/home/huiling/HPC/Projet-HPC/morphoout_SSE2/";
 	}
 
-    for(int k=3001; k<=3199; k++){
+  for(int k=3001; k<=3199; k++){
 		generate_path_filename_k_ndigit_extension(path_ref, filename, k, ndigit, extension, complete_filename);
 		MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, img_ref);
 		generate_path_filename_k_ndigit_extension(path, filename, k, ndigit, extension, complete_filename);
@@ -410,5 +411,5 @@ int check_results(int i) {
 	}
 	free_ui8matrix(img_ref,i0,i1,j0,j1);
 	free_ui8matrix(img,i0,i1,j0,j1);
-    return 1;
+  return 1;
 }

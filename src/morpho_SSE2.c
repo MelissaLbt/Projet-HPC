@@ -928,7 +928,7 @@ void morpho_pipeline(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int v
     zero_vui8matrix(Y, vi0b, vi1b, vj0b, vj1b);
 
     init_bord(vE,vi0,vi1,vj0,vj1,vj0b,vj1b);// bord vertical et orizontal(2)
-
+    #pragma omp for
     //bord haut
     for(int j = vj0b; j <= vj1b; j++){
       vcst = vec_load2(vE,0,j); vec_store2(vE,-3,j,vcst); vec_store2(vE,-4,j,vcst);
@@ -937,14 +937,14 @@ void morpho_pipeline(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int v
     //prologue X[-3~2] Y[-1~0]
     erosion_SSE2_red(vE,X,-3,2,vj0,vj1);
     dilatation_fusion(X,Y,-1,0,vj0,vj1);
-
+    #pragma omp for
     //pipeline en ligne
     for(int i=0;i<=vi1-4;i++){
       erosion_SSE2_red(vE,X,i+3,i+3,vj0,vj1);
       dilatation_fusion(X,Y,i+1,i+1,vj0,vj1);
       erosion_SSE2_red(Y,vOut,i,i,vj0,vj1);
     }
-
+    #pragma omp for
     //bord bas
     for(int j = vj0b; j <= vj1b; j++){
       vcst = vec_load2(vE,vi1,j); vec_store2(vE,vi1+3,j,vcst); vec_store2(vE,vi1+4,j,vcst);

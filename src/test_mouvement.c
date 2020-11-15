@@ -89,5 +89,4 @@ int64_t test_mouvement(){
 	free_ui8matrix(E,i0,i1,j0,j1);
 
 	return timer_sd;
-
 }

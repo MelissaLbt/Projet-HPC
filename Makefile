@@ -27,8 +27,8 @@ CC = gcc
 AR = ar -rc
 
 # -- Flags ----------
-C_DEBUG_FLAGS = -O0 
-C_CC_FLAGS = -Wall -std=c99 -DNOALIAS -DALIGNED -DmySSE -DTIMER_POSIX6
+C_DEBUG_FLAGS = -O0
+C_CC_FLAGS = -g -fopenmp -std=c99 -DNOALIAS -DALIGNED -DmySSE -DTIMER_POSIX6
 C_OPTIMISATION_FLAGS = -O3 -fstrict-aliasing
 C_ARCH_FLAGS = -msse4.2
 
