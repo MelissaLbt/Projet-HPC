@@ -71,37 +71,37 @@ int main(int argc, char *argv[])
     printf(" - %-*s completed     %s\n", 25, "Morpho_dilatation",   Morpho_dilatation() ? "[OK]" : "[KO]");
 
 
-    // puts("==========================");
-    // puts("=== Tests formal begin ===");
-    // puts("==========================");
-    //
-    // CHRONO(time = test_mouvement(),cycles);
-    // printf(" - %-*s completed %7ld ms        ", 25, "Sigma_Delta Naive", time);
-    // BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
-    //
-    // CHRONO(time = test_morpho(),cycles);
-    // printf(" - %-*s completed %7ld ms        ", 25, "Morphologie Naive", time);
-    // BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
-    //
-    // CHRONO(time = test_mouvement_SSE2(),cycles);
-    // printf(" - %-*s completed %7ld ms %s   ", 25, "Sigma_Delta SSE2", time, check_results(1) ? "[OK]" : "[KO]");
-    // BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
-    //
-    CHRONO(time = test_morpho_SSE2(0),cycles);
-    // printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie SSE2 r1", time, check_results(2) ? "[OK]" : "[KO]");
-    // BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
-    //
-    // CHRONO(time = test_morpho_SSE2(1),cycles);
-    // printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie red", time, check_results(2) ? "[OK]" : "[KO]");
-    // BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
-    //
-    // CHRONO(time = test_morpho_SSE2(2),cycles);
-    // printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie fusion", time, check_results(2) ? "[OK]" : "[KO]");
-    // BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
+    puts("==========================");
+    puts("=== Tests formal begin ===");
+    puts("==========================");
 
-    // CHRONO(time = test_morpho_SSE2(3),cycles);
-    // printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie pipeline", time, check_results(2) ? "[OK]" : "[KO]");
-    // BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
+    CHRONO(time = test_mouvement(),cycles);
+    printf(" - %-*s completed %7ld ms        ", 25, "Sigma_Delta Naive", time);
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
+
+    CHRONO(time = test_morpho(),cycles);
+    printf(" - %-*s completed %7ld ms        ", 25, "Morphologie Naive", time);
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
+
+    CHRONO(time = test_mouvement_SSE2(),cycles);
+    printf(" - %-*s completed %7ld ms %s   ", 25, "Sigma_Delta SSE2", time, check_results(1) ? "[OK]" : "[KO]");
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
+
+    CHRONO(time = test_morpho_SSE2(0),cycles);
+    printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie SSE2 r1", time, check_results(2) ? "[OK]" : "[KO]");
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
+
+    CHRONO(time = test_morpho_SSE2(1),cycles);
+    printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie red", time, check_results(2) ? "[OK]" : "[KO]");
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
+
+    CHRONO(time = test_morpho_SSE2(2),cycles);
+    printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie fusion", time, check_results(2) ? "[OK]" : "[KO]");
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
+
+    CHRONO(time = test_morpho_SSE2(3),cycles);
+    printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie pipeline", time, check_results(2) ? "[OK]" : "[KO]");
+    BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
 
 
     puts("====================");

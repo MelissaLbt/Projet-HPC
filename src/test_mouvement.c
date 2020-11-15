@@ -25,7 +25,7 @@ int64_t test_mouvement(){
 	// char *path = "/home/huiling/HPC/Projet-HPC/car3/";
 	// char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";
 	char *path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/car3/";
-	char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout/";	
+	char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout/";
 
 
 	char *filename = "car_";
@@ -77,8 +77,6 @@ int64_t test_mouvement(){
 		generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
 		SavePGM_ui8matrix(E, i0, i1, j0, j1, complete_filename);
 	}
-
-
 
 	// Desallocation
 	free_ui8matrix(I0,i0,i1,j0,j1);

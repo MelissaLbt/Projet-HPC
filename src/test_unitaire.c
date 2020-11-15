@@ -55,7 +55,7 @@ int SigmaDelta_step0_tu(){
 }
 
 int SigmaDelta_step1_tu(){
-	
+
 	uint8 **I1 = ui8matrix(0,3,0,3);
 	uint8 **M0 = ui8matrix(0,3,0,3);
 	uint8 **M1 = ui8matrix(0,3,0,3);
@@ -94,7 +94,7 @@ int SigmaDelta_step1_tu(){
 	free_ui8matrix(M0,0,3,0,3);
 	free_ui8matrix(M1,0,3,0,3);
 	free_ui8matrix(M1_ref,0,3,0,3);
-	return 1;	
+	return 1;
 }
 
 int SigmaDelta_step2_tu(){
@@ -133,8 +133,7 @@ int SigmaDelta_step2_tu(){
 	free_ui8matrix(M1,0,3,0,3);
 	free_ui8matrix(O,0,3,0,3);
 	free_ui8matrix(O_ref,0,3,0,3);
-	return 1;	
-	
+	return 1;
 }
 
 int SigmaDelta_step3_tu(){
@@ -172,8 +171,8 @@ int SigmaDelta_step3_tu(){
 	free_ui8matrix(O,0,3,0,3);
 	free_ui8matrix(V0,0,3,0,3);
 	free_ui8matrix(V1,0,3,0,3);
-	free_ui8matrix(V1_ref,0,3,0,3);	
-	return 1;	
+	free_ui8matrix(V1_ref,0,3,0,3);
+	return 1;
 }
 
 int SigmaDelta_step4_tu(){
@@ -216,7 +215,7 @@ int SigmaDelta_step4_tu(){
 	free_ui8matrix(V1,0,3,0,3);
 	free_ui8matrix(E,0,3,0,3);
 	free_ui8matrix(E_ref,0,3,0,3);
-	return 1;	
+	return 1;
 }
 
 //************* Test Unitaire ***************//
@@ -296,7 +295,7 @@ int Morpho_erosion(){
 	img_ref[1][0] = 1; img_ref[1][1] = 1; img_ref[1][2] = 2; img_ref[1][3] = 3;
 	img_ref[2][0] = 5; img_ref[2][1] = 5; img_ref[2][2] = 6; img_ref[2][3] = 7;
 	img_ref[3][0] = 9; img_ref[3][1] = 9; img_ref[3][2] = 10; img_ref[3][3] = 11;
-	
+
 	//display_ui8matrix (E,0,3,0,3,"%6d ","E");
 
 	erosion(E,img,1,0,3,0,3);
@@ -311,7 +310,7 @@ int Morpho_erosion(){
 				return 0;
 			}
 		}
-	}	
+	}
 	free_ui8matrix(E,0,3,0,3);
 	free_ui8matrix(img,0,3,0,3);
 	free_ui8matrix(img_ref,0,3,0,3);
@@ -334,7 +333,7 @@ int Morpho_dilatation(){
 	img_ref[1][0] = 10; img_ref[1][1] = 11; img_ref[1][2] = 12; img_ref[1][3] = 12;
 	img_ref[2][0] = 14; img_ref[2][1] = 15; img_ref[2][2] = 16; img_ref[2][3] = 16;
 	img_ref[3][0] = 14; img_ref[3][1] = 15; img_ref[3][2] = 16; img_ref[3][3] = 16;
-	
+
 	//display_ui8matrix (E,0,3,0,3,"%6d ","E");
 
 	dilatation(E,img,1,0,3,0,3);
@@ -349,7 +348,7 @@ int Morpho_dilatation(){
 				return 0;
 			}
 		}
-	}	
+	}
 	free_ui8matrix(E,0,3,0,3);
 	free_ui8matrix(img,0,3,0,3);
 	free_ui8matrix(img_ref,0,3,0,3);
@@ -376,21 +375,21 @@ int check_results(int i) {
 	uint8 **img_ref, **img;
 	img_ref = ui8matrix(i0,i1,j0,j1);
 	img 	= ui8matrix(i0,i1,j0,j1);
-	
+
 	if(i == 1){ // sd vs sd_simd
-		path_ref = "/home/huiling/HPC/Projet-HPC/sdout/";	
-		path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";	
+		path_ref = "/home/huiling/HPC/Projet-HPC/sdout/";
+		path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";
 	}
 	else if(i == 2){
-		path_ref = "/home/huiling/HPC/Projet-HPC/morphoout/";	
-		path = "/home/huiling/HPC/Projet-HPC/morphoout_SSE2/";	
+		path_ref = "/home/huiling/HPC/Projet-HPC/morphoout/";
+		path = "/home/huiling/HPC/Projet-HPC/morphoout_SSE2/";
 	}
 
     for(int k=3001; k<=3199; k++){
 		generate_path_filename_k_ndigit_extension(path_ref, filename, k, ndigit, extension, complete_filename);
-		MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, img_ref); 
+		MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, img_ref);
 		generate_path_filename_k_ndigit_extension(path, filename, k, ndigit, extension, complete_filename);
-		MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, img); 
+		MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, img);
 		c = 0;
 		for(int i=0; i<240; i++){
 			for(int j=0; j<320; j++){
@@ -402,7 +401,7 @@ int check_results(int i) {
 						free_ui8matrix(img,i0,i1,j0,j1);
 						return 0;
 					}
-					
+
 				}
 			}
 		}
