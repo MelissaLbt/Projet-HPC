@@ -20,7 +20,7 @@
 #define vec_and5(v0,v1,v2,v3,v4) _mm_and_si128 (_mm_and_si128 (_mm_and_si128 (_mm_and_si128 (v0,v1),v2),v3),v4)
 
 
-void init_bord(vuint8 **vE,int vi0,int vi1,int vj0,int vj1,int vj0b,int vj1b);
+void init_bord_SSE2(vuint8 **vE,int vi0,int vi1,int vj0,int vj1,int vj0b,int vj1b);
 
 void erosion_SSE2_r1(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);
 void dilatation_SSE2_r1(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);
@@ -42,6 +42,13 @@ void dilatation_fusion(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, in
 void morpho_fusion(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b);
 
 void morpho_pipeline(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b);
+//open MP
+//sur mor_pipeline
+void morpho_multi_thread(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b);
+//openmp+fusion : sur ero_red et dilate_fusion  wrong!!
+// void erosion_SSE2_red_omp(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);
+// void dilatation_fusion_omp(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);
+// void morpho_fusion_omp(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b);
 
 
 

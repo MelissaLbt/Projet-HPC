@@ -53,7 +53,11 @@ extern "C" {
 #if defined (__SSE4_2__) || defined (__SSE4_1__)
 #include <smmintrin.h>
 #endif
-    
+ 
+#ifdef __AVX__
+#include <immintrin.h>
+#endif
+
     typedef __m128i vuint8;
     typedef __m128i vsint8;
     
@@ -81,6 +85,7 @@ extern "C" {
     
     typedef __m128 vfloat;
     
+    typedef __m256i lvuint8;
     
 #ifdef __cplusplus
 }

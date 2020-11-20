@@ -7,7 +7,8 @@
 
 # -- Lile list ----------
 
-FILE = main.c nrutil.c vnrutil.c mutil.c mouvement.c morpho.c test_mouvement.c test_morpho.c mouvement_SSE2.c morpho_SSE2.c test_mouvement_SSE2.c test_morpho_SSE2.c test_unitaire.c
+FILE = main.c nrutil.c vnrutil.c mutil.c mouvement.c morpho.c test_mouvement.c test_morpho.c mouvement_SSE2.c morpho_SSE2.c test_mouvement_SSE2.c test_morpho_SSE2.c test_unitaire.c mouvement_AVX2.c morpho_AVX2.c test_mouvement_AVX2.c test_morpho_AVX2.c
+
 
 # -- Paths ----------
 SRC_PATH = src
@@ -30,7 +31,7 @@ AR = ar -rc
 C_DEBUG_FLAGS = -O0
 C_CC_FLAGS = -g -fopenmp -std=c99 -DNOALIAS -DALIGNED -DmySSE -DTIMER_POSIX6
 C_OPTIMISATION_FLAGS = -O3 -fstrict-aliasing
-C_ARCH_FLAGS = -msse4.2
+C_ARCH_FLAGS = -msse4.2 -msse2 -mavx2 -mavx 
 
 #C_OS_FLAGS = -D$(OS)
 C_OS_FLAGS =

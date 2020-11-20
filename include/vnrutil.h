@@ -29,6 +29,14 @@ extern "C" {
 	
 #define vec_or3(v0,v1,v2)	 _mm_or_si128 (_mm_or_si128 (v0,v1),v2)
 #define vec_and3(v0,v1,v2) _mm_and_si128(_mm_and_si128(v0,v1),v2)
+
+#define vec256_load2(T,i,j)  _mm256_load_si256((lvuint8*) &T[i][j])
+#define vec256_store2(T,i,j,x) _mm256_store_si256((lvuint8*) &T[i][j], x)	
+#define vec256_set(x) 		_mm256_set1_epi8(x)
+
+#define vec256_or3(v0,v1,v2)	 _mm256_or_si256 (_mm256_or_si256 (v0,v1),v2)
+#define vec256_and3(v0,v1,v2) _mm256_and_si256(_mm256_and_si256(v0,v1),v2)
+ 
     
 //#pragma message(" - include vnralloc.h")
     

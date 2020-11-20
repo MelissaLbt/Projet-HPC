@@ -11,9 +11,9 @@ int SigmaDelta_step1_tu();
 int SigmaDelta_step2_tu();
 int SigmaDelta_step3_tu();
 int SigmaDelta_step4_tu();
-int Morpho_gesbord();
-int Morpho_erosion();
-int Morpho_dilatation();
+int Morpho_initbord_tu();
+int Morpho_erosion_tu();
+int Morpho_dilatation_tu();
 int check_results(int i);
 
 

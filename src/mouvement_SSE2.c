@@ -29,7 +29,7 @@ void SigmaDelta_step0_SSE2(vuint8 **I, vuint8 **M, vuint8 **V, int vi0, int vi1,
 		}
 	}
 }
-
+//------------- SIMD+calcule par registre, fusion des 4 steps/
 void SigmaDelta_1step_SSE2(vuint8 **I, vuint8 **M0, vuint8 **V0, vuint8 **E, int vi0, int vi1, int vj0, int vj1){
 
 	int i,j;
@@ -86,3 +86,4 @@ void SigmaDelta_1step_SSE2(vuint8 **I, vuint8 **M0, vuint8 **V0, vuint8 **E, int
 		}
 	}
 }
+

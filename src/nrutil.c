@@ -47,6 +47,19 @@ void converti2b(uint8** img, int nrl, int nrh, int ncl, int nch){
   }
 }
 
+/* ---------------------------------------------------------- */
+void zero_ui8matrix(uint8 **m, long i0, long i1, long j0, long j1)
+/* ---------------------------------------------------------- */
+{
+    long i, j;
+    
+    for(i=i0; i<=i1; i++) {
+        for(j=j0; j<=j1; j++) {
+            m[i][j] = 0;
+        }
+    }
+}
+
 /* ------------------------- */
 void nrerror(char error_text[])
 /* ------------------------- */

@@ -17,7 +17,7 @@
 
 int64_t test_morpho_SSE2(int v){
 
-  void (*morpho_func_t[])(vuint8 **,vuint8 **,int,int,int,int,int,int,int,int) = {morpho_SSE2_r1, morpho_SSE2_red, morpho_fusion, morpho_pipeline};
+  void (*morpho_func_t[])(vuint8 **,vuint8 **,int,int,int,int,int,int,int,int) = {morpho_SSE2_r1, morpho_SSE2_rot, morpho_SSE2_red, morpho_fusion, morpho_pipeline, morpho_multi_thread};
 
   int b = 4; // border
   char *format = "%6.2f ";
@@ -60,10 +60,10 @@ int64_t test_morpho_SSE2(int v){
 
   int k, ndigit=0;
 
-  char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_SSE2/";
-  char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SSE2/";
-  // char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";
-  // char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_SSE2/";
+  // char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_SSE2/";
+  // char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SSE2/";
+  char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";
+  char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_SSE2/";
 
   char *filename = "car_";
   char *extension = "pgm";

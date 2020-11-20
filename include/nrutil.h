@@ -36,6 +36,8 @@ int64_t clocktime();
 /* conversion image code en [0,1] vers [0.255]*/
 void convertb2i();
 void converti2b();
+void zero_ui8matrix(uint8 **m, long i0, long i1, long j0, long j1);
+
 
 void generate_filename_k_ndigit                 (            char *filename, int k, int ndigit,                         char *complete_filename);
 void generate_filename_k_ndigit_extension       (            char *filename, int k, int ndigit,        char *extension, char *complete_filename);
