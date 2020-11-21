@@ -13,7 +13,7 @@
 
 #include "morpho_SSE2.h"
 #include "test_morpho_SSE2.h"
-
+#include <omp.h>
 
 int64_t test_morpho_SSE2(int v){
 
@@ -76,23 +76,44 @@ int64_t test_morpho_SSE2(int v){
   zero_vui8matrix(vE,  vi0b, vi1b, vj0b, vj1b);
   zero_vui8matrix(vOut, vi0, vi1, vj0, vj1);
 
+  if (v == 6){
+      #pragma omp critical
+      for(int i=1; i<200; i++){
+        k = i+3000;
 
-  for(int i=1; i<200; i++){
-    k = i+3000;
+        generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
+        MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
+        converti2b(sE,si0, si1, sj0, sj1);
 
-    generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
-    MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
-    converti2b(sE,si0, si1, sj0, sj1);
+        start  = clocktime();
+        morpho_func_t[v](vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
+        end  = clocktime();
+        timer_morpho += (end-start);
 
-    start  = clocktime();
-    morpho_func_t[v](vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
-    end  = clocktime();
-    timer_morpho += (end-start);
-
-    convertb2i(sOut,si0, si1, sj0, sj1);
-    generate_path_filename_k_ndigit_extension(morout_path, filename, k, ndigit, extension, complete_filename);
-    SavePGM_ui8matrix(sOut, si0, si1, sj0, sj1, complete_filename);
+        convertb2i(sOut,si0, si1, sj0, sj1);
+        generate_path_filename_k_ndigit_extension(morout_path, filename, k, ndigit, extension, complete_filename);
+        SavePGM_ui8matrix(sOut, si0, si1, sj0, sj1, complete_filename);
+      }
   }
+  else{
+    for(int i=1; i<200; i++){
+      k = i+3000;
+
+      generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
+      MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
+      converti2b(sE,si0, si1, sj0, sj1);
+
+      start  = clocktime();
+      morpho_func_t[v](vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
+      end  = clocktime();
+      timer_morpho += (end-start);
+
+      convertb2i(sOut,si0, si1, sj0, sj1);
+      generate_path_filename_k_ndigit_extension(morout_path, filename, k, ndigit, extension, complete_filename);
+      SavePGM_ui8matrix(sOut, si0, si1, sj0, sj1, complete_filename);
+    }
+  }
+
   free_vui8matrix(vE, vi0b, vi1b, vj0b, vj1b);
   free_vui8matrix(vOut, vi0, vi1, vj0, vj1);
 
