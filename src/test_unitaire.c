@@ -9,6 +9,7 @@
 
 #include "mutil.h"
 
+#include "mymacro.h"
 #include "test_unitaire.h"
 #include "mouvement.h"
 #include "morpho.h"
@@ -27,9 +28,10 @@ int SigmaDelta_step0_tu(){
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
 			I0[i][j] = i+j;
+
 		}
 	}
-	//display_ui8matrix (I0,0,3,0,3,"%6d ","my I0");
+	DEBUG(display_ui8matrix (I0,0,3,0,3,"%6d ","my I0")); DEBUG("");
 
 	SigmaDelta_step0(I0,M0,V0,0,3,0,3);
 
@@ -69,16 +71,16 @@ int SigmaDelta_step1_tu(){
 		}
 	}
 
-	M1_ref[0][0] = 1; M1_ref[0][1] = 2; M1_ref[0][2] =    M1_ref[0][3] = 3;
-	M1_ref[1][0] = 2; M1_ref[1][1] = 	M1_ref[1][2] =	  M1_ref[1][3] = 3;
-	M1_ref[2][0] = 	  M1_ref[2][1] = 	M1_ref[2][2] = 3; M1_ref[2][3] = 4;
-	M1_ref[3][0] = 	  M1_ref[3][1] = 3;	M1_ref[3][2] = 4; M1_ref[3][3] = 5;
-	//display_ui8matrix (I1,0,3,0,3,"%6d ","I1");
-	//display_ui8matrix (M0,0,3,0,3,"%6d ","M0");
-	//display_ui8matrix (M1_ref,0,3,0,3,"%6d ","M1_ref");
+	M1_ref[0][0] = 1; M1_ref[0][1] = 2; M1_ref[0][2] = M1_ref[0][3] = 3;
+	M1_ref[1][0] = 2; M1_ref[1][1] = 	M1_ref[1][2] = M1_ref[1][3] = 3;
+	M1_ref[2][0] = M1_ref[2][1] = M1_ref[2][2] = 3; M1_ref[2][3] = 4;
+	M1_ref[3][0] = M1_ref[3][1] = 3;	M1_ref[3][2] = 4; M1_ref[3][3] = 5;
+	DEBUG(display_ui8matrix (I1,0,3,0,3,"%6d ","I1")); DEBUG("");
+	DEBUG(display_ui8matrix (M0,0,3,0,3,"%6d ","M0")); DEBUG("");
+	DEBUG(display_ui8matrix (M1_ref,0,3,0,3,"%6d ","M1_ref")); DEBUG("");
 
 	SigmaDelta_step1(I1,M0,M1,0,3,0,3);
-	//display_ui8matrix (M1,0,3,0,3,"%6d ","M1");
+	DEBUG(display_ui8matrix (M1,0,3,0,3,"%6d ","M1")); DEBUG("");
 
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
@@ -111,13 +113,17 @@ int SigmaDelta_step2_tu(){
 			M1[i][j] = i+j;
 		}
 	}
+	DEBUG(display_ui8matrix (I1,0,3,0,3,"%6d ","I1")); DEBUG("");
+	DEBUG(display_ui8matrix (M1,0,3,0,3,"%6d ","M1")); DEBUG("");
 
 	O_ref[0][0] = 3; O_ref[0][1] = 2; O_ref[0][2] = 1; O_ref[0][3] = 0;
 	O_ref[1][0] = 2; O_ref[1][1] = 1; O_ref[1][2] =	0; O_ref[1][3] = 1;
 	O_ref[2][0] = 1; O_ref[2][1] = 0; O_ref[2][2] = 1; O_ref[2][3] = 2;
 	O_ref[3][0] = 0; O_ref[3][1] = 1; O_ref[3][2] = 2; O_ref[3][3] = 3;
+	DEBUG(display_ui8matrix (O_ref,0,3,0,3,"%6d ","O_ref")); DEBUG("");
 
 	SigmaDelta_step2(I1,M1,O,0,3,0,3);
+	DEBUG(display_ui8matrix (O,0,3,0,3,"%6d ","O")); DEBUG("");
 
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
@@ -150,13 +156,21 @@ int SigmaDelta_step3_tu(){
 			V0[i][j] = i+j;
 		}
 	}
+	DEBUG(display_ui8matrix (O,0,3,0,3,"%6d ","O")); DEBUG("");
+	DEBUG(display_ui8matrix (V0,0,3,0,3,"%6d ","V0")); DEBUG("");
+
 	O[0][0] = 0; V0[0][0] = 1; //tester le seuil
+	DEBUG(display_ui8matrix (O,0,3,0,3,"%6d ","O")); DEBUG("");
+	DEBUG(display_ui8matrix (V0,0,3,0,3,"%6d ","V0")); DEBUG("");
+
 	V1_ref[0][0] = 1; V1_ref[0][1] =    V1_ref[0][2] =    V1_ref[0][3] = 2;
 	V1_ref[1][0] =    V1_ref[1][1] = 	V1_ref[1][2] = 2; V1_ref[1][3] = 3;
 	V1_ref[2][0] = 	  V1_ref[2][1] = 2; V1_ref[2][2] = 3; V1_ref[2][3] = 4;
 	V1_ref[3][0] = 2; V1_ref[3][1] = 3;	V1_ref[3][2] = 4; V1_ref[3][3] = 5;
+	DEBUG(display_ui8matrix (V1_ref,0,3,0,3,"%6d ","V1_ref")); DEBUG("");
 
 	SigmaDelta_step3(O,V0,V1,0,3,0,3);
+	DEBUG(display_ui8matrix (V1,0,3,0,3,"%6d ","V1")); DEBUG("");
 
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
@@ -189,17 +203,17 @@ int SigmaDelta_step4_tu(){
 			V1[i][j] = i+j;
 		}
 	}
+	DEBUG(display_ui8matrix (O,0,3,0,3,"%6d ","O")); DEBUG("");
+	DEBUG(display_ui8matrix (V1,0,3,0,3,"%6d ","V1"));
 
 	E_ref[0][0] = E_ref[0][1] = E_ref[0][2] = E_ref[0][3] = 255;
 	E_ref[1][0] = E_ref[1][1] = E_ref[1][2] = 255; E_ref[1][3] = 0;
 	E_ref[2][0] = E_ref[2][1] = 255; E_ref[2][2] = E_ref[2][3] = 0;
 	E_ref[3][0] = 255; E_ref[3][1] = E_ref[3][2] = E_ref[3][3] = 0;
-	//display_ui8matrix (O,0,3,0,3,"%6d ","O");
-	//display_ui8matrix (V1,0,3,0,3,"%6d ","V1");
-	//display_ui8matrix (E_ref,0,3,0,3,"%6d ","E_ref");
+	DEBUG(display_ui8matrix (E_ref,0,3,0,3,"%6d ","E_ref")); DEBUG("");
 
 	SigmaDelta_step4(O,V1,E,0,3,0,3);
-	//display_ui8matrix (E,0,3,0,3,"%6d ","E");
+	DEBUG(display_ui8matrix (E,0,3,0,3,"%6d ","E")); DEBUG("");
 
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
@@ -232,22 +246,32 @@ int SigmaDelta_integration_tu(){
 
 	I1[0][0]=3; I1[0][1]=2;
 	I1[1][0]=2; I1[1][1]=1;
-	I1[2][0]=2; I1[2][1]=1; 
-	I1[3][0]=1; 
+	I1[2][0]=2; I1[2][1]=1;
+	I1[3][0]=1;
+	DEBUG(display_ui8matrix(I1,0,3,0,3,"%6d ","I1")); DEBUG("");
 
 	M0[0][0]=5;
 	M0[1][0]=1; M0[1][1]=4;
 	M0[2][0]=1; M0[2][1]=3;
 	M0[3][0]=1; M0[3][1]=2;
+	DEBUG(display_ui8matrix(M0,0,3,0,3,"%6d ","M0")); DEBUG("");
+
 	for(int i=0;i<=3;i++){
 		for(int j=0;j<=3;j++){
 			V0[i][j]=1;
 		}
 	}
+	DEBUG(display_ui8matrix(V0,0,3,0,3,"%6d ","V0")); DEBUG("");
 
 	E_ref[1][1] = 255;
+ 	DEBUG(display_ui8matrix(E_ref,0,3,0,3,"%6d ","E_ref")); DEBUG("");
 
 	SigmaDelta_integre(I1,M0,M1,O,V0,V1,E,0,3,0,3);
+	DEBUG(display_ui8matrix(M1,0,3,0,3,"%6d ","M1")); DEBUG("");
+	DEBUG(display_ui8matrix(O,0,3,0,3,"%6d ","O")); DEBUG("");
+	DEBUG(display_ui8matrix(V1,0,3,0,3,"%6d ","V1")); DEBUG("");
+	DEBUG(display_ui8matrix(E,0,3,0,3,"%6d ","E")); DEBUG("");
+
 
 	for(int i=0;i<=3;i++){
 		for(int j=0;j<=3;j++){
@@ -292,6 +316,7 @@ int Morpho_initbord_tu(){
 
 	E[0][0] = 1; E[0][1] = 2;
 	E[1][0] = 3; E[1][1] = 4;
+	DEBUG(display_ui8matrix(E,-2,3,-2,3,"%6d ","E")); DEBUG("");
 
 	E1_ref[-2][-2] = 0; E1_ref[-2][-1] = 0; E1_ref[-2][0] = 0; E1_ref[-2][1] = 0; E1_ref[-2][2] = 0; E1_ref[-2][3] = 0;
 	E1_ref[-1][-2] = 0; E1_ref[-1][-1] = 1; E1_ref[-1][0] = 1; E1_ref[-1][1] = 2; E1_ref[-1][2] = 2; E1_ref[-1][3] = 0;
@@ -299,15 +324,18 @@ int Morpho_initbord_tu(){
 	E1_ref[1][-2] = 0; E1_ref[1][-1] = 3; E1_ref[1][0] = 3; E1_ref[1][1] = 4; E1_ref[1][2] = 4; E1_ref[1][3] = 0;
 	E1_ref[2][-2] = 0; E1_ref[2][-1] = 3; E1_ref[2][0] = 3; E1_ref[2][1] = 4; E1_ref[2][2] = 4; E1_ref[2][3] = 0;
 	E1_ref[3][-2] = 0; E1_ref[3][-1] = 0; E1_ref[3][0] = 0; E1_ref[3][1] = 0; E1_ref[3][2] = 0; E1_ref[3][3] = 0;
-	
+	DEBUG(display_ui8matrix(E1_ref,-2,3,-2,3,"%6d ","E1_ref")); DEBUG("");
+
 	E2_ref[-2][-2] = 1; E2_ref[-2][-1] = 1; E2_ref[-2][0] = 1; E2_ref[-2][1] = 2; E2_ref[-2][2] = 2; E2_ref[-2][3] = 2;
 	E2_ref[-1][-2] = 1; E2_ref[-1][-1] = 1; E2_ref[-1][0] = 1; E2_ref[-1][1] = 2; E2_ref[-1][2] = 2; E2_ref[-1][3] = 2;
 	E2_ref[0][-2] = 1; E2_ref[0][-1] = 1; E2_ref[0][0] = 1; E2_ref[0][1] = 2; E2_ref[0][2] = 2; E2_ref[0][3] = 2;
 	E2_ref[1][-2] = 3; E2_ref[1][-1] = 3; E2_ref[1][0] = 3; E2_ref[1][1] = 4; E2_ref[1][2] = 4; E2_ref[1][3] = 4;
 	E2_ref[2][-2] = 3; E2_ref[2][-1] = 3; E2_ref[2][0] = 3; E2_ref[2][1] = 4; E2_ref[2][2] = 4; E2_ref[2][3] = 4;
 	E2_ref[3][-2] = 3; E2_ref[3][-1] = 3; E2_ref[3][0] = 3; E2_ref[3][1] = 4; E2_ref[3][2] = 4; E2_ref[3][3] = 4;
-	
+	DEBUG(display_ui8matrix(E2_ref,-2,3,-2,3,"%6d ","E2_ref")); DEBUG("");
+
 	init_bord(E,1,0,1,0,1);
+	DEBUG(display_ui8matrix(E,-2,3,-2,3,"%6d ","E")); DEBUG("");
 
 	for(int i=-2;i<=3;i++){
 		for(int j=-2;j<=3;j++){
@@ -321,6 +349,7 @@ int Morpho_initbord_tu(){
 	}
 
 	init_bord(E,2,0,1,0,1);
+	DEBUG(display_ui8matrix(E,-2,3,-2,3,"%6d ","E")); DEBUG("");
 
 	for(int i=-2;i<=3;i++){
 		for(int j=-2;j<=3;j++){
@@ -333,7 +362,7 @@ int Morpho_initbord_tu(){
 		}
 	}
 
-	
+
 	free_ui8matrix(E,-2,3,-2,3);
 	free_ui8matrix(E1_ref,-2,3,-2,3);
 	free_ui8matrix(E2_ref,-2,3,-2,3);
@@ -353,17 +382,19 @@ int Morpho_erosion_tu(){
 			c++;
 		}
 	}
+	DEBUG(display_ui8matrix(E,-2,5,-2,5,"%6d ","E")); DEBUG("");
+
 	init_bord(E,2,0,3,0,3);
+	DEBUG(display_ui8matrix(E,-2,5,-2,5,"%6d ","E")); DEBUG("");
 
 	img_ref[0][0] = 1; img_ref[0][1] = 1; img_ref[0][2] = 2; img_ref[0][3] = 3;
 	img_ref[1][0] = 1; img_ref[1][1] = 1; img_ref[1][2] = 2; img_ref[1][3] = 3;
 	img_ref[2][0] = 5; img_ref[2][1] = 5; img_ref[2][2] = 6; img_ref[2][3] = 7;
 	img_ref[3][0] = 9; img_ref[3][1] = 9; img_ref[3][2] = 10; img_ref[3][3] = 11;
-
-	//display_ui8matrix (E,0,3,0,3,"%6d ","E");
+	DEBUG(display_ui8matrix (E,-2,5,-2,5,"%6d ","E")); DEBUG("");
 
 	erosion(E,img,1,0,3,0,3);
-	//display_ui8matrix (img,0,3,0,3,"%6d ","img");
+	DEBUG(display_ui8matrix(img,0,3,0,3,"%6d ","img")); DEBUG("");
 
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
@@ -393,17 +424,20 @@ int Morpho_dilatation_tu(){
 			c++;
 		}
 	}
+	DEBUG(display_ui8matrix(E,-2,5,-2,5,"%6d ","E")); DEBUG("");
+
 	init_bord(E,2,0,3,0,3);
+	DEBUG(display_ui8matrix(E,-2,5,-2,5,"%6d ","E")); DEBUG("");
 
 	img_ref[0][0] = 6; img_ref[0][1] = 7; img_ref[0][2] = 8; img_ref[0][3] = 8;
 	img_ref[1][0] = 10; img_ref[1][1] = 11; img_ref[1][2] = 12; img_ref[1][3] = 12;
 	img_ref[2][0] = 14; img_ref[2][1] = 15; img_ref[2][2] = 16; img_ref[2][3] = 16;
 	img_ref[3][0] = 14; img_ref[3][1] = 15; img_ref[3][2] = 16; img_ref[3][3] = 16;
 
-	//display_ui8matrix (E,0,3,0,3,"%6d ","E");
+	DEBUG(display_ui8matrix(img_ref,0,3,0,3,"%6d ","img_ref")); DEBUG("");
 
 	dilatation(E,img,1,0,3,0,3);
-	//display_ui8matrix (img,0,3,0,3,"%6d ","img");
+	DEBUG(display_ui8matrix(img,0,3,0,3,"%6d ","img")); DEBUG("");
 
 	for(int i=0; i<=3; i++){
 		for(int j=0; j<=3; j++){
@@ -476,7 +510,7 @@ int check_results(int i) {
 			}
 		}
 		//if(c>max) max=c;
-		
+
 	}
 	printf("c = %d\n",c);
 	free_ui8matrix(img_ref,i0,i1,j0,j1);
