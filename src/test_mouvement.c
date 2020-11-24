@@ -66,11 +66,11 @@ int64_t test_mouvement(){
 		MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, I1);
 
 		start  = clocktime();
-		SigmaDelta_step1(I1,M0,M1,i0,i1,j0,j1);
-		SigmaDelta_step2(I1,M1,O,i0,i1,j0,j1);
-		SigmaDelta_step3(O,V0,V1,i0,i1,j0,j1);
-		SigmaDelta_step4(O,V1,E,i0,i1,j0,j1);
-
+		// SigmaDelta_step1(I1,M0,M1,i0,i1,j0,j1);
+		// SigmaDelta_step2(I1,M1,O,i0,i1,j0,j1);
+		// SigmaDelta_step3(O,V0,V1,i0,i1,j0,j1);
+		// SigmaDelta_step4(O,V1,E,i0,i1,j0,j1);
+		SigmaDelta_integre(I1,M0,M1,O,V0,V1,E,i0,i1,j0,j1);
 		end = clocktime();
 		timer_sd += (end-start);
 

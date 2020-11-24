@@ -13,7 +13,8 @@
 #include "mouvement.h"
 #include "morpho.h"
 
-//********* test unitaire 1/etape *********//
+//********* test unitaire *********//
+//*** 1 test par etape + test integre ***//
 //*** sur des petites matrix predefinie ***//
 //********* pour valider sd naive *********//
 
@@ -217,9 +218,66 @@ int SigmaDelta_step4_tu(){
 	free_ui8matrix(E_ref,0,3,0,3);
 	return 1;
 }
+int SigmaDelta_integration_tu(){
+	uint8 **I1, **M0, **M1, **V0, **V1, **O, **E, **E_ref;
+
+	I1 = ui8matrix(0,3,0,3); zero_ui8matrix(I1,0,3,0,3);
+	M0 = ui8matrix(0,3,0,3); zero_ui8matrix(M0,0,3,0,3);
+	M1 = ui8matrix(0,3,0,3); zero_ui8matrix(M1,0,3,0,3);
+	V0 = ui8matrix(0,3,0,3); zero_ui8matrix(V0,0,3,0,3);
+	V1 = ui8matrix(0,3,0,3); zero_ui8matrix(V1,0,3,0,3);
+	O  = ui8matrix(0,3,0,3); zero_ui8matrix(O,0,3,0,3);
+	E  = ui8matrix(0,3,0,3); zero_ui8matrix(E,0,3,0,3);
+	E_ref  = ui8matrix(0,3,0,3); zero_ui8matrix(E_ref,0,3,0,3);
+
+	I1[0][0]=3; I1[0][1]=2;
+	I1[1][0]=2; I1[1][1]=1;
+	I1[2][0]=2; I1[2][1]=1; 
+	I1[3][0]=1; 
+
+	M0[0][0]=5;
+	M0[1][0]=1; M0[1][1]=4;
+	M0[2][0]=1; M0[2][1]=3;
+	M0[3][0]=1; M0[3][1]=2;
+	for(int i=0;i<=3;i++){
+		for(int j=0;j<=3;j++){
+			V0[i][j]=1;
+		}
+	}
+
+	E_ref[1][1] = 255;
+
+	SigmaDelta_integre(I1,M0,M1,O,V0,V1,E,0,3,0,3);
+
+	for(int i=0;i<=3;i++){
+		for(int j=0;j<=3;j++){
+			if(E_ref[i][j] != E[i][j]){
+				free_ui8matrix(I1,0,3,0,3);
+				free_ui8matrix(M0,0,3,0,3);
+				free_ui8matrix(M1,0,3,0,3);
+				free_ui8matrix(V0,0,3,0,3);
+				free_ui8matrix(V1,0,3,0,3);
+				free_ui8matrix(O,0,3,0,3);
+				free_ui8matrix(E,0,3,0,3);
+				free_ui8matrix(E_ref,0,3,0,3);
+				return 0;
+
+			}
+		}
+	}
+	free_ui8matrix(I1,0,3,0,3);
+	free_ui8matrix(M0,0,3,0,3);
+	free_ui8matrix(M1,0,3,0,3);
+	free_ui8matrix(V0,0,3,0,3);
+	free_ui8matrix(V1,0,3,0,3);
+	free_ui8matrix(O,0,3,0,3);
+	free_ui8matrix(E,0,3,0,3);
+	free_ui8matrix(E_ref,0,3,0,3);
+	return 1;
+}
 
 //************* Test Unitaire ***************//
-//*** Gestion du bord, erosion, dilataion ***//
+//*** Init du bord, erosion, dilataion et integre ***//
 //******** Pour valider Morpho naive ********//
 
 int Morpho_initbord_tu(){
@@ -360,6 +418,10 @@ int Morpho_dilatation_tu(){
 	free_ui8matrix(E,-2,5,-2,5);
 	free_ui8matrix(img,0,3,0,3);
 	free_ui8matrix(img_ref,0,3,0,3);
+	return 1;
+}
+
+int Morpho_tu(){
 	return 1;
 }
 
