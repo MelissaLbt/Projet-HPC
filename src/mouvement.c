@@ -99,3 +99,10 @@ void SigmaDelta_step4(uint8 **O, uint8 **V1, uint8 **E, int i0, int i1, int j0, 
 	}
 }
 
+void SigmaDelta_integre(uint8 **I1, uint8 **M0, uint8 **M1, uint8 **O, uint8 **V0, uint8 **V1, uint8 **E, int i0, int i1, int j0, int j1)
+{
+	SigmaDelta_step1(I1,M0,M1,i0,i1,j0,j1);
+	SigmaDelta_step2(I1,M1,O,i0,i1,j0,j1);
+	SigmaDelta_step3(O,V0,V1,i0,i1,j0,j1);
+	SigmaDelta_step4(O,V1,E,i0,i1,j0,j1);
+}

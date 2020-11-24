@@ -65,14 +65,16 @@ int main(int argc, char *argv[])
     puts("===========================");
 
     printf("Validation des algo scalaire:\n");
-    printf(" - %-*s completed     %s\n", 25, "SigmaDelta_step0_tu", SigmaDelta_step0_tu() ? "[OK]" : "[KO]");
-    printf(" - %-*s completed     %s\n", 25, "SigmaDelta_step1_tu", SigmaDelta_step1_tu() ? "[OK]" : "[KO]");
-    printf(" - %-*s completed     %s\n", 25, "SigmaDelta_step2_tu", SigmaDelta_step2_tu() ? "[OK]" : "[KO]");
-    printf(" - %-*s completed     %s\n", 25, "SigmaDelta_step3_tu", SigmaDelta_step3_tu() ? "[OK]" : "[KO]");
-    printf(" - %-*s completed     %s\n", 25, "SigmaDelta_step4_tu", SigmaDelta_step4_tu() ? "[OK]" : "[KO]");
-    printf(" - %-*s completed     %s\n", 25, "Morpho_initbord_tu",  Morpho_initbord_tu()  ? "[OK]" : "[KO]");
-    printf(" - %-*s completed     %s\n", 25, "Morpho_erosion_tu",   Morpho_erosion_tu()   ? "[OK]" : "[KO]");
-    printf(" - %-*s completed     %s\n", 25, "Morpho_dilatation_tu",Morpho_dilatation_tu()? "[OK]" : "[KO]");
+    printf(" - %-*s completed     %s\n", 30, "SigmaDelta_step0_tu",       SigmaDelta_step0_tu()       ? "[OK]" : "[KO]");
+    printf(" - %-*s completed     %s\n", 30, "SigmaDelta_step1_tu",       SigmaDelta_step1_tu()       ? "[OK]" : "[KO]");
+    printf(" - %-*s completed     %s\n", 30, "SigmaDelta_step2_tu",       SigmaDelta_step2_tu()       ? "[OK]" : "[KO]");
+    printf(" - %-*s completed     %s\n", 30, "SigmaDelta_step3_tu",       SigmaDelta_step3_tu()       ? "[OK]" : "[KO]");
+    printf(" - %-*s completed     %s\n", 30, "SigmaDelta_step4_tu",       SigmaDelta_step4_tu()       ? "[OK]" : "[KO]");
+    printf(" - %-*s completed     %s\n", 30, "SigmaDelta_integration_tu", SigmaDelta_integration_tu() ? "[OK]" : "[KO]");
+    printf(" - %-*s completed     %s\n", 30, "Morpho_initbord_tu",        Morpho_initbord_tu()        ? "[OK]" : "[KO]");
+    printf(" - %-*s completed     %s\n", 30, "Morpho_erosion_tu",         Morpho_erosion_tu()         ? "[OK]" : "[KO]");
+    printf(" - %-*s completed     %s\n", 30, "Morpho_dilatation_tu",      Morpho_dilatation_tu()      ? "[OK]" : "[KO]");
+    printf(" - %-*s completed     %s\n", 30, "Morpho_tu",                 Morpho_tu()                 ? "[OK]" : "[KO]");
 
 
     puts("==========================");
