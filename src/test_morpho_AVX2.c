@@ -42,7 +42,7 @@ int64_t test_morpho_AVX2(int v){
   int64_t start, end;
   int64_t timer_morpho = 0;
 
-  int card = card_vuint8(); //Peut-être card = card_vuint8   240
+  int card = 32; //Pour le cas AVX
 
 
   s2v(si0, si1, sj0, sj1, card, &vi0, &vi1, &vj0, &vj1);
@@ -65,10 +65,10 @@ int64_t test_morpho_AVX2(int v){
 
   int k, ndigit=0;
 
-  // char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_AVX2/";
-  // char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_AVX2/";
-  char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_AVX2/";
-  char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_AVX2/";
+  char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout/"; //_AVX2/";
+  char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_AVX2/";
+  // char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_AVX2/";
+  // char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_AVX2/";
 
   char *filename = "car_";
   char *extension = "pgm";
@@ -103,4 +103,3 @@ int64_t test_morpho_AVX2(int v){
   // //printf("%d,%d,%d,%d\n",vi0b, vi1b, vj0b, vj1b);
   return timer_morpho;
 }
-
