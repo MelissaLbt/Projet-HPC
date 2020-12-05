@@ -20,10 +20,8 @@ void SigmaDelta_step0_AVX2(vuint8 **I, vuint8 **M, vuint8 **V, int vi0, int vi1,
 	lvuint8 tmp,vmin;
 
 	vmin = vec256_set(VMIN);
-
 	for(i=vi0;i<=vi1; i++){
 		for(j=vj0; j<=vj1; j+=2){
-
 			tmp = vec256_load2(I, i, j);
 			vec256_store2(M, i, j, tmp);
 			vec256_store2(V, i, j, vmin);

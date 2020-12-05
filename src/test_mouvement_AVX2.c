@@ -87,25 +87,18 @@ int64_t test_mouvement_AVX2(){
 
 	start = clocktime();
 	SigmaDelta_step0_AVX2(vI0,vM,vV,vi0,vi1,vj0,vj1);
-
-	end = clocktime();
-	timer_sd += (end-start);
-
 	for(int i=1; i<200; i++){   //traitement a partir de 1
 
 		k = i + 3000;
 		generate_path_filename_k_ndigit_extension(path, filename, k, ndigit, extension, complete_filename);
 		MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sI1);
 
-		start  = clocktime();
 		SigmaDelta_1step_AVX2(vI1,vM,vV,vE,vi0,vi1,vj0,vj1);
-
-		end = clocktime();
-		timer_sd += (end-start);
-
 		generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
 		SavePGM_ui8matrix(sE, si0, si1, sj0, sj1, complete_filename);
 	}
+	end = clocktime();
+	timer_sd += (end-start);
 
 	// ------------------- //
   // -- Desallocation -- //

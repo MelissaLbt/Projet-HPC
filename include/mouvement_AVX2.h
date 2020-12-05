@@ -18,9 +18,11 @@
 #define vec256_sub2(x,y) 		_mm256_subs_epu8(x,y)
 #define vec256_abs(x,y) 		_mm256_subs_epu8(_mm256_max_epu8(x,y),_mm256_min_epu8(x,y))
 
-#define vec256_lt(x,y) 			_mm256_cmpgt_epi8(_mm256_add_epi8(y, _mm256_set1_epi8((char)0x80)), _mm256_add_epi8(x, _mm256_set1_epi8((char)0x80)))
-#define vec256_gt(x,y) 			_mm256_cmpgt_epi8(_mm256_add_epi8(x, _mm256_set1_epi8((char)0x80)), _mm256_add_epi8(y, _mm256_set1_epi8((char)0x80)))
 #define vec256_eq(x,y) 			_mm256_cmpeq_epi8(x,y)
+#define vec256_ge(x,y)			vec256_eq(_mm256_max_epu8(x, y), x)
+#define vec256_lt(x,y) 			_mm256_xor_si256(vec256_ge(x,y), _mm256_set1_epi8((char)0xff)) 
+#define vec256_gt(x,y) 			vec256_lt(y,x)
+
 	
 #define vec256_sel2(a,b,m)      	_mm256_blendv_epi8(b,a,m)
 #define vec256_sel3(a,b,c,m1,m2,m3) vec256_or3(_mm256_and_si256(m1,a),_mm256_and_si256(m2,b),_mm256_and_si256(m3,c))

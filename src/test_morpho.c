@@ -48,20 +48,21 @@ int64_t test_morpho(){
 	zero_ui8matrix(E,i0b,i1b,j0b,j1b);
 	zero_ui8matrix(out,i0,i1,j0,j1);
 
+	start  = clocktime();
 	for(int i=1; i<200; i++){
 
 		k = i+3000;
 		generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
 		MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, E);
-
-		start  = clocktime();
+		
 		morpho(E,out,b,i0,i1,j0,j1);
-		end = clocktime();
-		timer_morpho += (end-start);
 
 		generate_path_filename_k_ndigit_extension(morout_path, filename, k, ndigit, extension, complete_filename);
 		SavePGM_ui8matrix(out, i0, i1, j0, j1, complete_filename);
 	}
+	end = clocktime();
+	timer_morpho += (end-start);
+	
 	// Desallocation
 	free_ui8matrix(E, i0b, i1b, j0b, j1b);
 	free_ui8matrix(out, i0, i1, j0, j1);

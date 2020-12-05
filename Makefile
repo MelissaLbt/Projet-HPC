@@ -63,7 +63,14 @@ depend:
 
 clean:
 	rm -f $(OBJ)
-	rm -f ${LIB_PATH}/${PRODUCT}
+	rm -f ${EXE_PATH}/${PRODUCT}
+	rm -rf sdout/* 
+	rm -rf sdout_SSE2/* 
+	rm -rf sdout_AVX2/*
+	rm -rf morphoout/*
+	rm -rf morphoout_SSE2/*
+	rm -rf morphoout_AVX2/*
+
 
 tar:
 	tar -cvf deriche_SSE.tar Makefile src include

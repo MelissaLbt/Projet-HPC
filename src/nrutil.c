@@ -831,10 +831,12 @@ void MLoadPGM_ui8matrix(char *filename, int nrl, int nrh, int ncl, int nch, uint
     /* lecture de l'entete du fichier pgm */
     readitem(file, buffer);
     /*fscanf(fichier, "%s", buffer);*/
-    if(strcmp(buffer, "P5") != 0)
+    if(strcmp(buffer, "P5") != 0){
+    	printf("%s\n",filename);
         nrerror("entete du fichier %s invalide\n");
-    //nrerror("entete du fichier %s invalide\n", filename);
-
+        
+    	//nrerror("entete du fichier %s invalide\n", filename);
+	}
     width  = atoi(readitem(file, buffer));
     height = atoi(readitem(file, buffer));
     gris   = atoi(readitem(file, buffer));

@@ -46,28 +46,11 @@ void erosion_AVX2(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1
   lvuint8 aa2, cc2;
   lvuint8 y;
 
-  vuint8 x0, x1, x2;
-  vuint8 z0, z1, z2;
-
   for(i = vi0; i <= vi1; i++){
         for(j = vj0; j <= vj1; j+=2){
             a0 = vec256_load2(vE,i-1, j-2);
-            x0 = _mm256_extracti128_si256(a0,1);
-            z0 = _mm256_extracti128_si256(a0,0);
-            DEBUG(display_vuint8(x0, "%4d", "a0[255:128] =")); DEBUG(puts(""));
-            DEBUG(display_vuint8(z0, "%4d", " a0[127:0] =")); DEBUG(puts(""));
-
             a1 = vec256_load2(vE,i  , j-2);
-            x1 = _mm256_extracti128_si256(a1,1);
-            z1 = _mm256_extracti128_si256(a1,0);
-            DEBUG(display_vuint8(x1, "%4d", "a1[255:128] =")); DEBUG(puts(""));
-            DEBUG(display_vuint8(z1, "%4d", " a1[127:0] =")); DEBUG(puts(""));
-
             a2 = vec256_load2(vE,i+1, j-2);
-            x2 = _mm256_extracti128_si256(a2,1);
-            z2 = _mm256_extracti128_si256(a2,0);
-            DEBUG(display_vuint8(x2, "%4d", "a2[255:128] =")); DEBUG(puts(""));
-            DEBUG(display_vuint8(z2, "%4d", " a2[127:0] =")); DEBUG(puts(""));
 
             b0 = vec256_load2(vE,i-1, j);
             b1 = vec256_load2(vE,i  , j);
@@ -158,7 +141,7 @@ void morpho_AVX2(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, 
     init_bord_AVX2(vE,vi0,vi1,vj0,vj1,vj0b,vj1b);
     erosion_AVX2(vE, vinter1, vi0, vi1, vj0, vj1);
 
-    init_bord_AVX2(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b);
+    init_bord_AVX2(vinter1,vi0,vi1,vj0,vj1,vj0b,vj1b); 
     dilatation_AVX2(vinter1, vinter2, vi0, vi1, vj0, vj1);
 
     init_bord_AVX2(vinter2,vi0,vi1,vj0,vj1,vj0b,vj1b);

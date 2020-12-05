@@ -14,10 +14,10 @@
 #include "mouvement.h"
 #include "morpho.h"
 
-//********* test unitaire *********//
+//*********** test unitaire *************//
 //*** 1 test par etape + test integre ***//
-//*** sur des petites matrix predefinie ***//
-//********* pour valider sd naive *********//
+//** sur des petites matrix predefinie **//
+//******** pour valider sd naive ********//
 
 int SigmaDelta_step0_tu(){
 
@@ -480,7 +480,7 @@ int check_results(int i) {
 	img_ref = ui8matrix(i0,i1,j0,j1);
 	img 	= ui8matrix(i0,i1,j0,j1);
 
-	if(i == 1){ // sd vs sd_simd
+	if(i == 1){ // sd
 		path_ref = "/home/huiling/HPC/Projet-HPC/sdout/";
 		path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";
 	}
@@ -488,31 +488,39 @@ int check_results(int i) {
 		path_ref = "/home/huiling/HPC/Projet-HPC/morphoout/";
 		path = "/home/huiling/HPC/Projet-HPC/morphoout_SSE2/";
 	}
+	else if(i == 3){ // sd
+		path_ref = "/home/huiling/HPC/Projet-HPC/sdout/";
+		path = "/home/huiling/HPC/Projet-HPC/sdout_AVX2/";
+	}
+	else if(i == 4){
+		path_ref = "/home/huiling/HPC/Projet-HPC/morphoout/";
+		path = "/home/huiling/HPC/Projet-HPC/morphoout_AVX2/";
+	}
 
-  for(int k=3001; k<=3199; k++){
+  	for(int k=3001; k<=3199; k++){
 		generate_path_filename_k_ndigit_extension(path_ref, filename, k, ndigit, extension, complete_filename);
 		MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, img_ref);
 		generate_path_filename_k_ndigit_extension(path, filename, k, ndigit, extension, complete_filename);
 		MLoadPGM_ui8matrix(complete_filename, i0, i1, j0, j1, img);
-		//c = 0;
+		c = 0;
 		for(int i=0; i<240; i++){
 			for(int j=0; j<320; j++){
 				if(img[i][j] != img_ref[i][j]) {
 					c++;
 					if(c>=1536){  //2%
 
-						free_ui8matrix(img_ref,i0,i1,j0,j1);
-						free_ui8matrix(img,i0,i1,j0,j1);
-						return 0;
+						// free_ui8matrix(img_ref,i0,i1,j0,j1);
+						// free_ui8matrix(img,i0,i1,j0,j1);
+						// return 0;
 					}
 
 				}
 			}
 		}
-		//if(c>max) max=c;
+		if(c>max) max=c;
 
 	}
-	//printf("c = %d\n",c);
+	printf("max = %d\n",max);
 	free_ui8matrix(img_ref,i0,i1,j0,j1);
 	free_ui8matrix(img,i0,i1,j0,j1);
   return 1;

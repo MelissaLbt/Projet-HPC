@@ -6,5 +6,6 @@
 #define __TEST_MOUVEMENT_SSE2_H__
 
 int64_t test_mouvement_SSE2();
+int64_t test_mouvement_SSE2_omp();
 
 #endif
