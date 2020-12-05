@@ -465,12 +465,12 @@ int check_results(int i) {
 			for(int j=0; j<320; j++){
 				if(img[i][j] != img_ref[i][j]) {
 					c++;
-					// if(c>=1536){  //2%
+					if(c>=1536){  //2%
 
-					// 	free_ui8matrix(img_ref,i0,i1,j0,j1);
-					// 	free_ui8matrix(img,i0,i1,j0,j1);
-					// 	return 0;
-					// }
+						free_ui8matrix(img_ref,i0,i1,j0,j1);
+						free_ui8matrix(img,i0,i1,j0,j1);
+						return 0;
+					}
 
 				}
 			}
@@ -478,7 +478,7 @@ int check_results(int i) {
 		//if(c>max) max=c;
 		
 	}
-	printf("c = %d\n",c);
+	//printf("c = %d\n",c);
 	free_ui8matrix(img_ref,i0,i1,j0,j1);
 	free_ui8matrix(img,i0,i1,j0,j1);
   return 1;

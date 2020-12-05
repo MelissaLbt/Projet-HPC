@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
     BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
 
 
-    CHRONO(time = test_morpho_SSE2(5),cycles);
+    CHRONO(time = test_morpho_SSE2_omp(),cycles);
     printf(" - %-*s completed %7ld ms %s   ", 25, "Morphologie OpenMP", time, check_results(2) ? "[OK]" : "[KO]");
     BENCH(printf("CPP: %6.2f  DEBIT: %6ld M", cycles/N_PIXEL, N_PIXEL/(1000*time))); puts("\n");
 

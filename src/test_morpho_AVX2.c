@@ -65,9 +65,9 @@ int64_t test_morpho_AVX2(int v){
 
   int k, ndigit=0;
 
-  // char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_AVX2/";
+  // char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout/";
   // char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_AVX2/";
-  char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_AVX2/";
+  char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";
   char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_AVX2/";
 
   char *filename = "car_";
@@ -80,7 +80,7 @@ int64_t test_morpho_AVX2(int v){
 
   zero_vui8matrix(vE,  vi0b, vi1b, vj0b, vj1b);
   zero_vui8matrix(vOut, vi0, vi1, vj0, vj1);
-
+  start  = clocktime();
   for(int i=1; i<200; i++){
     k = i+3000;
 
@@ -88,15 +88,16 @@ int64_t test_morpho_AVX2(int v){
     MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
     converti2b(sE,si0, si1, sj0, sj1);
 
-    start  = clocktime();
+    
     morpho_func_t[v](vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
-    end  = clocktime();
-    timer_morpho += (end-start);
+    
 
     convertb2i(sOut,si0, si1, sj0, sj1);
     generate_path_filename_k_ndigit_extension(morout_path, filename, k, ndigit, extension, complete_filename);
     SavePGM_ui8matrix(sOut, si0, si1, sj0, sj1, complete_filename);
   }
+  end  = clocktime();
+  timer_morpho += (end-start);
   free_vui8matrix(vE, vi0b, vi1b, vj0b, vj1b);
   free_vui8matrix(vOut, vi0, vi1, vj0, vj1);
 
