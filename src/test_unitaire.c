@@ -509,18 +509,17 @@ int check_results(int i) {
 					c++;
 					if(c>=1536){  //2%
 
-						// free_ui8matrix(img_ref,i0,i1,j0,j1);
-						// free_ui8matrix(img,i0,i1,j0,j1);
-						// return 0;
+						free_ui8matrix(img_ref,i0,i1,j0,j1);
+						free_ui8matrix(img,i0,i1,j0,j1);
+						return 0;
 					}
 
 				}
 			}
 		}
 		if(c>max) max=c;
-
 	}
-	printf("max = %d\n",max);
+	// printf("max = %d\n",max);
 	free_ui8matrix(img_ref,i0,i1,j0,j1);
 	free_ui8matrix(img,i0,i1,j0,j1);
   return 1;

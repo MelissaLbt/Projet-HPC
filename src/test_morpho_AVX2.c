@@ -42,7 +42,7 @@ int64_t test_morpho_AVX2(int v){
   int64_t start, end;
   int64_t timer_morpho = 0;
 
-  int card = 32; //Pour le cas AVX
+  int card = card_vuint8(); //Pour le cas AVX
 
 
   s2v(si0, si1, sj0, sj1, card, &vi0, &vi1, &vj0, &vj1);
@@ -101,7 +101,7 @@ int64_t test_morpho_AVX2(int v){
   timer_morpho += (end-start);
   free_vui8matrix(vE, vi0b, vi1b, vj0b, vj1b);
   free_vui8matrix(vOut, vi0, vi1, vj0, vj1);
-
-  //printf("%d,%d,%d,%d\n",vi0b, vi1b, vj0b, vj1b);
+  // printf("%d,%d,%d,%d\n",vi0, vi1, vj0, vj1);
+  // printf("%d,%d,%d,%d\n",vi0b, vi1b, vj0b, vj1b);
   return timer_morpho;
 }
