@@ -67,7 +67,7 @@ int64_t test_morpho_SSE2(int v){
 
   char *filename = "car_";
   char *extension = "pgm";
-  
+
 
   // ---------- //
   // -- init -- //
@@ -85,9 +85,9 @@ int64_t test_morpho_SSE2(int v){
     MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
     converti2b(sE,si0, si1, sj0, sj1);
 
-    
+
     morpho_func_t[v](vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
-    
+
 
     convertb2i(sOut,si0, si1, sj0, sj1);
     generate_path_filename_k_ndigit_extension(morout_path, filename, k, ndigit, extension, complete_filename);
@@ -102,7 +102,9 @@ int64_t test_morpho_SSE2(int v){
   return timer_morpho;
 }
 
-int64_t test_morpho_SSE2_omp(){
+int64_t test_morpho_SSE2_omp(int v){
+
+  void (*morpho_func_t[])(vuint8 **,vuint8 **,int,int,int,int,int,int,int,int) = {morpho_SSE2_r1, morpho_SSE2_rot, morpho_SSE2_red, morpho_fusion, morpho_pipeline};
 
   int b = 4; // border
   char *format = "%6.2f ";
@@ -132,7 +134,7 @@ int64_t test_morpho_SSE2_omp(){
   s2v(si0b, si1b, sj0b, sj1b, card, &vi0b, &vi1b, &vj0b, &vj1b);
   v2m(vi0b, vi1b, vj0b, vj1b, card, &mi0b, &mi1b, &mj0b, &mj1b);
 
-  
+
 
   int ndigit=0;
 
@@ -143,7 +145,7 @@ int64_t test_morpho_SSE2_omp(){
 
   char *filename = "car_";
   char *extension = "pgm";
-  
+
 
   // ---------- //
   // -- init -- //
@@ -153,7 +155,7 @@ int64_t test_morpho_SSE2_omp(){
   // zero_vui8matrix(vOut, vi0, vi1, vj0, vj1);
 
 
-  
+
   start  = clocktime();
   #pragma omp parallel for num_threads(8)
   for(int i=1; i<200; i++){
@@ -176,7 +178,7 @@ int64_t test_morpho_SSE2_omp(){
     MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
     converti2b(sE,si0, si1, sj0, sj1);
 
-    morpho_multi_thread(vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);    
+    morpho_func_t[v](vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
 
     convertb2i(sOut,si0, si1, sj0, sj1);
     generate_path_filename_k_ndigit_extension(morout_path, filename, k, ndigit, extension, complete_filename);
@@ -188,8 +190,6 @@ int64_t test_morpho_SSE2_omp(){
 
   end  = clocktime();
   timer_morpho += (end-start);
-  
+
   return timer_morpho;
 }
-
-

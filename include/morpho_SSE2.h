@@ -44,7 +44,7 @@ void morpho_fusion(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1
 void morpho_pipeline(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b);
 //open MP
 //sur mor_pipeline
-void morpho_multi_thread(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b);
+//void morpho_multi_thread(vuint8 **vE, vuint8 **vOut,int vi0, int vi1, int vj0, int vj1, int vi0b, int vi1b, int vj0b, int vj1b);
 //openmp+fusion : sur ero_red et dilate_fusion  wrong!!
 // void erosion_SSE2_red_omp(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);
 // void dilatation_fusion_omp(vuint8 **vE, vuint8 **vOut, int vi0, int vi1, int vj0, int vj1);

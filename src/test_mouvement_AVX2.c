@@ -125,9 +125,9 @@ int64_t test_mouvement_AVX2_omp(){
 	int mi0, mi1, mj0, mj1; // memory (bounded) indices
 
 	char *path = "/home/huiling/HPC/Projet-HPC/car3/";
-	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";
+	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_AVX2/";
 	// char *path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/car3/";
-	// char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_SSE2/";
+	// char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_AVX2/";
 
 	char *filename = "car_";
 	char *extension = "pgm";
@@ -191,7 +191,7 @@ int64_t test_mouvement_AVX2_omp(){
 	// ------------ //
 
 	start = clocktime();
-	SigmaDelta_step0_SSE2_omp(vI0,vM,vV,vi0,vi1,vj0,vj1);
+	SigmaDelta_step0_AVX2_omp(vI0,vM,vV,vi0,vi1,vj0,vj1);
 
 	for(int i=1; i<200; i++){   //traitement a partir de 1
 
@@ -199,7 +199,7 @@ int64_t test_mouvement_AVX2_omp(){
 		generate_path_filename_k_ndigit_extension(path, filename, k, ndigit, extension, complete_filename);
 		MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sI1);
 
-		SigmaDelta_1step_SSE2_omp(vI1,vM,vV,vE,vi0,vi1,vj0,vj1);
+		SigmaDelta_1step_AVX2_omp(vI1,vM,vV,vE,vi0,vi1,vj0,vj1);
 
 		generate_path_filename_k_ndigit_extension(sdout_path, filename, k, ndigit, extension, complete_filename);
 		SavePGM_ui8matrix(sE, si0, si1, sj0, sj1, complete_filename);

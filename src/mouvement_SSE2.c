@@ -34,7 +34,7 @@ void SigmaDelta_step0_SSE2_omp(vuint8 **I, vuint8 **M, vuint8 **V, int vi0, int 
 	vuint8 tmp,vmin;
 
 	vmin = vec_set(VMIN);
-  	#pragma omp parallel for num_threads(8)
+  #pragma omp parallel for num_threads(8)
 	for(i=vi0;i<=vi1; i++){
 		for(j=vj0; j<=vj1; j++){
 
@@ -158,4 +158,3 @@ void SigmaDelta_1step_SSE2_omp(vuint8 **I, vuint8 **M0, vuint8 **V0, vuint8 **E,
 		}
 	}
 }
-

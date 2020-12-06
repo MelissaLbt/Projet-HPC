@@ -6,5 +6,6 @@
 #define __TEST_MOUVEMENT_AVX2_H__
 
 int64_t test_mouvement_AVX2();
+int64_t test_mouvement_AVX2_omp();
 
 #endif

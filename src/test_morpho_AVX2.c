@@ -107,7 +107,9 @@ int64_t test_morpho_AVX2(int v){
 }
 
 
-int64_t test_morpho_AVX2_omp(){
+int64_t test_morpho_AVX2_omp(int v){
+
+  void (*morpho_func_t[])(vuint8 **,vuint8 **,int,int,int,int,int,int,int,int) = {morpho_AVX2,morpho_AVX2_red};
 
   int b = 4; // border
   char *format = "%6.2f ";
@@ -181,7 +183,7 @@ char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_AVX2/";
     MLoadPGM_ui8matrix(complete_filename, si0, si1, sj0, sj1, sE);
     converti2b(sE,si0, si1, sj0, sj1);
 
-    morpho_multi_thread(vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
+    morpho_func_t[v](vE, vOut, vi0, vi1, vj0, vj1, vi0b, vi1b, vj0b, vj1b);
 
     convertb2i(sOut,si0, si1, sj0, sj1);
     generate_path_filename_k_ndigit_extension(morout_path, filename, k, ndigit, extension, complete_filename);
