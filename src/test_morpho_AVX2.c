@@ -139,6 +139,9 @@ int64_t test_morpho_AVX2_omp(int v){
   s2v(si0b, si1b, sj0b, sj1b, card, &vi0b, &vi1b, &vj0b, &vj1b);
   v2m(vi0b, vi1b, vj0b, vj1b, card, &mi0b, &mi1b, &mj0b, &mj1b);
 
+  // 256 bits registre a besoin de 2*vuint8
+  vj0b = vj0b-1;
+  vj1b = vj1b+1;
 
 
   int ndigit=0;
@@ -146,18 +149,10 @@ int64_t test_morpho_AVX2_omp(int v){
   // char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_AVX2/";
   // char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_AVX2/";
   char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_AVX2/";
-char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_AVX2/";
+  char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_AVX2/";
 
   char *filename = "car_";
   char *extension = "pgm";
-
-
-  // ---------- //
-  // -- init -- //
-  // ---------- //
-
-  // zero_vui8matrix(vE,  vi0b, vi1b, vj0b, vj1b);
-  // zero_vui8matrix(vOut, vi0, vi1, vj0, vj1);
 
 
 

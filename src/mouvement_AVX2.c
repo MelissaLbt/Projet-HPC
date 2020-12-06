@@ -62,7 +62,6 @@ void SigmaDelta_1step_AVX2(vuint8 **I, vuint8 **M0, vuint8 **V0, vuint8 **E, int
 	vmax = vec256_set(VMAX);
 	vmin = vec256_set(VMIN);
 	
-	#pragma omp parallel for num_threads(8)
 	for(i=vi0;i<=vi1; i++){
 		for(j=vj0; j<=vj1; j+=2){
 
@@ -120,7 +119,7 @@ void SigmaDelta_1step_AVX2_omp(vuint8 **I, vuint8 **M0, vuint8 **V0, vuint8 **E,
 	cst1 = vec256_set(1);
 	vmax = vec256_set(VMAX);
 	vmin = vec256_set(VMIN);
-
+	#pragma omp parallel for num_threads(8)
 	for(i=vi0;i<=vi1; i++){
 		for(j=vj0; j<=vj1; j+=2){
 

@@ -147,13 +147,6 @@ int64_t test_morpho_SSE2_omp(int v){
   char *extension = "pgm";
 
 
-  // ---------- //
-  // -- init -- //
-  // ---------- //
-
-  // zero_vui8matrix(vE,  vi0b, vi1b, vj0b, vj1b);
-  // zero_vui8matrix(vOut, vi0, vi1, vj0, vj1);
-
 
 
   start  = clocktime();

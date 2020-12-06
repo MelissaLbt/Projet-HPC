@@ -14,10 +14,16 @@
 #include "mouvement.h"
 #include "morpho.h"
 
-//*********** test unitaire *************//
-//*** 1 test par etape + test integre ***//
-//** sur des petites matrix predefinie **//
-//******** pour valider sd naive ********//
+//********     Test unitaire pour Sigma Delta	    ********//
+//********     1 test par étape + test intégré      ********//
+//******** 	  sur des petites matrix prédefinies 	********//
+//******** comparer les résultats avec la référence ********//
+
+
+//	Test unitaire 
+//	Entrée: 	I0, matrix 4x4 
+//	Méthode:	SigmaDelta_step0
+//	Sortie: 	M0,V0
 
 int SigmaDelta_step0_tu(){
 
@@ -56,6 +62,11 @@ int SigmaDelta_step0_tu(){
 	free_ui8matrix(V0,0,3,0,3);
 	return 1;
 }
+
+//	Test unitaire 
+//	Entrée: 	I0,M0, matrix 4x4 
+//	Méthode:	SigmaDelta_step1
+//	Sortie: 	M1
 
 int SigmaDelta_step1_tu(){
 
@@ -100,6 +111,11 @@ int SigmaDelta_step1_tu(){
 	return 1;
 }
 
+//	Test unitaire 
+//	Entrée: 	I1,M1, matrix 4x4 
+//	Méthode:	SigmaDelta_step2
+//	Sortie: 	O
+
 int SigmaDelta_step2_tu(){
 
 	uint8 **I1 = ui8matrix(0,3,0,3);
@@ -142,6 +158,11 @@ int SigmaDelta_step2_tu(){
 	free_ui8matrix(O_ref,0,3,0,3);
 	return 1;
 }
+
+//	Test unitaire 
+//	Entrée: 	O,V0, matrix 4x4 
+//	Méthode:	SigmaDelta_step3
+//	Sortie: 	V1
 
 int SigmaDelta_step3_tu(){
 
@@ -190,6 +211,11 @@ int SigmaDelta_step3_tu(){
 	return 1;
 }
 
+//	Test unitaire 
+//	Entrée: 	O,V1, matrix 4x4 
+//	Méthode:	SigmaDelta_step4
+//	Sortie: 	E
+
 int SigmaDelta_step4_tu(){
 
 	uint8 **O  = ui8matrix(0,3,0,3);
@@ -232,6 +258,12 @@ int SigmaDelta_step4_tu(){
 	free_ui8matrix(E_ref,0,3,0,3);
 	return 1;
 }
+
+//	Test intégré pour l'algorithme Sigma Delta 
+//	Entrée: 	I1,M0,M1,O,V0,V1, matrix 4x4 
+//	Méthode:	SigmaDelta_integre
+//	Sortie: 	E
+
 int SigmaDelta_integration_tu(){
 	uint8 **I1, **M0, **M1, **V0, **V1, **O, **E, **E_ref;
 
@@ -300,10 +332,17 @@ int SigmaDelta_integration_tu(){
 	return 1;
 }
 
-//************* Test Unitaire ***************//
-//*** Init du bord, erosion, dilataion et integre ***//
-//******** Pour valider Morpho naive ********//
+//********  Test unitaire pour Morpho Mathémathique	********//
+//********Init du bord/erosion/dilataion et integre ********//
+//******** 	  sur des petites matrix prédefinies 	********//
+//******** comparer les résultats avec la référence ********//
 
+
+//	Test unitaire 
+//	Entrée: 	E, matrix initialisé en 2x2, alloué en 6x6 
+//	Méthode:	init_bord
+//	Sortie: 	E1, matrix attribué en 4x4, avec bord supplémentaire de 1
+//              E2, matrix attribué en 6x6, avec bord supplémentaire de 2
 int Morpho_initbord_tu(){
 
 	uint8 **E = ui8matrix(-2,3,-2,3);
@@ -369,6 +408,11 @@ int Morpho_initbord_tu(){
 	return 1;
 }
 
+//	Test unitaire 
+//	Entrée: 	E, matrix initialisé en 4x4, alloué en 8x8 pour init_bord
+//	Méthode:	erosion
+//	Sortie: 	img, matrix 4x4
+
 int Morpho_erosion_tu(){
 
 	uint8 c = 1;
@@ -411,6 +455,11 @@ int Morpho_erosion_tu(){
 	free_ui8matrix(img_ref,0,3,0,3);
 	return 1;
 }
+
+//	Test unitaire 
+//	Entrée: 	E, matrix initialisé en 4x4, alloué en 8x8 pour init_bord
+//	Méthode:	dilatation
+//	Sortie: 	img, matrix 4x4
 
 int Morpho_dilatation_tu(){
 	uint8 c = 1;
@@ -455,12 +504,57 @@ int Morpho_dilatation_tu(){
 	return 1;
 }
 
-int Morpho_tu(){
+//	Test intégré pour l'algorithme Morphologie 
+//	Entrée: 	E, matrix 50x50, alloué en 52x52 
+//	Méthode:	morpho
+//	Sortie: 	res, matrix 50x50
+
+int Morpho_integration_tu(){
+
+	uint8 **E 		= ui8matrix(-2,51,-2,51);
+	uint8 **res 	= ui8matrix(0,49,0,49);
+	uint8 **res_ref = ui8matrix(0,49,0,49);
+
+	for(int i=0;i<=49;i++){
+		for(int j=0;j<=49;j++){
+			E[i][j] = 1;
+			res_ref[i][j] = 1;
+		}
+	}
+	for(int i=12;i<=30;i++){
+		for(int j=12;j<=30;j++){
+			E[i][j] = 0;
+			res_ref[i][j] = 0;
+		}
+	}
+	// des trous
+	E[14][15] = E[15][15] = E[15][14] = 1;
+	E[20][25] = E[19][25] = E[21][24] = 1;
+	E[28][17] = E[28][16] = E[27][17] = 1;
+
+	morpho(E,res,1,0,49,0,49);
+
+	for(int i=0;i<=49;i++){
+		for(int j=0;j<=49;j++){
+			if(res_ref[i][j]!=res[i][j]){
+				free_ui8matrix(E,-2,51,-2,51);
+				free_ui8matrix(res,0,49,0,49);
+				free_ui8matrix(res_ref,0,49,0,49);
+				return 0;
+			}
+		}
+	}
+
+	free_ui8matrix(E,-2,51,-2,51);
+	free_ui8matrix(res,0,49,0,49);
+	free_ui8matrix(res_ref,0,49,0,49);			
 	return 1;
 }
 
-//****** Validation d'optimisation ******//
-//*******  1:mouvement  2:morpho  *******//
+//******* Validation d'optimisation    *******//
+//******* SSE2  1:mouvement  2:morpho  *******//
+//******* AVX2  3:mouvement  4:morpho  *******//
+
 
 int check_results(int i) {
 
@@ -480,7 +574,7 @@ int check_results(int i) {
 	img_ref = ui8matrix(i0,i1,j0,j1);
 	img 	= ui8matrix(i0,i1,j0,j1);
 
-	if(i == 1){ // sd
+	if(i == 1){ 
 		path_ref = "/home/huiling/HPC/Projet-HPC/sdout/";
 		path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";
 	}
@@ -488,7 +582,7 @@ int check_results(int i) {
 		path_ref = "/home/huiling/HPC/Projet-HPC/morphoout/";
 		path = "/home/huiling/HPC/Projet-HPC/morphoout_SSE2/";
 	}
-	else if(i == 3){ // sd
+	else if(i == 3){ 
 		path_ref = "/home/huiling/HPC/Projet-HPC/sdout/";
 		path = "/home/huiling/HPC/Projet-HPC/sdout_AVX2/";
 	}
@@ -507,7 +601,7 @@ int check_results(int i) {
 			for(int j=0; j<320; j++){
 				if(img[i][j] != img_ref[i][j]) {
 					c++;
-					if(c>=1536){  //2%
+					if(c>=1152){  //1.5%
 
 						free_ui8matrix(img_ref,i0,i1,j0,j1);
 						free_ui8matrix(img,i0,i1,j0,j1);
@@ -517,9 +611,7 @@ int check_results(int i) {
 				}
 			}
 		}
-		if(c>max) max=c;
 	}
-	// printf("max = %d\n",max);
 	free_ui8matrix(img_ref,i0,i1,j0,j1);
 	free_ui8matrix(img,i0,i1,j0,j1);
   return 1;
