@@ -22,11 +22,8 @@ int64_t test_mouvement(){
 
 	int k, ndigit = 0;
 
-	char *path = "/home/huiling/HPC/Projet-HPC/car3/";
-	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";
-	// char *path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/car3/";
-	// char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout/";
-
+	char *path = "./car3/";
+	char *sdout_path = "./sdout/";
 
 	char *filename = "car_";
 	char *extension = "pgm";

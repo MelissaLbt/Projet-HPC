@@ -23,10 +23,8 @@ int64_t test_mouvement_SSE2(){
 	int vi0, vi1, vj0, vj1; // vector indices
 	int mi0, mi1, mj0, mj1; // memory (bounded) indices
 
-	char *path = "/home/huiling/HPC/Projet-HPC/car3/";
-	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";
-	// char *path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/car3/";
-	// char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_SSE2/";
+	char *path = "./car3/";
+	char *sdout_path = "./sdout_SSE2/";
 
 	char *filename = "car_";
 	char *extension = "pgm";
@@ -130,11 +128,9 @@ int64_t test_mouvement_SSE2_omp(){
 	int vi0, vi1, vj0, vj1; // vector indices
 	int mi0, mi1, mj0, mj1; // memory (bounded) indices
 
-	char *path = "/home/huiling/HPC/Projet-HPC/car3/";
-	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";
-	// char *path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/car3/";
-	// char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_SSE2/";
-
+	char *path = "./car3/";
+	char *sdout_path = "./sdout_SSE2/";
+	
 	char *filename = "car_";
 	char *extension = "pgm";
 	char  complete_filename[50];

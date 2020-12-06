@@ -60,10 +60,8 @@ int64_t test_morpho_SSE2(int v){
 
   int k, ndigit=0;
 
-  // char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout/";
-  // char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SSE2/";
-  char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";
-  char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_SSE2/";
+  char *sdout_path = "./sdout/";
+  char *morout_path = "./morphoout_SSE2/";
 
   char *filename = "car_";
   char *extension = "pgm";
@@ -138,10 +136,8 @@ int64_t test_morpho_SSE2_omp(int v){
 
   int ndigit=0;
 
-  // char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout/";
-  // char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_SSE2/";
-  char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout/";
-  char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_SSE2/";
+  char *sdout_path = "./sdout/";
+  char *morout_path = "./morphoout_SSE2/";
 
   char *filename = "car_";
   char *extension = "pgm";

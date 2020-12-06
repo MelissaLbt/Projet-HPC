@@ -575,20 +575,20 @@ int check_results(int i) {
 	img 	= ui8matrix(i0,i1,j0,j1);
 
 	if(i == 1){ 
-		path_ref = "/home/huiling/HPC/Projet-HPC/sdout/";
-		path = "/home/huiling/HPC/Projet-HPC/sdout_SSE2/";
+		path_ref = "./sdout/";
+		path = "./sdout_SSE2/";
 	}
 	else if(i == 2){
-		path_ref = "/home/huiling/HPC/Projet-HPC/morphoout/";
-		path = "/home/huiling/HPC/Projet-HPC/morphoout_SSE2/";
+		path_ref = "./morphoout/";
+		path = "./morphoout_SSE2/";
 	}
 	else if(i == 3){ 
-		path_ref = "/home/huiling/HPC/Projet-HPC/sdout/";
-		path = "/home/huiling/HPC/Projet-HPC/sdout_AVX2/";
+		path_ref = "./sdout/";
+		path = "./sdout_AVX2/";
 	}
 	else if(i == 4){
-		path_ref = "/home/huiling/HPC/Projet-HPC/morphoout/";
-		path = "/home/huiling/HPC/Projet-HPC/morphoout_AVX2/";
+		path_ref = "./morphoout/";
+		path = "./morphoout_AVX2/";
 	}
 
   	for(int k=3001; k<=3199; k++){

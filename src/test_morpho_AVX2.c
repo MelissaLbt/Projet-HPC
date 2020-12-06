@@ -17,7 +17,6 @@
 int64_t test_morpho_AVX2(int v){
 
   void (*morpho_func_t[])(vuint8 **,vuint8 **,int,int,int,int,int,int,int,int) = {morpho_AVX2,morpho_AVX2_red};
-  	//morpho_SSE2_rot, morpho_SSE2_red, morpho_fusion, morpho_pipeline, morpho_multi_thread, morpho_fusion_omp};
 
   int b = 4; // border
   char *format = "%6.2f ";
@@ -65,10 +64,8 @@ int64_t test_morpho_AVX2(int v){
 
   int k, ndigit=0;
 
-  //char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout/"; //_AVX2/";
-  //char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_AVX2/";
-  char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_AVX2/";
-  char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_AVX2/";
+  char *sdout_path = "./sdout_AVX2/";
+  char *morout_path = "./morphoout_AVX2/";
 
 
   char *filename = "car_";
@@ -101,8 +98,7 @@ int64_t test_morpho_AVX2(int v){
   timer_morpho += (end-start);
   free_vui8matrix(vE, vi0b, vi1b, vj0b, vj1b);
   free_vui8matrix(vOut, vi0, vi1, vj0, vj1);
-  // printf("%d,%d,%d,%d\n",vi0, vi1, vj0, vj1);
-  // printf("%d,%d,%d,%d\n",vi0b, vi1b, vj0b, vj1b);
+ 
   return timer_morpho;
 }
 
@@ -146,10 +142,8 @@ int64_t test_morpho_AVX2_omp(int v){
 
   int ndigit=0;
 
-  // char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_AVX2/";
-  // char *morout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/morphoout_AVX2/";
-  char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_AVX2/";
-  char *morout_path = "/home/huiling/HPC/Projet-HPC/morphoout_AVX2/";
+  char *sdout_path = "./sdout_AVX2/";
+  char *morout_path = "./morphoout_AVX2/";
 
   char *filename = "car_";
   char *extension = "pgm";
