@@ -126,8 +126,8 @@ int64_t test_mouvement_AVX2_omp(){
 
 	char *path = "/home/huiling/HPC/Projet-HPC/car3/";
 	char *sdout_path = "/home/huiling/HPC/Projet-HPC/sdout_AVX2/";
-	// char *path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/car3/";
-	// char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_AVX2/";
+	//char *path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/car3/";
+	//char *sdout_path = "/home/melissa/Documents/HPC/Projet/Projet-HPC/sdout_AVX2/";
 
 	char *filename = "car_";
 	char *extension = "pgm";

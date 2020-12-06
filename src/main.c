@@ -92,12 +92,12 @@ int main(int argc, char *argv[])
     printf(" - %-*s completed %5ld ms %s   ", 25, "Sigma_Delta SSE2", time, check_results(1) ? "[OK]" : "[KO]");
     BENCH(printf("CPP: %6.2f  DEBIT: %4ld M\n", cycles/N_PIXEL, N_PIXEL/(1000*time)));
 
-
-	  CHRONO(time = test_mouvement_AVX2(),cycles);
+	CHRONO(time = test_mouvement_AVX2(),cycles);
     printf(" - %-*s completed %5ld ms %s   ", 25, "Sigma_Delta AVX2", time, check_results(3) ? "[OK]" : "[KO]");
     BENCH(printf("CPP: %6.2f  DEBIT: %4ld M\n", cycles/N_PIXEL, N_PIXEL/(1000*time)));
 
-	   puts("===================");
+
+	puts("===================");
     puts("=== Morphologie ===");
     puts("===================");
 
@@ -138,11 +138,7 @@ int main(int argc, char *argv[])
     puts("==============");
 
     CHRONO(time = test_mouvement_SSE2_omp(),cycles);
-    printf(" - %-*s completed %5ld ms %s   ", 25, "Sigma_Delta SSE2_OpenMP", time, check_results(1) ? "[OK]" : "[KO]");
-    BENCH(printf("CPP: %6.2f  DEBIT: %4ld M\n", cycles/N_PIXEL, N_PIXEL/(1000*time)));
-
-    CHRONO(time = test_mouvement_AVX2_omp(),cycles);
-    printf(" - %-*s completed %5ld ms %s   ", 25, "Sigma_Delta AVX2_OpenMP", time, check_results(3) ? "[OK]" : "[KO]");
+    printf(" - %-*s completed %5ld ms %s   ", 34, "Sigma_Delta SSE2_OpenMP", time, check_results(1) ? "[OK]" : "[KO]");
     BENCH(printf("CPP: %6.2f  DEBIT: %4ld M\n", cycles/N_PIXEL, N_PIXEL/(1000*time)));
 
     // CHRONO(time = test_morpho_SSE2_omp(),cycles);
@@ -150,31 +146,37 @@ int main(int argc, char *argv[])
     // BENCH(printf("CPP: %6.2f  DEBIT: %4ld M\n", cycles/N_PIXEL, N_PIXEL/(1000*time)));
 
     CHRONO(time = test_morpho_SSE2_omp(0),cycles);
-    printf(" - %-*s completed %5ld ms %s   ", 25, "Morphologie SSE2 + OpenMP", time, check_results(2) ? "[OK]" : "[KO]");
+    printf(" - %-*s completed %5ld ms %s   ", 34, "Morphologie SSE2 + OpenMP", time, check_results(2) ? "[OK]" : "[KO]");
     BENCH(printf("CPP: %6.2f  DEBIT: %4ld M\n", cycles/N_PIXEL, N_PIXEL/(1000*time)));
 
     CHRONO(time = test_morpho_SSE2_omp(1),cycles);
-    printf(" - %-*s completed %5ld ms %s   ", 25, "Morphologie SSE2_rot + OpenMP", time, check_results(2) ? "[OK]" : "[KO]");
+    printf(" - %-*s completed %5ld ms %s   ", 34, "Morphologie SSE2_rot + OpenMP", time, check_results(2) ? "[OK]" : "[KO]");
     BENCH(printf("CPP: %6.2f  DEBIT: %4ld M\n", cycles/N_PIXEL, N_PIXEL/(1000*time)));
 
     CHRONO(time = test_morpho_SSE2_omp(2),cycles);
-    printf(" - %-*s completed %5ld ms %s   ", 25, "Morphologie SSE2_red + OpenMP", time, check_results(2) ? "[OK]" : "[KO]");
+    printf(" - %-*s completed %5ld ms %s   ", 34, "Morphologie SSE2_red + OpenMP", time, check_results(2) ? "[OK]" : "[KO]");
     BENCH(printf("CPP: %6.2f  DEBIT: %4ld M\n", cycles/N_PIXEL, N_PIXEL/(1000*time)));
 
     CHRONO(time = test_morpho_SSE2_omp(3),cycles);
-    printf(" - %-*s completed %5ld ms %s   ", 25, "Morphologie SSE2_fusion + OpenMP", time, check_results(2) ? "[OK]" : "[KO]");
+    printf(" - %-*s completed %5ld ms %s   ", 34, "Morphologie SSE2_fusion + OpenMP", time, check_results(2) ? "[OK]" : "[KO]");
     BENCH(printf("CPP: %6.2f  DEBIT: %4ld M\n", cycles/N_PIXEL, N_PIXEL/(1000*time)));
 
     CHRONO(time = test_morpho_SSE2_omp(4),cycles);
-    printf(" - %-*s completed %5ld ms %s   ", 25, "Morphologie SSE2_pipeline + OpenMP", time, check_results(2) ? "[OK]" : "[KO]");
+    printf(" - %-*s completed %5ld ms %s   ", 34, "Morphologie SSE2_pipeline + OpenMP", time, check_results(2) ? "[OK]" : "[KO]");
+    BENCH(printf("CPP: %6.2f  DEBIT: %4ld M\n", cycles/N_PIXEL, N_PIXEL/(1000*time)));
+
+
+
+    CHRONO(time = test_mouvement_AVX2_omp(),cycles);
+    printf(" - %-*s completed %5ld ms %s   ", 34, "Sigma_Delta AVX2_OpenMP", time, check_results(3) ? "[OK]" : "[KO]");
     BENCH(printf("CPP: %6.2f  DEBIT: %4ld M\n", cycles/N_PIXEL, N_PIXEL/(1000*time)));
 
     CHRONO(time = test_morpho_AVX2_omp(0),cycles);
-    printf(" - %-*s completed %5ld ms %s   ", 25, "Morphologie AVX2 + OpenMP", time, check_results(4) ? "[OK]" : "[KO]");
+    printf(" - %-*s completed %5ld ms %s   ", 34, "Morphologie AVX2 + OpenMP", time, check_results(4) ? "[OK]" : "[KO]");
     BENCH(printf("CPP: %6.2f  DEBIT: %4ld M\n", cycles/N_PIXEL, N_PIXEL/(1000*time)));
 
     CHRONO(time = test_morpho_AVX2_omp(1),cycles);
-    printf(" - %-*s completed %5ld ms %s   ", 25, "Morphologie AVX2_red + OpenMP", time, check_results(4) ? "[OK]" : "[KO]");
+    printf(" - %-*s completed %5ld ms %s   ", 34, "Morphologie AVX2_red + OpenMP", time, check_results(4) ? "[OK]" : "[KO]");
     BENCH(printf("CPP: %6.2f  DEBIT: %4ld M\n", cycles/N_PIXEL, N_PIXEL/(1000*time)));
 
 
