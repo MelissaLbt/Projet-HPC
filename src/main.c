@@ -193,7 +193,6 @@ int main(int argc, char *argv[])
     printf("Output of Morphologie              : Projet-HPC/morphoout\n");
     printf("Output of Sigma_Delta SSE2         : Projet-HPC/sdout_SSE2\n");
     printf("Output of Morphologie SSE2         : Projet-HPC/morphoout_SSE2\n");
-    printf("Output of Morphologie avec fusion  : Projet-HPC/morphoout_SSE2\n");
     printf("Output of Sigma_Delta AVX2         : Projet-HPC/sdout_AVX2\n");
     printf("Output of Morphologie AVX2         : Projet-HPC/morphoout_AVX2\n");
 
